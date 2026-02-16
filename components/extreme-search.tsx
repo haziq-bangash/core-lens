@@ -36,7 +36,6 @@ import ReactECharts, { EChartsOption } from 'echarts-for-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { DataExtremeSearchPart } from '@/lib/types';
-import XSearch from '@/components/x-search';
 import { XLogoIcon } from '@phosphor-icons/react/dist/ssr';
 
 // Minimal color palette for charts with better contrast
@@ -2165,53 +2164,6 @@ const ExtremeSearchComponent = ({
             )}
           </div>
         )}
-
-        {/* X Search Results (combined) */}
-        {(() => {
-          const completedX = xSearchExecutions.filter((x) => x.status === 'completed' && x.result);
-          if (completedX.length === 0) return null;
-
-          const handles = Array.from(
-            new Set(
-              completedX
-                .flatMap((x) => x.handles || [])
-                .filter((handle): handle is string => typeof handle === 'string' && handle.length > 0),
-            ),
-          );
-
-          const combinedSearch = {
-            content: completedX.map((x) => x.result!.content).join('\n\n'),
-            citations: completedX.flatMap((x) => x.result!.citations || []),
-            sources: completedX.flatMap((x) => x.result!.sources || []),
-            query: completedX
-              .map((x) => x.query)
-              .filter(Boolean)
-              .join(' | '),
-            dateRange: `${completedX[0].startDate || ''} to ${completedX[completedX.length - 1].endDate || ''}`,
-            handles,
-          };
-
-          const combinedResult = {
-            searches: [combinedSearch],
-            dateRange: combinedSearch.dateRange,
-            handles,
-          };
-
-          const combinedArgs = {
-            queries: completedX
-              .map((x) => x.query)
-              .filter((query): query is string => typeof query === 'string' && query.length > 0),
-            startDate: completedX[0].startDate,
-            endDate: completedX[completedX.length - 1].endDate,
-            includeXHandles: handles,
-          };
-
-          return (
-            <div className="space-y-3">
-              <XSearch result={combinedResult} args={combinedArgs} />
-            </div>
-          );
-        })()}
 
         {/* Sources */}
         {allSources.length > 0 && renderSources(allSources)}

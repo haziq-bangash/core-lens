@@ -18,7 +18,6 @@ import { HugeiconsIcon } from '@/components/ui/hugeicons';
 import { RepeatIcon, Copy01Icon, CpuIcon, SplitIcon } from '@hugeicons/core-free-icons';
 import { ChatMessage, CustomUIDataTypes, DataQueryCompletionPart, DataExtremeSearchPart } from '@/lib/types';
 import { UseChatHelpers } from '@ai-sdk/react';
-import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -32,8 +31,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 // Tool-specific components (eagerly loaded for better UX)
 import { SearchLoadingState } from '@/components/tool-invocation-list-view';
 import {
-  DollarSign,
-  User2,
   XCircle,
   Loader2,
   Clock,
@@ -47,7 +44,6 @@ import {
   FileCode,
   Download,
   Clock as PhosphorClockIcon,
-  MemoryStick as MemoryIcon,
   ArrowLeft as ArrowLeftIcon,
   ArrowRight as ArrowRightIcon,
   Sigma as SigmaIcon,
@@ -882,46 +878,6 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             }
             break;
 
-          case 'tool-text_translate':
-            switch (part.state) {
-              case 'input-streaming':
-                return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
-                    Preparing translation...
-                  </div>
-                );
-              case 'input-available':
-              case 'output-available':
-                return (
-                  <TranslationTool key={`${messageIndex}-${partIndex}-tool`} args={part.input} result={part.output} />
-                );
-            }
-            break;
-
-          case 'tool-code_context':
-            switch (part.state) {
-              case 'input-streaming':
-                return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
-                    Preparing code context...
-                  </div>
-                );
-              case 'input-available':
-                return (
-                  <SearchLoadingState
-                    key={`${messageIndex}-${partIndex}-tool`}
-                    icon={Code}
-                    text="Getting code context..."
-                    color="blue"
-                  />
-                );
-              case 'output-available':
-                return (
-                  <CodeContextTool key={`${messageIndex}-${partIndex}-tool`} args={part.input} result={part.output} />
-                );
-            }
-            break;
-
           case 'tool-academic_search':
             switch (part.state) {
               case 'input-streaming':
@@ -1014,60 +970,6 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
 
                 // Use the new RetrieveResults component for both single and multi-URL
                 return <RetrieveResults key={`${messageIndex}-${partIndex}-tool`} result={part.output} />;
-            }
-            break;
-
-          case 'tool-greeting':
-            switch (part.state) {
-              case 'input-streaming':
-                return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
-                    Preparing greeting...
-                  </div>
-                );
-              case 'input-available':
-                return (
-                  <SearchLoadingState
-                    key={`${messageIndex}-${partIndex}-tool`}
-                    icon={User2}
-                    text="Preparing greeting..."
-                    color="gray"
-                  />
-                );
-              case 'output-available':
-                return (
-                  <div
-                    key={`${messageIndex}-${partIndex}-tool`}
-                    className="group my-2 rounded-md border border-neutral-200/60 dark:border-neutral-700/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200"
-                  >
-                    <div className="p-3">
-                      <div className="flex items-start gap-3">
-                        {part.output.timeEmoji && (
-                          <div className="mt-0.5 w-5 h-5 rounded-md bg-neutral-600 flex items-center justify-center">
-                            <span className="text-xs">{part.output.timeEmoji}</span>
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0 space-y-2">
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                              {part.output.greeting}
-                            </span>
-                            <span className="text-neutral-400">•</span>
-                            <span className="text-neutral-500 dark:text-neutral-400">{part.output.dayOfWeek}</span>
-                          </div>
-                          <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                            {part.output.professionalMessage}
-                          </div>
-                          {part.output.helpfulTip && (
-                            <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                              {part.output.helpfulTip}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
             }
             break;
 
