@@ -1,0 +1,669 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@plugin 'tailwind-scrollbar';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+@keyframes spinner-fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes revealLine {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0.25;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+    opacity: 1;
+  }
+}
+
+@utility animate-reveal-line {
+  animation: revealLine 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal-line {
+    animation: none !important;
+  }
+}
+
+@theme {
+  --animate-accordion-down: accordion-down 300ms ease-out;
+  --animate-accordion-up: accordion-up 300ms ease-out;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@layer utilities {
+  .markdown-body .katex {
+    font-size: 1.1em;
+  }
+
+  .markdown-body .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .markdown-body .katex-display > .katex {
+    font-size: 1.21em;
+  }
+
+  .markdown-body .katex-display > .katex > .katex-html {
+    display: block;
+    position: relative;
+  }
+
+  .markdown-body .katex-display > .katex > .katex-html > .tag {
+    position: absolute;
+    right: 0;
+  }
+
+  /* Enhanced list styling for better readability */
+  .markdown-body ol {
+    counter-reset: item;
+    list-style-type: none;
+  }
+
+  .markdown-body ol > li {
+    counter-increment: item;
+    position: relative;
+  }
+
+  .markdown-body ol > li::before {
+    content: counter(item) '.';
+    font-weight: 600;
+    color: hsl(var(--primary));
+    display: inline-block;
+    width: 2em;
+    margin-left: -2em;
+    text-align: right;
+    padding-right: 0.5em;
+  }
+
+  .markdown-body ul > li::marker {
+    color: hsl(var(--primary) / 0.7);
+    font-size: 1.1em;
+  }
+
+  .markdown-body ol > li > ol,
+  .markdown-body ul > li > ul,
+  .markdown-body ol > li > ul,
+  .markdown-body ul > li > ol {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Nested list styling */
+  .markdown-body ol ol > li::before {
+    content: counter(item, lower-alpha) '.';
+  }
+
+  .markdown-body ol ol ol > li::before {
+    content: counter(item, lower-roman) '.';
+  }
+
+  /* Better spacing for paragraphs within list items */
+  .markdown-body li > p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-body li > p:first-child {
+    margin-top: 0;
+  }
+
+  .markdown-body li > p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Horizontal rule styling */
+  .markdown-body hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 2px solid hsl(var(--border));
+    opacity: 0.5;
+  }
+
+  /* Better heading differentiation */
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3,
+  .markdown-body h4,
+  .markdown-body h5,
+  .markdown-body h6 {
+    line-height: 1.3;
+    color: hsl(var(--foreground));
+  }
+
+  .markdown-body h1 {
+    letter-spacing: -0.02em;
+  }
+
+  .markdown-body h2 {
+    letter-spacing: -0.015em;
+  }
+
+  /* Improve strong/bold visibility */
+  .markdown-body strong {
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  /* Better code inline spacing */
+  .markdown-body p > code,
+  .markdown-body li > code {
+    margin: 0 0.1em;
+  }
+
+  /* Improve blockquote spacing */
+  .markdown-body blockquote > *:first-child {
+    margin-top: 0;
+  }
+
+  .markdown-body blockquote > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@layer utilities {
+  /* Tweet wrapper styling for horizontal layout - compact and minimal */
+  .tweet-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .tweet-wrapper [data-theme] {
+    margin: 0 !important;
+    border-radius: 0.5rem !important;
+    border: 1px solid hsl(var(--border) / 0.5) !important;
+    box-shadow: none !important;
+    background: hsl(var(--card)) !important;
+    height: 100%;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .tweet-wrapper [data-theme]:hover {
+    border-color: hsl(var(--border)) !important;
+  }
+
+  /* Tweet wrapper styling for sheet - clean and minimal */
+  .tweet-wrapper-sheet [data-theme] {
+    margin: 0 !important;
+    border-radius: 0.5rem !important;
+    border: 1px solid hsl(var(--border) / 0.5) !important;
+    box-shadow: none !important;
+    background: hsl(var(--card)) !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    transition: border-color 0.2s ease;
+  }
+
+  .tweet-wrapper-sheet [data-theme]:hover {
+    border-color: hsl(var(--border)) !important;
+  }
+
+  /* Ensure proper tweet spacing */
+  .tweet-wrapper .react-tweet-theme,
+  .tweet-wrapper-sheet .react-tweet-theme {
+    margin: 0 !important;
+  }
+
+  /* Override react-tweet default margins */
+  [data-tweet-container] {
+    margin: 0 !important;
+  }
+
+  .linenumber {
+    font-style: normal !important;
+    font-weight: normal !important;
+  }
+
+  :is([data-theme='dark'], .dark) :where(.react-tweet-theme) {
+    --tweet-skeleton-gradient: linear-gradient(270deg, #09090b, #18181b, #18181b, #09090b) !important;
+    --tweet-border: 1px solid #27272a !important;
+    --tweet-font-color: #fafafa !important;
+    --tweet-font-color-secondary: #a1a1aa !important;
+    --tweet-bg-color: #09090b !important;
+    --tweet-bg-color-hover: #18181b !important;
+    --tweet-quoted-bg-color: #18181b !important;
+    --tweet-quoted-bg-color-hover: #27272a !important;
+    --tweet-color-blue-primary: #3b82f6 !important;
+    --tweet-color-blue-secondary-hover: rgba(59, 130, 246, 0.1) !important;
+    --tweet-icon-color: #71717a !important;
+    --tweet-icon-color-hover: #a1a1aa !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border no-scrollbar!;
+  }
+
+  body {
+    @apply bg-background text-foreground scrollbar!;
+  }
+
+  [role='button'],
+  button {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: default;
+  }
+
+  .whatsize {
+    field-sizing: content;
+    min-height: 2lh;
+    max-height: 10lh;
+    resize: none;
+    overflow-y: auto;
+
+    /* Fallback for browsers that don't support field-sizing */
+    min-height: 40px;
+    height: auto;
+
+    /* fix for firefox */
+    @supports (-moz-appearance: none) {
+      min-height: 2lh;
+      max-height: 10lh;
+    }
+  }
+}
+
+:root {
+  /* Sugar-high syntax highlighting - Light theme */
+  --sh-identifier: #003d3a;
+  --sh-keyword: #00524e;
+  --sh-string: #2a6b68;
+  --sh-class: #005f5b;
+  --sh-property: #003d3a;
+  --sh-entity: #4a7f7c;
+  --sh-jsxliterals: #6b9693;
+  --sh-sign: #00302e;
+  --sh-comment: #8aaba9;
+
+  --font-be-vietnam-pro: 'Be Vietnam Pro';
+  --background: #fdfbed;
+  --foreground: #0c1618;
+  --card: #ffffff;
+  --card-foreground: #0c1618;
+  --popover: #ffffff;
+  --popover-foreground: #0c1618;
+  --primary: #003d3a;
+  --primary-foreground: #fdfbed;
+  --secondary: #e8f0ef;
+  --secondary-foreground: #003d3a;
+  --muted: #f0f4f3;
+  --muted-foreground: #4a5c5b;
+  --accent: #d9e5e4;
+  --accent-foreground: #0c1618;
+  --destructive: #d9534f;
+  --destructive-foreground: #ffffff;
+  --border: #c5d5d4;
+  --input: #d1dfde;
+  --ring: #003d3a;
+  --chart-1: #003d3a;
+  --chart-2: #2a6b68;
+  --chart-3: #4a7f7c;
+  --chart-4: #00524e;
+  --chart-5: #6b9693;
+  --sidebar: #f7f5e8;
+  --sidebar-foreground: #0c1618;
+  --sidebar-primary: #003d3a;
+  --sidebar-primary-foreground: #fdfbed;
+  --sidebar-accent: #e8f0ef;
+  --sidebar-accent-foreground: #0c1618;
+  --sidebar-border: #c5d5d4;
+  --sidebar-ring: #8aaba9;
+  --radius: 0.625rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: #0c1618;
+  --shadow-2xs: 0 1px 3px 0px rgba(12, 22, 24, 0.05);
+  --shadow-xs: 0 1px 3px 0px rgba(12, 22, 24, 0.05);
+  --shadow-sm: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 1px 2px -1px rgba(12, 22, 24, 0.1);
+  --shadow: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 1px 2px -1px rgba(12, 22, 24, 0.1);
+  --shadow-md: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 2px 4px -1px rgba(12, 22, 24, 0.1);
+  --shadow-lg: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 4px 6px -1px rgba(12, 22, 24, 0.1);
+  --shadow-xl: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 8px 10px -1px rgba(12, 22, 24, 0.1);
+  --shadow-2xl: 0 1px 3px 0px rgba(12, 22, 24, 0.25);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  /* Sugar-high syntax highlighting - Dark theme */
+  --sh-identifier: #8acdca;
+  --sh-keyword: #b3dfdd;
+  --sh-string: #7fbfbc;
+  --sh-class: #9ed6d3;
+  --sh-property: #6bc4c0;
+  --sh-entity: #a8d9d7;
+  --sh-jsxliterals: #c4e8e6;
+  --sh-sign: #5bb8b4;
+  --sh-comment: #5a7f7d;
+
+  --font-be-vietnam-pro: 'Be Vietnam Pro';
+  --background: #0c1618;
+  --foreground: #e8ebe6;
+  --card: #152224;
+  --card-foreground: #e8ebe6;
+  --popover: #152224;
+  --popover-foreground: #e8ebe6;
+  --primary: #4a9e9a;
+  --primary-foreground: #0c1618;
+  --secondary: #1a3234;
+  --secondary-foreground: #b3dfdd;
+  --muted: #1e2e30;
+  --muted-foreground: #8aaba9;
+  --accent: #003d3a;
+  --accent-foreground: #e8ebe6;
+  --destructive: #d9534f;
+  --destructive-foreground: #ffffff;
+  --border: #2a4a4c;
+  --input: #243c3e;
+  --ring: #4a9e9a;
+  --chart-1: #4a9e9a;
+  --chart-2: #6bc4c0;
+  --chart-3: #5bb8b4;
+  --chart-4: #7fbfbc;
+  --chart-5: #8acdca;
+  --sidebar: #0a1214;
+  --sidebar-foreground: #e8ebe6;
+  --sidebar-primary: #4a9e9a;
+  --sidebar-primary-foreground: #0c1618;
+  --sidebar-accent: #1a3234;
+  --sidebar-accent-foreground: #e8ebe6;
+  --sidebar-border: #2a4a4c;
+  --sidebar-ring: #5bb8b4;
+  --radius: 0.625rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: #000000;
+  --shadow-2xs: 0 1px 3px 0px rgba(0, 0, 0, 0.15);
+  --shadow-xs: 0 1px 3px 0px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 8px 10px -1px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 1px 3px 0px rgba(0, 0, 0, 0.35);
+}
+
+@theme inline {
+  --font-be-vietnam-pro: var(--font-be-vietnam-pro);
+  --font-baumans: var(--font-baumans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Prevent iOS scroll bounce issues with fixed positioned elements */
+body {
+  /* Prevent iOS from shrinking viewport height when scrolling */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* Mobile viewport height fixes */
+@media screen and (max-width: 1024px) {
+  /* Fix for iOS viewport height issues */
+  .h-screen {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for better mobile support */
+  }
+
+  /* Ensure fixed elements work properly with viewport changes */
+  .fixed {
+    /* Force hardware acceleration */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Better height handling for mobile containers */
+  body {
+    /* Use dynamic viewport height on mobile */
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+
+  body {
+    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Ensure fixed elements maintain position during scroll */
+@media screen and (max-width: 1024px) {
+  /* Prevent viewport height changes from affecting fixed elements */
+  .fixed {
+    /* Force hardware acceleration for smoother rendering */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Prevent iOS bounce from affecting positioning */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Ensure safe area calculations are consistent */
+  .fixed.bottom-0 {
+    /* Use padding instead of margin for more reliable positioning */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Hide Leaflet attribution globally */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Polished Leaflet zoom control (light/dark aware) */
+.leaflet-control-zoom,
+.custom-zoom-control.leaflet-bar {
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(6px);
+}
+
+.dark .leaflet-control-zoom,
+.dark .custom-zoom-control.leaflet-bar {
+  border-color: hsl(var(--border));
+  background: rgba(9, 9, 11, 0.6);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.leaflet-control-zoom a,
+.custom-zoom-control .zoom-btn {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid hsl(var(--border));
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.leaflet-control-zoom a:last-child,
+.custom-zoom-control .zoom-btn:last-child {
+  border-bottom: none;
+}
+
+.leaflet-control-zoom a:hover,
+.custom-zoom-control .zoom-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.dark .leaflet-control-zoom a:hover,
+.dark .custom-zoom-control .zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.leaflet-control-zoom a:active,
+.custom-zoom-control .zoom-btn:active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.dark .leaflet-control-zoom a:active,
+.dark .custom-zoom-control .zoom-btn:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.leaflet-control-zoom a:focus,
+.custom-zoom-control .zoom-btn:focus {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.leaflet-control-zoom a.leaflet-disabled,
+.custom-zoom-control .zoom-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: transparent !important;
+}
+
+/* Touch-friendly sizing */
+.leaflet-touch .leaflet-control-zoom a,
+.leaflet-touch .custom-zoom-control .zoom-btn {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 18px;
+}
+
+/* Divider between zoom buttons */
+.custom-zoom-control .divider {
+  height: 1px;
+  background: hsl(var(--border));
+}
+
+/* Thin horizontal scrollbar for the map's place-card scroller */
+.nearby-search-map::-webkit-scrollbar {
+  height: 8px;
+}
+.nearby-search-map::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 9999px;
+}
+.nearby-search-map::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Sugar-high syntax highlighting styles */
