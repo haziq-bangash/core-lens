@@ -162,7 +162,7 @@ async function handleStripeSubscriptionEvent(event: Stripe.Event) {
 
 // Initialize Stripe client
 export const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-01-28.clover',
+  apiVersion: '2025-12-15.clover',
 });
 
 export const auth = betterAuth({

@@ -16,6 +16,14 @@ import {
   lookout,
   documentIndex,
   type DocumentIndexRecord,
+  paper,
+  type Paper,
+  collection,
+  type Collection,
+  paperCollection,
+  type PaperCollection,
+  paperTag,
+  type PaperTag,
 } from './schema';
 import { ChatSDKError } from '../errors';
 import { db, getReadReplica, maindb } from './index';
@@ -932,11 +940,13 @@ export async function deleteLookout({ id }: { id: string }) {
 
 export async function saveDocumentIndex({
   chatId,
+  paperId,
   userId,
   fileName,
   fileUrl,
 }: {
-  chatId: string;
+  chatId?: string;
+  paperId?: string;
   userId: string;
   fileName: string;
   fileUrl: string;
@@ -946,6 +956,7 @@ export async function saveDocumentIndex({
       .insert(documentIndex)
       .values({
         chatId,
+        paperId,
         userId,
         fileName,
         fileUrl,
@@ -1019,5 +1030,326 @@ export async function getDocumentIndexByFileUrl(fileUrl: string): Promise<Docume
     return record || null;
   } catch (error) {
     throw new ChatSDKError('bad_request:database', 'Failed to get document index by file URL');
+  }
+}
+
+export async function getReadyDocumentIndicesByUserId(userId: string): Promise<DocumentIndexRecord[]> {
+  try {
+    return await getReadReplica()
+      .select()
+      .from(documentIndex)
+      .where(and(eq(documentIndex.userId, userId), eq(documentIndex.status, 'ready')));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get ready document indices by user');
+  }
+}
+
+export async function getReadyDocumentIndicesByPaperIds(paperIds: string[]): Promise<DocumentIndexRecord[]> {
+  try {
+    if (paperIds.length === 0) return [];
+    return await getReadReplica()
+      .select()
+      .from(documentIndex)
+      .where(and(inArray(documentIndex.paperId, paperIds), eq(documentIndex.status, 'ready')));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get document indices by paper IDs');
+  }
+}
+
+// ===========================================================================
+// RESEARCH LIBRARY - PAPERS
+// ===========================================================================
+
+export async function createPaper({
+  userId,
+  title,
+  fileName,
+  fileUrl,
+  fileSizeMb,
+}: {
+  userId: string;
+  title: string;
+  fileName?: string;
+  fileUrl?: string;
+  fileSizeMb?: number;
+}): Promise<Paper> {
+  try {
+    const [record] = await db
+      .insert(paper)
+      .values({
+        userId,
+        title,
+        fileName,
+        fileUrl,
+        fileSizeMb,
+        status: 'pending',
+      })
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to create paper');
+  }
+}
+
+export async function getPaperById(id: string): Promise<Paper | null> {
+  try {
+    const [record] = await getReadReplica()
+      .select()
+      .from(paper)
+      .where(eq(paper.id, id))
+      .limit(1);
+    return record || null;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get paper');
+  }
+}
+
+export async function getPapersByUserId({
+  userId,
+  limit = 50,
+  offset = 0,
+  status,
+}: {
+  userId: string;
+  limit?: number;
+  offset?: number;
+  status?: string;
+}): Promise<Paper[]> {
+  try {
+    const conditions: SQL[] = [eq(paper.userId, userId)];
+    if (status) conditions.push(eq(paper.status, status));
+
+    return await getReadReplica()
+      .select()
+      .from(paper)
+      .where(and(...conditions))
+      .orderBy(desc(paper.createdAt))
+      .limit(limit)
+      .offset(offset);
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get papers');
+  }
+}
+
+export async function updatePaper({
+  id,
+  ...fields
+}: {
+  id: string;
+  title?: string;
+  authors?: string[];
+  abstract?: string;
+  year?: number;
+  doi?: string;
+  journal?: string;
+  sourceUrl?: string;
+  fileUrl?: string;
+  fileName?: string;
+  fileSizeMb?: number;
+  totalPages?: number;
+  status?: string;
+  error?: string;
+  notes?: string;
+}): Promise<Paper> {
+  try {
+    const updates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(fields)) {
+      if (value !== undefined) updates[key] = value;
+    }
+
+    const [record] = await db
+      .update(paper)
+      .set(updates)
+      .where(eq(paper.id, id))
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to update paper');
+  }
+}
+
+export async function deletePaper(id: string): Promise<void> {
+  try {
+    await db.delete(paper).where(eq(paper.id, id));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to delete paper');
+  }
+}
+
+export async function getPapersByCollectionId(collectionId: string): Promise<Paper[]> {
+  try {
+    const results = await getReadReplica()
+      .select({ paper: paper })
+      .from(paperCollection)
+      .innerJoin(paper, eq(paperCollection.paperId, paper.id))
+      .where(eq(paperCollection.collectionId, collectionId))
+      .orderBy(desc(paper.createdAt));
+    return results.map((r) => r.paper);
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get papers by collection');
+  }
+}
+
+// ===========================================================================
+// RESEARCH LIBRARY - COLLECTIONS
+// ===========================================================================
+
+export async function createCollection({
+  userId,
+  name,
+  description,
+  color,
+}: {
+  userId: string;
+  name: string;
+  description?: string;
+  color?: string;
+}): Promise<Collection> {
+  try {
+    const [record] = await db
+      .insert(collection)
+      .values({ userId, name, description, color })
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to create collection');
+  }
+}
+
+export async function getCollectionsByUserId(userId: string): Promise<Collection[]> {
+  try {
+    return await getReadReplica()
+      .select()
+      .from(collection)
+      .where(eq(collection.userId, userId))
+      .orderBy(asc(collection.name));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get collections');
+  }
+}
+
+export async function updateCollection({
+  id,
+  name,
+  description,
+  color,
+}: {
+  id: string;
+  name?: string;
+  description?: string;
+  color?: string;
+}): Promise<Collection> {
+  try {
+    const updates: Record<string, unknown> = {};
+    if (name !== undefined) updates.name = name;
+    if (description !== undefined) updates.description = description;
+    if (color !== undefined) updates.color = color;
+
+    const [record] = await db
+      .update(collection)
+      .set(updates)
+      .where(eq(collection.id, id))
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to update collection');
+  }
+}
+
+export async function deleteCollection(id: string): Promise<void> {
+  try {
+    await db.delete(collection).where(eq(collection.id, id));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to delete collection');
+  }
+}
+
+export async function addPaperToCollection({
+  paperId,
+  collectionId,
+}: {
+  paperId: string;
+  collectionId: string;
+}): Promise<PaperCollection> {
+  try {
+    const [record] = await db
+      .insert(paperCollection)
+      .values({ paperId, collectionId })
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to add paper to collection');
+  }
+}
+
+export async function removePaperFromCollection({
+  paperId,
+  collectionId,
+}: {
+  paperId: string;
+  collectionId: string;
+}): Promise<void> {
+  try {
+    await db
+      .delete(paperCollection)
+      .where(
+        and(
+          eq(paperCollection.paperId, paperId),
+          eq(paperCollection.collectionId, collectionId),
+        ),
+      );
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to remove paper from collection');
+  }
+}
+
+// ===========================================================================
+// RESEARCH LIBRARY - TAGS
+// ===========================================================================
+
+export async function addTagToPaper({
+  paperId: paperIdValue,
+  tag,
+}: {
+  paperId: string;
+  tag: string;
+}): Promise<PaperTag> {
+  try {
+    const [record] = await db
+      .insert(paperTag)
+      .values({ paperId: paperIdValue, tag })
+      .returning();
+    return record;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to add tag to paper');
+  }
+}
+
+export async function removeTagFromPaper({
+  paperId: paperIdValue,
+  tag,
+}: {
+  paperId: string;
+  tag: string;
+}): Promise<void> {
+  try {
+    await db
+      .delete(paperTag)
+      .where(
+        and(eq(paperTag.paperId, paperIdValue), eq(paperTag.tag, tag)),
+      );
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to remove tag from paper');
+  }
+}
+
+export async function getTagsByPaperId(paperIdValue: string): Promise<PaperTag[]> {
+  try {
+    return await getReadReplica()
+      .select()
+      .from(paperTag)
+      .where(eq(paperTag.paperId, paperIdValue));
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get tags');
   }
 }

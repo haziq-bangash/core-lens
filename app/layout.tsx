@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: '%s | Contract Lens AI',
   },
   description:
-    'Contract Lens is a free Agentic Research Platform that finds, analyzes, and cites information from the live web. $15/month—fast answers; 11000+ stars on GitHub.',
+    'Contract Lens is a free Agentic Research Platform that finds, analyzes, and cites information from the live web. $15/month—fast answers.',
   openGraph: {
     url: 'https://contract-lens.ai',
     siteName: 'Contract Lens AI',
@@ -45,7 +45,6 @@ export const metadata: Metadata = {
     'contract-lens ai',
     'Contract Lens AI',
     'contract-lens AI',
-    'ROVO.AI',
     'contract-lens github',
     'ai search engine',
     'Contract Lens',
@@ -68,7 +67,7 @@ export const metadata: Metadata = {
     'AI Search Engine',
     'mplx.run',
     'mplx ai',
-    'haziqbangash mukaddam',
+    'haziqbangash',
     'contract-lens.how',
     'search engine',
     'AI',

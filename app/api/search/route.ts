@@ -33,9 +33,7 @@ import {
   webSearchTool,
   academicSearchTool,
   retrieveTool,
-  codeInterpreterTool,
   datetimeTool,
-  greetingTool,
   extremeSearchTool,
   createPdfSearchTool,
 } from '@/lib/tools';
@@ -599,10 +597,8 @@ export async function POST(req: Request) {
           web_search: webSearchTool(dataStream, searchProvider),
           academic_search: academicSearchTool(dataStream),
           retrieve: retrieveTool,
-          ...(model !== 'contract-lens-qwen-coder-plus' ? { code_interpreter: codeInterpreterTool } : {}),
           datetime: datetimeTool,
           extreme_search: extremeSearchTool(dataStream, extremeSearchProvider || 'exa'),
-          greeting: greetingTool(timezone),
           ...(user ? { pdf_search: createPdfSearchTool(id) } : {}),
         } as any,
         experimental_repairToolCall: async ({ toolCall, tools, inputSchema, error }) => {

@@ -660,7 +660,7 @@ export function PreferencesSection({
                         <HugeiconsIcon icon={group.icon} size={16} color="currentColor" />
                         <span className="text-sm font-medium truncate">{group.name}</span>
                       </div>
-                      {'requirePro' in group && group.requirePro && (
+                      {group && 'requirePro' in group && (group as any).requirePro && (
                         <Badge variant="secondary" className="text-[10px]">
                           PRO
                         </Badge>

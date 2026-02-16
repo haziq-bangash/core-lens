@@ -2301,7 +2301,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
                 <Textarea
                   ref={inputRef}
                   placeholder=""
-                  value="â—‰ Recording..."
+                  value="Recording..."
                   disabled={true}
                   className={cn(
                     'w-full rounded-xl rounded-b-none md:text-base!',
@@ -2330,9 +2330,9 @@ const FormComponent: React.FC<FormComponentProps> = ({
                   ref={inputRef}
                   placeholder={
                     isEnhancing
-                      ? 'âœ¨ Enhancing your prompt...'
+                      ? 'Enhancing your prompt...'
                       : isTypewriting
-                        ? 'âœ¨ Writing enhanced prompt...'
+                        ? 'Writing enhanced prompt...'
                         : hasInteracted
                           ? 'Ask a new question...'
                           : 'Ask a question...'

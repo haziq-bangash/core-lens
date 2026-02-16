@@ -313,6 +313,105 @@ export const lookout = pgTable('lookout', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+// ===========================================================================
+// RESEARCH LIBRARY TABLES
+// ===========================================================================
+
+// Paper table - core library entity
+export const paper = pgTable(
+  'paper',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    title: text('title').notNull(),
+    authors: json('authors').$type<string[]>().default([]),
+    abstract: text('abstract'),
+    year: integer('year'),
+    doi: text('doi'),
+    journal: text('journal'),
+    sourceUrl: text('source_url'),
+    fileUrl: text('file_url'),
+    fileName: text('file_name'),
+    fileSizeMb: real('file_size_mb'),
+    totalPages: integer('total_pages'),
+    status: text('status').notNull().default('pending'), // pending | extracting_metadata | indexing | ready | failed
+    error: text('error'),
+    notes: text('notes'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index('paper_userId_idx').on(table.userId),
+    index('paper_doi_idx').on(table.doi),
+    index('paper_status_idx').on(table.status),
+  ],
+);
+
+// Collection table - folders for organizing papers
+export const collection = pgTable(
+  'collection',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    description: text('description'),
+    color: text('color'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index('collection_userId_idx').on(table.userId)],
+);
+
+// Paper-Collection join table
+export const paperCollection = pgTable(
+  'paper_collection',
+  {
+    paperId: text('paper_id')
+      .notNull()
+      .references(() => paper.id, { onDelete: 'cascade' }),
+    collectionId: text('collection_id')
+      .notNull()
+      .references(() => collection.id, { onDelete: 'cascade' }),
+    addedAt: timestamp('added_at').notNull().defaultNow(),
+  },
+  (table) => [
+    index('pc_paperId_idx').on(table.paperId),
+    index('pc_collectionId_idx').on(table.collectionId),
+  ],
+);
+
+// Paper tag table
+export const paperTag = pgTable(
+  'paper_tag',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId()),
+    paperId: text('paper_id')
+      .notNull()
+      .references(() => paper.id, { onDelete: 'cascade' }),
+    tag: text('tag').notNull(),
+  },
+  (table) => [
+    index('pt_paperId_idx').on(table.paperId),
+    index('pt_tag_idx').on(table.tag),
+  ],
+);
+
 // Document index table for PDF RAG indexing
 export const documentIndex = pgTable(
   'document_index',
@@ -321,8 +420,9 @@ export const documentIndex = pgTable(
       .primaryKey()
       .$defaultFn(() => generateId()),
     chatId: text('chat_id')
-      .notNull()
       .references(() => chat.id, { onDelete: 'cascade' }),
+    paperId: text('paper_id')
+      .references(() => paper.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
@@ -336,13 +436,19 @@ export const documentIndex = pgTable(
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
-  (table) => [index('document_index_chatId_idx').on(table.chatId), index('document_index_userId_idx').on(table.userId)],
+  (table) => [
+    index('document_index_chatId_idx').on(table.chatId),
+    index('document_index_paperId_idx').on(table.paperId),
+    index('document_index_userId_idx').on(table.userId),
+  ],
 );
 
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
   chats: many(chat),
+  papers: many(paper),
+  collections: many(collection),
   extremeSearchUsages: many(extremeSearchUsage),
   messageUsages: many(messageUsage),
   customInstructions: many(customInstructions),
@@ -402,9 +508,49 @@ export const documentIndexRelations = relations(documentIndex, ({ one }) => ({
     fields: [documentIndex.chatId],
     references: [chat.id],
   }),
+  paper: one(paper, {
+    fields: [documentIndex.paperId],
+    references: [paper.id],
+  }),
   user: one(user, {
     fields: [documentIndex.userId],
     references: [user.id],
+  }),
+}));
+
+export const paperRelations = relations(paper, ({ one, many }) => ({
+  user: one(user, {
+    fields: [paper.userId],
+    references: [user.id],
+  }),
+  collections: many(paperCollection),
+  tags: many(paperTag),
+  documentIndices: many(documentIndex),
+}));
+
+export const collectionRelations = relations(collection, ({ one, many }) => ({
+  user: one(user, {
+    fields: [collection.userId],
+    references: [user.id],
+  }),
+  papers: many(paperCollection),
+}));
+
+export const paperCollectionRelations = relations(paperCollection, ({ one }) => ({
+  paper: one(paper, {
+    fields: [paperCollection.paperId],
+    references: [paper.id],
+  }),
+  collection: one(collection, {
+    fields: [paperCollection.collectionId],
+    references: [collection.id],
+  }),
+}));
+
+export const paperTagRelations = relations(paperTag, ({ one }) => ({
+  paper: one(paper, {
+    fields: [paperTag.paperId],
+    references: [paper.id],
   }),
 }));
 
@@ -424,3 +570,7 @@ export type CustomInstructions = InferSelectModel<typeof customInstructions>;
 export type UserPreferences = InferSelectModel<typeof userPreferences>;
 export type Lookout = InferSelectModel<typeof lookout>;
 export type DocumentIndexRecord = InferSelectModel<typeof documentIndex>;
+export type Paper = InferSelectModel<typeof paper>;
+export type Collection = InferSelectModel<typeof collection>;
+export type PaperCollection = InferSelectModel<typeof paperCollection>;
+export type PaperTag = InferSelectModel<typeof paperTag>;

@@ -728,12 +728,6 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                         <span>About</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <a href="https://git.new/contract-lens" target="_blank" rel="noopener noreferrer" onClick={closeMobileSidebar}>
-                        <GithubLogoIcon size={16} weight="regular" className="mr-2" />
-                        <span>GitHub</span>
-                      </a>
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

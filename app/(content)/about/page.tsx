@@ -16,7 +16,6 @@ import {
   ProAccordionTrigger,
   ProAccordionContent,
 } from '@/components/ui/pro-accordion';
-import { useGitHubStars } from '@/hooks/use-github-stars';
 import { models } from '@/ai/providers';
 import { VercelLogo } from '@/components/logos/vercel-logo';
 import { ExaLogo } from '@/components/logos/exa-logo';
@@ -34,8 +33,6 @@ export default function AboutPage() {
   const [openCategory, setOpenCategory] = useState(false);
   const [openCapabilities, setOpenCapabilities] = useState(false);
   const [showAllModels, setShowAllModels] = useState(false);
-  const { data: githubStars, isLoading: isLoadingStars } = useGitHubStars();
-  // Marketing hero: simple group selector (exclude Extreme)
   const visibleGroups = useMemo(
     () =>
       getSearchGroups().filter(
@@ -69,23 +66,6 @@ export default function AboutPage() {
             </div>
 
             <div className="col-span-6 flex items-center justify-end gap-2 h-full px-4">
-              <Link
-                href="https://git.new/contract-lens"
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors rounded-none"
-                target="_blank"
-              >
-                <GithubLogoIcon className="h-4 w-4" />
-                <span className="hidden lg:inline">
-                  {!isLoadingStars && githubStars && (
-                    <Badge variant="secondary" className="ml-1 text-xs">
-                      {githubStars > 1000 ? `${(githubStars / 1000).toFixed(1)}k` : githubStars}
-                    </Badge>
-                  )}
-                </span>
-              </Link>
-
-              <div className="w-px h-6 bg-border hidden sm:block" />
-
               <div className="block">
                 <ThemeSwitcher />
               </div>
@@ -223,22 +203,7 @@ export default function AboutPage() {
                   </div>
                 </div>
               </form>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border">
-                <Link
-                  href="https://git.new/contract-lens"
-                  className="flex items-center justify-center h-11 gap-2 px-6 bg-foreground text-background hover:bg-foreground/90 transition-colors rounded-none border-r border-border group/link"
-                  target="_blank"
-                >
-                  <GithubLogoIcon className="h-4 w-4 group-hover/link:rotate-12 transition-transform duration-300" />
-                  <span className="font-medium">GitHub</span>
-                  {!isLoadingStars && githubStars && (
-                    <Badge variant="secondary" className="ml-2">
-                      {githubStars && githubStars > 1000
-                        ? `${(githubStars / 1000).toFixed(1)}k`
-                        : githubStars.toLocaleString()}
-                    </Badge>
-                  )}
-                </Link>
+              <div className="grid grid-cols-1 gap-px bg-border">
                 <Link
                   href="/"
                   className="flex items-center justify-center h-11 gap-2 px-6 border border-border hover:border-primary hover:bg-accent transition-colors rounded-none group/link"
@@ -267,18 +232,6 @@ export default function AboutPage() {
                   </div>
                   <p className="text-sm text-muted-foreground group-hover/stat:text-foreground transition-colors">
                     Active Users
-                  </p>
-                </div>
-                <div className="bg-background p-4 group/stat hover:bg-accent/50 transition-colors">
-                  <div className="text-3xl font-bold mb-1 group-hover/stat:scale-110 transition-transform inline-block">
-                    {isLoadingStars ? (
-                      <span className="animate-pulse">...</span>
-                    ) : (
-                      `${githubStars && githubStars > 1000 ? `${(githubStars / 1000).toFixed(1)}k` : githubStars && githubStars > 1000 ? githubStars.toLocaleString() : '9,000'}+`
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground group-hover/stat:text-foreground transition-colors">
-                    GitHub Stars
                   </p>
                 </div>
               </div>
