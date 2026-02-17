@@ -362,7 +362,30 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                tooltip="Search Library"
+                tooltip="Research Library"
+                className={cn(
+                  'hover:bg-primary/10',
+                  pathname === '/library' || pathname?.startsWith('/library/') ? 'bg-primary/12 text-foreground' : '',
+                )}
+              >
+                <Link
+                  prefetch={true}
+                  href="/library"
+                  onClick={closeMobileSidebar}
+                  className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
+                >
+                  <BookIcon size={18} weight="regular" />
+                  <span className="group-data-[collapsible=icon]:hidden">Research Library</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+
+          {user && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip="Search History"
                 className={cn(
                   'hover:bg-primary/10',
                   pathname === '/searches' || pathname?.startsWith('/searches/') ? 'bg-primary/12 text-foreground' : '',
@@ -375,7 +398,7 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                   className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
                 >
                   <HugeiconsIcon icon={FolderLibraryIcon} size={18} />
-                  <span className="group-data-[collapsible=icon]:hidden">Search Library</span>
+                  <span className="group-data-[collapsible=icon]:hidden">Search History</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

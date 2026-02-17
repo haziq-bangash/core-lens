@@ -17,10 +17,13 @@ import { cn } from '@/lib/utils';
 import { Check, Copy, WrapText, ArrowLeftRight, Download, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { CitationMarker } from '@/components/citations';
+import type { CitationSource } from '@/lib/types';
 
 interface MarkdownRendererProps {
   content: string;
   isUserMessage?: boolean;
+  libraryCitations?: CitationSource[];
 }
 
 interface CitationLink {
@@ -1571,7 +1574,7 @@ const CitationGroup = React.memo(({ urls, texts, elementKey }: CitationGroupProp
 CitationGroup.displayName = 'CitationGroup';
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
-  ({ content, isUserMessage = false }) => {
+  ({ content, isUserMessage = false, libraryCitations }) => {
     const { processedContent, citations: extractedCitations, citationGroups, latexBlocks, isProcessing } = useProcessedContent(content);
     const citationLinks = extractedCitations;
 
@@ -1646,11 +1649,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
     const renderer: Partial<ReactRenderer> = useMemo(
       () => ({
         text(text: string) {
-          // Check if text contains any LaTeX patterns or citation groups without mutating regex state
+          // Check if text contains any LaTeX patterns, citation groups, or library citations
           const hasLatex = text.includes('§§§LATEXBLOCK_PROTECTED_') || text.includes('§§§LATEXINLINE_PROTECTED_');
           const hasCitationGroup = text.includes('§§§CITATIONGROUP_');
+          const hasLibraryCitation = libraryCitations && libraryCitations.length > 0 && /\[\d+\]/.test(text);
 
-          if (!hasLatex && !hasCitationGroup) {
+          if (!hasLatex && !hasCitationGroup && !hasLibraryCitation) {
             return text;
           }
 
@@ -1658,10 +1662,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
           const blockPattern = /§§§LATEXBLOCK_PROTECTED_(\d+)§§§/g;
           const inlinePattern = /§§§LATEXINLINE_PROTECTED_(\d+)§§§/g;
           const citationGroupPattern = /§§§CITATIONGROUP_(\d+)§§§/g;
+          const libraryCitationPattern = /\[(\d+)\]/g;
 
           const components: any[] = [];
           let lastEnd = 0;
-          const allMatches: Array<{ match: RegExpExecArray; type: 'latex-block' | 'latex-inline' | 'citation-group' }> = [];
+          const allMatches: Array<{ match: RegExpExecArray; type: 'latex-block' | 'latex-inline' | 'citation-group' | 'library-citation' }> = [];
 
           let match;
           while ((match = blockPattern.exec(text)) !== null) {
@@ -1672,6 +1677,17 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
           }
           while ((match = citationGroupPattern.exec(text)) !== null) {
             allMatches.push({ match, type: 'citation-group' });
+          }
+          if (hasLibraryCitation) {
+            while ((match = libraryCitationPattern.exec(text)) !== null) {
+              // Only match if this citation number exists in our citations
+              const num = match[1];
+              const citationKey = `[${num}]`;
+              const exists = libraryCitations!.some((c) => c.citationKey === citationKey);
+              if (exists) {
+                allMatches.push({ match, type: 'library-citation' });
+              }
+            }
           }
 
           allMatches.sort((a, b) => a.match.index - b.match.index);
@@ -1686,7 +1702,18 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
               components.push(<span key={key}>{textContent}</span>);
             }
 
-            if (type === 'citation-group') {
+            if (type === 'library-citation') {
+              const citationKey = fullMatch; // e.g., "[1]"
+              const citation = libraryCitations?.find((c) => c.citationKey === citationKey);
+              const key = getElementKey('link', `lib-cite-${citationKey}`);
+              components.push(
+                <CitationMarker
+                  key={key}
+                  citationKey={citationKey}
+                  citation={citation}
+                />
+              );
+            } else if (type === 'citation-group') {
               const citationGroup = citationGroups.find((group) => group.id === fullMatch);
               if (citationGroup) {
                 const key = getElementKey('link', citationGroup.id);
@@ -1962,7 +1989,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
           );
         },
       }),
-      [latexBlocks, citationGroups, isUserMessage, renderCitation, renderHoverCard, getElementKey, citationLinks],
+      [latexBlocks, citationGroups, isUserMessage, renderCitation, renderHoverCard, getElementKey, citationLinks, libraryCitations],
     );
 
     // Show a progressive loading state for large content
@@ -1993,7 +2020,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
     );
   },
   (prevProps, nextProps) => {
-    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage;
+    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage && prevProps.libraryCitations === nextProps.libraryCitations;
   },
 );
 
@@ -2001,7 +2028,7 @@ MarkdownRenderer.displayName = 'MarkdownRenderer';
 
 // Virtual scrolling component for very large content
 const VirtualMarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
-  ({ content, isUserMessage = false }) => {
+  ({ content, isUserMessage = false, libraryCitations }) => {
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -2031,7 +2058,7 @@ const VirtualMarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
 
     // Only use virtual scrolling for very large content
     if (content.length < 50000) {
-      return <MarkdownRenderer content={content} isUserMessage={isUserMessage} />;
+      return <MarkdownRenderer content={content} isUserMessage={isUserMessage} libraryCitations={libraryCitations} />;
     }
 
     return (
@@ -2041,13 +2068,13 @@ const VirtualMarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
         onScroll={handleScroll}
       >
         {contentChunks.slice(visibleRange.start, visibleRange.end).map((chunk, index) => (
-          <MarkdownRenderer key={`chunk-${visibleRange.start + index}`} content={chunk} isUserMessage={isUserMessage} />
+          <MarkdownRenderer key={`chunk-${visibleRange.start + index}`} content={chunk} isUserMessage={isUserMessage} libraryCitations={libraryCitations} />
         ))}
       </div>
     );
   },
   (prevProps, nextProps) => {
-    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage;
+    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage && prevProps.libraryCitations === nextProps.libraryCitations;
   },
 );
 
@@ -2093,18 +2120,18 @@ const usePerformanceMonitor = (content: string) => {
 
 // Main optimized markdown component with automatic optimization selection
 const OptimizedMarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
-  ({ content, isUserMessage = false }) => {
+  ({ content, isUserMessage = false, libraryCitations }) => {
     usePerformanceMonitor(content);
 
     // Automatically choose the best rendering strategy based on content size
     if (content.length > 100000) {
-      return <VirtualMarkdownRenderer content={content} isUserMessage={isUserMessage} />;
+      return <VirtualMarkdownRenderer content={content} isUserMessage={isUserMessage} libraryCitations={libraryCitations} />;
     }
 
-    return <MarkdownRenderer content={content} isUserMessage={isUserMessage} />;
+    return <MarkdownRenderer content={content} isUserMessage={isUserMessage} libraryCitations={libraryCitations} />;
   },
   (prevProps, nextProps) => {
-    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage;
+    return prevProps.content === nextProps.content && prevProps.isUserMessage === nextProps.isUserMessage && prevProps.libraryCitations === nextProps.libraryCitations;
   },
 );
 

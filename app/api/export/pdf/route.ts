@@ -291,21 +291,58 @@ export async function POST(req: NextRequest) {
     };
 
     // Professional header with Contract Lens branding and chat title
-    const drawProfessionalHeader = () => {
-      // One-line: logo + app name/title
+    const drawProfessionalHeader = async () => {
       const titleSize = 16;
-      const logoWidth = 20;
-      const logoColor = rgb(0.15, 0.15, 0.15);
+      const logoDisplayWidth = 20;
+      const logoDisplayHeight = 20;
 
-      // Align logo top to sit above the text baseline (cap height ~0.7x font size)
-      const capHeight = titleSize * 0.7;
-      const baselineAdjust = 25; // nudge downward for visual alignment
-      const logoTop = y + capHeight + baselineAdjust;
-      const logoHeight = drawContractLensLogo(margin, logoTop, logoWidth, logoColor);
-      const textX = margin + logoWidth + 8;
+      // Embed the favicon SVG as a PNG image
+      try {
+        const faviconPath = path.join(process.cwd(), 'app/favicon.svg');
+        const svgBuf = readFileSync(faviconPath);
+        const pngBuf = await sharp(svgBuf)
+          .resize(Math.round(logoDisplayWidth * 4), Math.round(logoDisplayHeight * 4), { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+          .png()
+          .toBuffer();
+        const logoImg = await pdfDoc.embedPng(pngBuf);
+        const logoY = y - logoDisplayHeight + titleSize * 0.8; // align with text baseline
+        page.drawImage(logoImg, {
+          x: margin,
+          y: logoY,
+          width: logoDisplayWidth,
+          height: logoDisplayHeight,
+        });
+      } catch (err) {
+        console.warn('Failed to embed favicon logo:', err);
+      }
+
+      const textX = margin + logoDisplayWidth + 8;
       const headerText = title ?? 'Contract Lens AI';
-      drawTextWithFallback(headerText, textX, y, titleSize, fontBold, rgb(0, 0, 0));
-      y -= Math.max(titleSize, logoHeight) + 12;
+      const maxTitleWidth = pageWidth - margin - textX; // available width for title
+
+      // Wrap title if it's too long
+      const titleWords = headerText.split(/\s+/);
+      const titleLines: string[] = [];
+      let currentLine = '';
+      for (const word of titleWords) {
+        const test = currentLine ? `${currentLine} ${word}` : word;
+        let testWidth = 0;
+        try { testWidth = fontBold.widthOfTextAtSize(test, titleSize); } catch { testWidth = test.length * titleSize * 0.55; }
+        if (testWidth > maxTitleWidth && currentLine) {
+          titleLines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = test;
+        }
+      }
+      if (currentLine) titleLines.push(currentLine);
+
+      // Draw each title line
+      for (const line of titleLines) {
+        drawTextWithFallback(line, textX, y, titleSize, fontBold, rgb(0, 0, 0));
+        y -= titleSize + 4;
+      }
+      y -= 8; // extra space after title block
 
       // Metadata — left-aligned, muted
       const info: string[] = [];
@@ -329,7 +366,7 @@ export async function POST(req: NextRequest) {
       y -= 16;
     };
 
-    drawProfessionalHeader();
+    await drawProfessionalHeader();
 
     const maxLineWidth = pageWidth - margin * 2;
 
@@ -797,44 +834,6 @@ export async function POST(req: NextRequest) {
       }
       return out;
     };
-
-    // Positions the logo with its top-left at (x, yTop). Width controls overall size.
-    function drawContractLensLogo(x: number, yTop: number, width: number, color = rgb(0, 0, 0)) {
-      // Original viewBox: 910 x 934
-      const vbW = 910;
-      const vbH = 934;
-      const scale = width / vbW;
-      const height = vbH * scale;
-      const y = yTop - height; // convert to bottom-left anchor for PDF
-
-      const border = (w: number) => Math.max(0.5, w * scale);
-
-      const p1 =
-        'M647.664 197.775C569.13 189.049 525.5 145.419 516.774 66.8849C508.048 145.419 464.418 189.049 385.884 197.775C464.418 206.501 508.048 250.131 516.774 328.665C525.5 250.131 569.13 206.501 647.664 197.775Z';
-      const p2 =
-        'M516.774 304.217C510.299 275.491 498.208 252.087 480.335 234.214C462.462 216.341 439.058 204.251 410.333 197.775C439.059 191.3 462.462 179.209 480.335 161.336C498.208 143.463 510.299 120.06 516.774 91.334C523.25 120.059 535.34 143.463 553.213 161.336C571.086 179.209 594.49 191.3 623.216 197.775C594.49 204.251 571.086 216.341 553.213 234.214C535.34 252.087 523.25 275.491 516.774 304.217Z';
-      const p3 =
-        'M857.5 508.116C763.259 497.644 710.903 445.288 700.432 351.047C689.961 445.288 637.605 497.644 543.364 508.116C637.605 518.587 689.961 570.943 700.432 665.184C710.903 570.943 763.259 518.587 857.5 508.116Z';
-      const p4 =
-        'M700.432 615.957C691.848 589.05 678.575 566.357 660.383 548.165C642.191 529.973 619.499 516.7 592.593 508.116C619.499 499.533 642.191 486.258 660.383 468.066C678.575 449.874 691.848 427.181 700.432 400.274C709.015 427.181 722.289 449.874 740.481 468.066C758.673 486.258 781.365 499.533 808.271 508.116C781.365 516.7 758.673 529.973 740.481 548.165C722.289 566.357 709.015 589.05 700.432 615.957Z';
-      const p5 =
-        'M889.949 121.237C831.049 114.692 798.326 81.9698 791.782 23.0692C785.237 81.9698 752.515 114.692 693.614 121.237C752.515 127.781 785.237 160.504 791.782 219.404C798.326 160.504 831.049 127.781 889.949 121.237Z';
-      const p6 =
-        'M791.782 196.795C786.697 176.937 777.869 160.567 765.16 147.858C752.452 135.15 736.082 126.322 716.226 121.237C736.082 116.152 752.452 107.324 765.16 94.6152C777.869 81.9065 786.697 65.5368 791.782 45.6797C796.867 65.5367 805.695 81.9066 818.403 94.6152C831.112 107.324 847.481 116.152 867.338 121.237C847.481 126.322 831.112 135.15 818.403 147.858C805.694 160.567 796.867 176.937 791.782 196.795Z';
-      const p7 =
-        'M760.632 764.337C720.719 814.616 669.835 855.1 611.872 882.692C553.91 910.285 490.404 924.255 426.213 923.533C362.022 922.812 298.846 907.419 241.518 878.531C184.19 849.643 134.228 808.026 95.4548 756.863C56.6815 705.7 30.1238 646.346 17.8129 583.343C5.50206 520.339 7.76432 455.354 24.4266 393.359C41.0889 331.364 71.7099 274.001 113.947 225.658C156.184 177.315 208.919 139.273 268.117 114.442';
-
-      // Draw strokes and fills
-      page.drawSvgPath(p1, { x, y, scale, borderColor: color, borderWidth: border(8) });
-      page.drawSvgPath(p2, { x, y, scale, color, borderColor: color, borderWidth: border(8) });
-      page.drawSvgPath(p3, { x, y, scale, borderColor: color, borderWidth: border(20) });
-      page.drawSvgPath(p4, { x, y, scale, borderColor: color, borderWidth: border(20) });
-      page.drawSvgPath(p5, { x, y, scale, borderColor: color, borderWidth: border(8) });
-      page.drawSvgPath(p6, { x, y, scale, color, borderColor: color, borderWidth: border(8) });
-      page.drawSvgPath(p7, { x, y, scale, borderColor: color, borderWidth: border(30) });
-
-      return height;
-    }
 
     // Add a variant of inline wrapping that applies a hanging indent to continuation lines
     const drawInlineWrappedHanging = (segments: Seg[], baseSize: number, firstIndent = 0, hangingIndent = 20) => {

@@ -23,7 +23,7 @@ export interface DocumentNode {
   /** Summary for parent/non-leaf nodes (generated from the node's own header text, excluding children) */
   prefix_summary?: string;
   /** Hierarchical structure index (e.g., "1", "1.1", "1.1.2") */
-  structure_index?: string;
+  structure_index?: string | null;
   start_index: number;
   end_index: number;
   /**
@@ -39,7 +39,7 @@ export interface DocumentNode {
 
 export interface DocumentIndex {
   doc_name: string;
-  doc_description?: string;
+  doc_description?: string | null;
   total_pages: number;
   structure: DocumentNode[];
 }
@@ -106,7 +106,7 @@ const DocumentNodeSchema: z.ZodType<DocumentNode> = z.lazy(() =>
     node_id: z.string().describe('Unique identifier (e.g., 0001, 0002)'),
     title: z.string().describe('Section title'),
     summary: z.string().describe('Brief summary of what this section contains'),
-    structure_index: z.string().optional().describe('Hierarchical index (e.g., 1, 1.1, 1.2)'),
+    structure_index: z.string().nullable().describe('Hierarchical index (e.g., 1, 1.1, 1.2), or null if not numbered'),
     start_index: z.number().describe('Start page number'),
     end_index: z.number().describe('End page number'),
     nodes: z.array(DocumentNodeSchema).describe('Child nodes (recursive structure)'),
@@ -115,7 +115,7 @@ const DocumentNodeSchema: z.ZodType<DocumentNode> = z.lazy(() =>
 
 const DocumentIndexSchema = z.object({
   doc_name: z.string().describe('Document name'),
-  doc_description: z.string().optional().describe('Brief description of the entire document'),
+  doc_description: z.string().nullable().describe('Brief description of the entire document'),
   structure: z.array(DocumentNodeSchema).describe('Top-level document structure nodes'),
 });
 
@@ -367,6 +367,110 @@ export class PageIndexRAG {
     }
 
     return this.iterativeTreeSearch(question);
+  }
+
+  /**
+   * Retrieves relevant context with structured citation metadata.
+   * Returns both formatted context string (with [N] markers) and citation sources.
+   */
+  async retrieveContextWithCitations(
+    question: string,
+    paperId: string,
+    paperTitle: string,
+  ): Promise<{ context: string; citations: Array<{ paperId: string; paperTitle: string; fileName: string; nodeTitle: string; pageStart: number; pageEnd: number; text: string }> }> {
+    if (!this.documentIndex) {
+      throw new Error('No document indexed. Call indexDocument() first.');
+    }
+
+    // Run the tree search to get relevant node IDs
+    const collectedNodeIds = new Set<string>();
+    let iterations = 0;
+    const maxIterations = 3;
+
+    while (iterations < maxIterations) {
+      const searchResult = await this.performTreeSearch(question, collectedNodeIds);
+      for (const id of searchResult.node_list) {
+        if (this.nodeMap.has(id)) collectedNodeIds.add(id);
+      }
+      if (searchResult.cross_references) {
+        for (const ref of searchResult.cross_references) {
+          const refNode = this.findNodeByTitle(ref);
+          if (refNode) collectedNodeIds.add(refNode.node_id);
+        }
+      }
+      if (!searchResult.needs_more_context) break;
+      iterations++;
+    }
+
+    // Extract content with citation metadata
+    return this.extractContentWithCitations(
+      Array.from(collectedNodeIds),
+      paperId,
+      paperTitle,
+    );
+  }
+
+  /**
+   * Similar to extractContentFromNodes but returns structured citations.
+   */
+  private extractContentWithCitations(
+    nodeIds: string[],
+    paperId: string,
+    paperTitle: string,
+  ): { context: string; citations: Array<{ paperId: string; paperTitle: string; fileName: string; nodeTitle: string; pageStart: number; pageEnd: number; text: string }> } {
+    const visited = new Set<string>();
+    const citations: Array<{ paperId: string; paperTitle: string; fileName: string; nodeTitle: string; pageStart: number; pageEnd: number; text: string }> = [];
+    let context = '';
+    let totalTokens = 0;
+    const maxTokens = this.config.maxContextTokens;
+
+    for (const nodeId of nodeIds) {
+      if (visited.has(nodeId)) continue;
+
+      const node = this.nodeMap.get(nodeId);
+      if (!node) continue;
+
+      const nodeText = this.getFullNodeText(node, visited);
+      if (!nodeText.trim()) continue;
+
+      const tokenEstimate = this.estimateTokens(nodeText);
+
+      if (totalTokens + tokenEstimate > maxTokens) {
+        const remainingChars = (maxTokens - totalTokens) * 4;
+        if (remainingChars > 200) {
+          const truncatedText = nodeText.slice(0, remainingChars);
+          context += `\n\n=== ${node.title} (Pages ${node.start_index}-${node.end_index}) ===\n`;
+          context += truncatedText;
+
+          citations.push({
+            paperId,
+            paperTitle,
+            fileName: this.documentIndex?.doc_name || '',
+            nodeTitle: node.title,
+            pageStart: node.start_index,
+            pageEnd: node.end_index,
+            text: truncatedText.slice(0, 500),
+          });
+        }
+        break;
+      }
+
+      context += `\n\n=== ${node.title} (Pages ${node.start_index}-${node.end_index}) ===\n`;
+      context += nodeText;
+      totalTokens += tokenEstimate;
+
+      citations.push({
+        paperId,
+        paperTitle,
+        fileName: this.documentIndex?.doc_name || '',
+        nodeTitle: node.title,
+        pageStart: node.start_index,
+        pageEnd: node.end_index,
+        text: nodeText.slice(0, 500),
+      });
+    }
+
+    return { context, citations };
   }
 
   // ===========================================================================
@@ -968,7 +1072,7 @@ Requirements:
       };
     } catch (error) {
       console.error('[PageIndexRAG] Tree generation failed:', error);
-      return this.createFallbackStructure(pages);
+      return this.createFallbackStructure(pages, documentName);
     }
   }
 
@@ -982,7 +1086,7 @@ Requirements:
       accumulatedToc = initResult;
     } catch (error) {
       console.error('[PageIndexRAG] Initial chunk ToC generation failed:', error);
-      return this.createFallbackStructure(pages);
+      return this.createFallbackStructure(pages, documentName);
     }
 
     // Process remaining chunks — continue the structure
@@ -996,7 +1100,7 @@ Requirements:
     }
 
     // Build tree from flat accumulated ToC entries
-    return this.buildTreeFromFlatEntries(accumulatedToc, pages);
+    return this.buildTreeFromFlatEntries(accumulatedToc, pages, documentName);
   }
 
   private async generateChunkToc(
@@ -1039,9 +1143,10 @@ Return ONLY the new entries (not the ones from the previous structure).`,
   private buildTreeFromFlatEntries(
     flatEntries: z.infer<typeof ChunkTocEntrySchema>['entries'],
     pages: PageContent[],
+    documentName: string,
   ): DocumentIndex {
     if (flatEntries.length === 0) {
-      return this.createFallbackStructure(pages);
+      return this.createFallbackStructure(pages, documentName);
     }
 
     // Convert to common format and use postProcessingToTree
@@ -1054,13 +1159,13 @@ Return ONLY the new entries (not the ones from the previous structure).`,
     const structure = this.postProcessingToTree(entries, pages.length, pages[0].pageNumber);
 
     return {
-      doc_name: 'Document',
+      doc_name: documentName,
       total_pages: pages.length,
       structure,
     };
   }
 
-  private createFallbackStructure(pages: PageContent[]): DocumentIndex {
+  private createFallbackStructure(pages: PageContent[], documentName: string = 'Unknown Document'): DocumentIndex {
     const structure: DocumentNode[] = [];
     let nodeCounter = 1;
 
@@ -1082,7 +1187,7 @@ Return ONLY the new entries (not the ones from the previous structure).`,
     }
 
     return {
-      doc_name: 'Unknown Document',
+      doc_name: documentName,
       doc_description: 'Automatically generated fallback structure.',
       total_pages: pages.length,
       structure,

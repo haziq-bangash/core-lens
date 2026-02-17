@@ -36,6 +36,8 @@ import {
   datetimeTool,
   extremeSearchTool,
   createPdfSearchTool,
+  textTranslateTool,
+  createLibrarySearchTool,
 } from '@/lib/tools';
 import { GroqProviderOptions } from '@ai-sdk/groq';
 import { markdownJoinerTransform } from '@/lib/parser';
@@ -598,8 +600,10 @@ export async function POST(req: Request) {
           academic_search: academicSearchTool(dataStream),
           retrieve: retrieveTool,
           datetime: datetimeTool,
+          text_translate: textTranslateTool,
           extreme_search: extremeSearchTool(dataStream, extremeSearchProvider || 'exa'),
           ...(user ? { pdf_search: createPdfSearchTool(id) } : {}),
+          ...(user ? { library_search: createLibrarySearchTool(user.id, dataStream) } : {}),
         } as any,
         experimental_repairToolCall: async ({ toolCall, tools, inputSchema, error }) => {
           if (NoSuchToolError.isInstance(error)) {

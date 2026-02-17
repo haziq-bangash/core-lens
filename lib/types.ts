@@ -5,7 +5,9 @@ import type {
   webSearchTool,
   datetimeTool,
   extremeSearchTool,
-  createPdfSearchTool
+  createPdfSearchTool,
+  textTranslateTool,
+  createLibrarySearchTool,
 } from '@/lib/tools';
 
 import type { InferUITool, UIMessage } from 'ai';
@@ -91,17 +93,31 @@ type webSearch = InferUITool<ReturnType<typeof webSearchTool>>;
 type extremeSearch = InferUITool<ReturnType<typeof extremeSearchTool>>;
 type datetimeTool = InferUITool<typeof datetimeTool>;
 type searchPDFTool = InferUITool<ReturnType<typeof createPdfSearchTool>>;
-
-// type mcpSearchTool = InferUITool<typeof mcpSearchTool>;
+type textTranslate = InferUITool<typeof textTranslateTool>;
+type librarySearch = InferUITool<ReturnType<typeof createLibrarySearchTool>>;
 
 export type ChatTools = {
   web_search: webSearch;
   academic_search: academicSearchTool;
   retrieve: retrieveTool;
   datetime: datetimeTool;
+  text_translate: textTranslate;
   extreme_search: extremeSearch;
   pdf_search: searchPDFTool;
+  library_search: librarySearch;
 };
+
+// Citation types for cite-aware chat
+export interface CitationSource {
+  citationKey: string;    // "[1]", "[2]"
+  paperId: string;
+  paperTitle: string;
+  fileName: string;
+  nodeTitle: string;      // section title
+  pageStart: number;
+  pageEnd: number;
+  text: string;           // exact source excerpt
+}
 
 export type CustomUIDataTypes = {
   appendMessage: string;
@@ -117,6 +133,7 @@ export type CustomUIDataTypes = {
   };
   extreme_search: DataExtremeSearchPart['data'];
   chat_title: { title: string };
+  citations: { citations: CitationSource[] };
 };
 
 export type ChatMessage = UIMessage<MessageMetadata, CustomUIDataTypes, ChatTools>;

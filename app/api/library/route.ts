@@ -7,6 +7,7 @@ import {
   createPaper,
   getPapersByUserId,
   saveDocumentIndex,
+  addPaperToCollection,
 } from '@/lib/db/queries';
 import { processAndIndexPaperPdf } from '@/lib/pdf-processing';
 
@@ -14,6 +15,7 @@ const UploadBodySchema = z.object({
   fileUrl: z.string().url(),
   fileName: z.string().min(1),
   fileSizeMb: z.number().optional(),
+  collectionId: z.string().optional(),
 });
 
 // GET /api/library — list user's papers
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body', details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { fileUrl, fileName, fileSizeMb } = parsed.data;
+  const { fileUrl, fileName, fileSizeMb, collectionId } = parsed.data;
 
   // Create the paper record
   const paperRecord = await createPaper({
@@ -61,6 +63,11 @@ export async function POST(req: NextRequest) {
     fileUrl,
     fileSizeMb,
   });
+
+  // Add to collection if specified
+  if (collectionId) {
+    await addPaperToCollection({ paperId: paperRecord.id, collectionId });
+  }
 
   // Create the document index record linked to the paper
   const docIndex = await saveDocumentIndex({

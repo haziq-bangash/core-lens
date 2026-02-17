@@ -8,8 +8,8 @@ import { auth } from '@/lib/auth';
 const FileSchema = z.object({
   file: z
     .instanceof(Blob)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: 'File size should be less than 5MB',
+    .refine((file) => file.size <= 50 * 1024 * 1024, {
+      message: 'File size should be less than 50MB',
     })
     .refine(
       (file) => {

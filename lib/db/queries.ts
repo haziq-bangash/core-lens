@@ -1066,12 +1066,26 @@ export async function createPaper({
   fileName,
   fileUrl,
   fileSizeMb,
+  authors,
+  abstract,
+  year,
+  doi,
+  journal,
+  sourceUrl,
+  status,
 }: {
   userId: string;
   title: string;
   fileName?: string;
   fileUrl?: string;
   fileSizeMb?: number;
+  authors?: string[];
+  abstract?: string;
+  year?: number;
+  doi?: string;
+  journal?: string;
+  sourceUrl?: string;
+  status?: string;
 }): Promise<Paper> {
   try {
     const [record] = await db
@@ -1082,7 +1096,13 @@ export async function createPaper({
         fileName,
         fileUrl,
         fileSizeMb,
-        status: 'pending',
+        authors,
+        abstract,
+        year,
+        doi,
+        journal,
+        sourceUrl,
+        status: status || 'pending',
       })
       .returning();
     return record;
@@ -1300,6 +1320,19 @@ export async function removePaperFromCollection({
       );
   } catch (error) {
     throw new ChatSDKError('bad_request:database', 'Failed to remove paper from collection');
+  }
+}
+
+export async function getCollectionsByPaperId(paperId: string): Promise<Collection[]> {
+  try {
+    const rows = await getReadReplica()
+      .select({ collection })
+      .from(paperCollection)
+      .innerJoin(collection, eq(paperCollection.collectionId, collection.id))
+      .where(eq(paperCollection.paperId, paperId));
+    return rows.map((r) => r.collection);
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get collections for paper');
   }
 }
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { getLightweightUser } from '@/app/actions';
-import { getPaperById, updatePaper, deletePaper, getTagsByPaperId } from '@/lib/db/queries';
+import { getPaperById, updatePaper, deletePaper, getTagsByPaperId, getCollectionsByPaperId } from '@/lib/db/queries';
 
 const UpdateBodySchema = z.object({
   title: z.string().min(1).optional(),
@@ -28,11 +28,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: 'Paper not found' }, { status: 404 });
   }
 
-  const tags = await getTagsByPaperId(id);
+  const [tags, collections] = await Promise.all([
+    getTagsByPaperId(id),
+    getCollectionsByPaperId(id),
+  ]);
 
   return NextResponse.json({
     paper: paperRecord,
     tags: tags.map((t) => t.tag),
+    collections,
   });
 }
 
