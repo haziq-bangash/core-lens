@@ -300,7 +300,7 @@ export function LibraryPage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen w-screen">
         <div className="text-center max-w-sm">
           <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
             <Library className="h-8 w-8 text-primary" />

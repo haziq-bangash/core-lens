@@ -5,6 +5,7 @@ import type { CitationSource } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { FileText, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CitationDetailPopover } from './citation-detail-popover';
 
 interface CitationPanelProps {
   citations: CitationSource[];
@@ -79,32 +80,34 @@ export function CitationPanel({ citations, onClose, highlightedCitation }: Citat
               {isExpanded && (
                 <div className="px-3 pb-2 space-y-1.5">
                   {group.citations.map((citation) => (
-                    <div
-                      key={citation.citationKey}
-                      id={`citation-${citation.citationKey.replace(/[\[\]]/g, '')}`}
-                      className={cn(
-                        'rounded p-2 text-xs transition-colors',
-                        highlightedCitation === citation.citationKey
-                          ? 'bg-primary/10 ring-1 ring-primary/30'
-                          : 'bg-muted/30',
-                      )}
-                    >
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="inline-flex items-center justify-center min-w-[1.25rem] h-4 px-1 text-[10px] font-semibold rounded bg-primary/10 text-primary">
-                          {citation.citationKey.replace(/[\[\]]/g, '')}
-                        </span>
-                        <span className="font-medium text-foreground truncate">
-                          {citation.nodeTitle}
-                        </span>
-                        <span className="text-muted-foreground ml-auto shrink-0">
-                          pp. {citation.pageStart}
-                          {citation.pageEnd !== citation.pageStart && `–${citation.pageEnd}`}
-                        </span>
-                      </div>
-                      <p className="text-muted-foreground leading-relaxed line-clamp-3 border-l-2 border-primary/20 pl-2">
-                        {citation.text}
-                      </p>
-                    </div>
+                    <CitationDetailPopover key={citation.citationKey} citation={citation}>
+                      <button
+                        id={`citation-${citation.citationKey.replace(/[\[\]]/g, '')}`}
+                        className={cn(
+                          'rounded p-2 text-xs transition-colors w-full text-left cursor-pointer',
+                          'hover:bg-primary/5',
+                          highlightedCitation === citation.citationKey
+                            ? 'bg-primary/10 ring-1 ring-primary/30'
+                            : 'bg-muted/30',
+                        )}
+                      >
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="inline-flex items-center justify-center min-w-5 h-4 px-1 text-[10px] font-semibold rounded bg-primary/10 text-primary">
+                            {citation.citationKey.replace(/[\[\]]/g, '')}
+                          </span>
+                          <span className="font-medium text-foreground truncate">
+                            {citation.nodeTitle}
+                          </span>
+                          <span className="text-muted-foreground ml-auto shrink-0">
+                            pp. {citation.pageStart}
+                            {citation.pageEnd !== citation.pageStart && `–${citation.pageEnd}`}
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground leading-relaxed line-clamp-3 border-l-2 border-primary/20 pl-2">
+                          {citation.text}
+                        </p>
+                      </button>
+                    </CitationDetailPopover>
                   ))}
                 </div>
               )}

@@ -39,6 +39,8 @@ import { ChatMessage } from '@/lib/types';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useSyncedPreferences } from '@/hooks/use-synced-preferences';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { MentionDropdown } from '@/components/ui/mention-dropdown';
+import { FileText as MentionFileIcon, FolderOpen as MentionFolderIcon } from 'lucide-react';
 
 
 
@@ -1095,6 +1097,9 @@ interface FormComponentProps {
   status: UseChatHelpers<ChatMessage>['status'];
   setHasSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
   onOpenSettings?: (tab?: string) => void;
+  mentions?: Array<import('@/lib/mention-types').Mention>;
+  onAddMention?: (mention: import('@/lib/mention-types').Mention) => void;
+  onRemoveMention?: (id: string, type: 'paper' | 'collection') => void;
 }
 
 const FormComponent: React.FC<FormComponentProps> = ({
@@ -1116,12 +1121,20 @@ const FormComponent: React.FC<FormComponentProps> = ({
   status,
   setHasSubmitted,
   onOpenSettings,
+  mentions = [],
+  onAddMention,
+  onRemoveMention,
 }) => {
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
   const isMounted = useRef(true);
   const isCompositionActive = useRef(false);
   const postSubmitFileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  // @mention state
+  const [mentionDropdownOpen, setMentionDropdownOpen] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const mentionTriggerPosRef = useRef<number | null>(null);
 
 
   const [isRecording, setIsRecording] = useState(false);
@@ -1444,8 +1457,31 @@ const FormComponent: React.FC<FormComponentProps> = ({
       } else {
         setInput(newValue);
       }
+
+      // @mention detection — only trigger on a fresh "@" (no space in query yet)
+      if (onAddMention) {
+        const cursorPos = event.target.selectionStart ?? newValue.length;
+        const textBeforeCursor = newValue.substring(0, cursorPos);
+        const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+
+        if (lastAtIndex >= 0) {
+          const charBeforeAt = lastAtIndex > 0 ? textBeforeCursor[lastAtIndex - 1] : ' ';
+          if (lastAtIndex === 0 || /\s/.test(charBeforeAt)) {
+            const query = textBeforeCursor.substring(lastAtIndex + 1);
+            // Only open dropdown if query has no spaces (still typing the mention)
+            // and no newlines
+            if (!query.includes(' ') && !query.includes('\n')) {
+              setMentionDropdownOpen(true);
+              setMentionQuery(query);
+              mentionTriggerPosRef.current = lastAtIndex;
+              return;
+            }
+          }
+        }
+        setMentionDropdownOpen(false);
+      }
     },
-    [setInput],
+    [setInput, onAddMention],
   );
 
   // Fire-and-forget: trigger background PDF indexing after upload
@@ -2135,8 +2171,40 @@ const FormComponent: React.FC<FormComponentProps> = ({
     }
   }, [attachments.length, status, fileInputRef]);
 
+  const handleMentionSelect = useCallback(
+    (mention: import('@/lib/mention-types').Mention) => {
+      const triggerPos = mentionTriggerPosRef.current;
+      if (triggerPos !== null && inputRef.current) {
+        const cursorPos = inputRef.current.selectionStart ?? input.length;
+        const before = input.substring(0, triggerPos);
+        const after = input.substring(cursorPos);
+        const newInput = `${before}@${mention.label} ${after}`;
+        setInput(newInput);
+      }
+      onAddMention?.(mention);
+      setMentionDropdownOpen(false);
+      setMentionQuery('');
+      mentionTriggerPosRef.current = null;
+      inputRef.current?.focus();
+    },
+    [input, setInput, onAddMention, inputRef],
+  );
+
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // When mention dropdown is open, let it handle navigation keys
+      if (mentionDropdownOpen) {
+        if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab'].includes(event.key)) {
+          // Let cmdk handle these via its own event listeners
+          return;
+        }
+        if (event.key === 'Escape') {
+          setMentionDropdownOpen(false);
+          event.preventDefault();
+          return;
+        }
+      }
+
       if (event.key === 'Enter' && !isCompositionActive.current) {
         if (isMobile) {
           // On mobile, allow Enter to create new lines only
@@ -2162,7 +2230,7 @@ const FormComponent: React.FC<FormComponentProps> = ({
         }
       }
     },
-    [isProcessing, isRecording, submitForm, inputRef, isMobile],
+    [isProcessing, isRecording, submitForm, inputRef, isMobile, mentionDropdownOpen],
   );
 
   const resizeTextarea = useCallback(() => {
@@ -2287,8 +2355,44 @@ const FormComponent: React.FC<FormComponentProps> = ({
             </div>
           )}
 
+          {/* Mention badges */}
+          {mentions.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 px-3 py-2">
+              {mentions.map((m) => (
+                <span
+                  key={`${m.type}-${m.id}`}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 text-primary px-2 py-1 text-xs font-medium"
+                >
+                  {m.type === 'paper' ? (
+                    <MentionFileIcon className="h-3 w-3" />
+                  ) : (
+                    <MentionFolderIcon className="h-3 w-3" />
+                  )}
+                  <span className="max-w-48 truncate">{m.label}</span>
+                  {onRemoveMention && (
+                    <button
+                      onClick={() => onRemoveMention(m.id, m.type)}
+                      className="ml-0.5 rounded-full p-0.5 hover:bg-primary/20 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* Form container */}
           <div className="relative">
+            {/* @mention dropdown */}
+            {mentionDropdownOpen && user && onAddMention && (
+              <MentionDropdown
+                query={mentionQuery}
+                onSelect={handleMentionSelect}
+                onClose={() => setMentionDropdownOpen(false)}
+              />
+            )}
+
             {/* Shadow-like background blur effect */}
             <div className="absolute -inset-1 rounded-2xl bg-primary/3 dark:bg-primary/3 blur-sm! pointer-events-none z-9999 shadow" />
             <div

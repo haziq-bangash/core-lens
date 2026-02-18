@@ -58,6 +58,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useUsageData } from '@/hooks/use-usage-data';
 import { useUser } from '@/contexts/user-context';
 import { useOptimizedScroll } from '@/hooks/use-optimized-scroll';
+import { useMentions } from '@/hooks/use-mentions';
 
 // Utility and type imports
 import { ChatSDKError } from '@/lib/errors';
@@ -91,7 +92,11 @@ const ChatInterface = memo(
     const { state } = useSidebar();
     const [query] = useQueryState('query', parseAsString.withDefault(''));
     const [q] = useQueryState('q', parseAsString.withDefault(''));
+    const [paperId] = useQueryState('paperId', parseAsString.withDefault(''));
     const [input, setInput] = useLocalStorage<string>('contract-lens-draft-input', '');
+    const { mentions, addMention, removeMention, clearMentions } = useMentions();
+    const mentionsRef = useRef(mentions);
+    mentionsRef.current = mentions;
     const [localChatTitle, setLocalChatTitle] = useState<string>(chatTitle || (initialChatId ? 'Chat' : 'New Chat'));
     const [isEditingTitle, setIsEditingTitle] = useState(false); // legacy inline edit (to be removed)
     const [titleInput, setTitleInput] = useState(localChatTitle);
@@ -349,6 +354,7 @@ const ChatInterface = memo(
               timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
               isCustomInstructionsEnabled: isCustomInstructionsEnabledRef.current,
               ...(initialChatId ? { chat_id: initialChatId } : {}),
+              ...(mentionsRef.current.length > 0 ? { mentions: mentionsRef.current } : {}),
               ...body,
             },
           };
@@ -468,6 +474,25 @@ const ChatInterface = memo(
       resumeStream,
       setMessages,
     });
+
+    // Auto-mention paper from URL query param (?paperId=...)
+    useEffect(() => {
+      if (paperId && !mentions.some((m) => m.id === paperId)) {
+        fetch(`/api/library/${paperId}`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            if (data?.paper) {
+              addMention({
+                type: 'paper',
+                id: data.paper.id,
+                label: data.paper.title,
+              });
+            }
+          })
+          .catch(() => {});
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [paperId]);
 
     useEffect(() => {
       if (status) {
@@ -998,6 +1023,9 @@ const ChatInterface = memo(
                         dispatch({ type: 'SET_HAS_SUBMITTED', payload: newValue });
                       }}
                       onOpenSettings={handleOpenSettings}
+                      mentions={mentions}
+                      onAddMention={addMention}
+                      onRemoveMention={removeMention}
                     />
 
                     {/* Example Categories - show only on initial state */}

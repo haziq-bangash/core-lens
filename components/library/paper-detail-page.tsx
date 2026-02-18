@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   ArrowLeft,
@@ -71,6 +71,8 @@ interface PaperDetailPageProps {
 export function PaperDetailPage({ paperId }: PaperDetailPageProps) {
   const { user } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const targetPage = searchParams.get('page');
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -317,7 +319,7 @@ export function PaperDetailPage({ paperId }: PaperDetailPageProps) {
             <Button
               size="sm"
               className="gap-1.5"
-              onClick={() => router.push(`/new?paperId=${paper.id}`)}
+              onClick={() => router.push(`/?paperId=${paper.id}`)}
               disabled={paper.status !== 'ready'}
             >
               <MessageSquare className="h-3.5 w-3.5" />
@@ -780,7 +782,7 @@ export function PaperDetailPage({ paperId }: PaperDetailPageProps) {
                 <main className="flex-1 bg-muted/30 flex flex-col min-w-0">
                   {paper.fileUrl ? (
                     <iframe
-                      src={paper.fileUrl}
+                      src={targetPage ? `${paper.fileUrl}#page=${targetPage}` : paper.fileUrl}
                       className="flex-1 w-full border-0"
                       title={`PDF: ${paper.title}`}
                     />

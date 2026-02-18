@@ -21,6 +21,8 @@ import {
   saveChat,
   saveMessages,
   incrementMessageUsage,
+  getPapersByCollectionId,
+  getPaperById,
 } from '@/lib/db/queries';
 import { ChatSDKError } from '@/lib/errors';
 import { createResumableStreamContext, type ResumableStreamContext } from 'resumable-stream';
@@ -42,6 +44,7 @@ import {
 import { GroqProviderOptions } from '@ai-sdk/groq';
 import { markdownJoinerTransform } from '@/lib/parser';
 import { ChatMessage } from '@/lib/types';
+import type { Mention } from '@/lib/mention-types';
 import { OpenAIResponsesProviderOptions } from '@ai-sdk/openai';
 import { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { getCachedCustomInstructionsByUserId, getCachedUserPreferencesByUserId } from '@/lib/user-data-server';
@@ -203,6 +206,7 @@ export async function POST(req: Request) {
     isCustomInstructionsEnabled,
     searchProvider,
     extremeSearchProvider,
+    mentions,
   } = await req.json();
   recordTiming('parse_request_body', opStart);
 
@@ -311,6 +315,33 @@ export async function POST(req: Request) {
 
   customInstructions = customInstructionsResult;
 
+  // Resolve @mentions to paper IDs
+  let mentionedPaperIds: string[] = [];
+  let mentionContext = '';
+  if (mentions && Array.isArray(mentions) && mentions.length > 0) {
+    const paperIdSet = new Set<string>();
+    const mentionLabels: string[] = [];
+
+    for (const mention of mentions as Mention[]) {
+      if (mention.type === 'paper') {
+        paperIdSet.add(mention.id);
+        mentionLabels.push(mention.label);
+      } else if (mention.type === 'collection') {
+        const collectionPapers = await getPapersByCollectionId(mention.id);
+        for (const p of collectionPapers) {
+          paperIdSet.add(p.id);
+        }
+        mentionLabels.push(`[Collection: ${mention.label}]`);
+      }
+    }
+
+    mentionedPaperIds = Array.from(paperIdSet);
+
+    if (mentionLabels.length > 0) {
+      mentionContext = `\n\n## PAPER CONTEXT\nThe user has mentioned these papers/collections: ${mentionLabels.map(l => `"${l}"`).join(', ')}. When using library_search, focus your response on these specific papers. Use the library_search tool to find relevant information.`;
+    }
+  }
+
   // Save user message (chat is guaranteed to exist now) - await synchronously (no background)
   if (user) {
     opStart = Date.now();
@@ -391,7 +422,8 @@ export async function POST(req: Request) {
             : '\n') +
           (latitude && longitude && userPreferencesResult?.preferences?.['contract-lens-location-metadata-enabled'] === true
             ? `\n\nThe user's location is ${latitude}, ${longitude}.`
-            : ''),
+            : '') +
+          mentionContext,
         toolChoice: 'auto',
         ...(model === 'contract-lens-anthropic' || model === 'contract-lens-anthropic-think'
           ? {
@@ -603,7 +635,7 @@ export async function POST(req: Request) {
           text_translate: textTranslateTool,
           extreme_search: extremeSearchTool(dataStream, extremeSearchProvider || 'exa'),
           ...(user ? { pdf_search: createPdfSearchTool(id) } : {}),
-          ...(user ? { library_search: createLibrarySearchTool(user.id, dataStream) } : {}),
+          ...(user ? { library_search: createLibrarySearchTool(user.id, dataStream, mentionedPaperIds.length > 0 ? mentionedPaperIds : undefined) } : {}),
         } as any,
         experimental_repairToolCall: async ({ toolCall, tools, inputSchema, error }) => {
           if (NoSuchToolError.isInstance(error)) {

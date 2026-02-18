@@ -8,14 +8,14 @@ import {
   getTagsByPaperId,
 } from '@/lib/db/queries';
 import { LibraryRAG, type PaperMeta } from '@/lib/library-rag';
-import type { CitationSource } from '@/lib/types';
-import type { DataStreamWriter } from 'ai';
+import type { ChatMessage } from '@/lib/types';
+import type { UIMessageStreamWriter } from 'ai';
 
-export function createLibrarySearchTool(userId: string, dataStream: DataStreamWriter) {
+export function createLibrarySearchTool(userId: string, dataStream: UIMessageStreamWriter<ChatMessage>, defaultPaperIds?: string[]) {
   return tool({
     description:
       'Search across research papers in the user\'s library. Use this when the user asks questions about their uploaded papers or research documents.',
-    parameters: z.object({
+    inputSchema: z.object({
       query: z.string().describe('The search query to find relevant information in the library'),
       paperIds: z
         .array(z.string())
@@ -23,13 +23,17 @@ export function createLibrarySearchTool(userId: string, dataStream: DataStreamWr
         .describe('Optional: specific paper IDs to search within. If omitted, searches all papers.'),
       maxPapers: z
         .number()
-        .default(5)
-        .describe('Maximum number of papers to search across'),
+        .optional()
+        .describe('Maximum number of papers to search across (default: 5)'),
     }),
-    execute: async ({ query, paperIds, maxPapers = 5 }) => {
+    execute: async ({ query, paperIds, maxPapers }) => {
+      const effectiveMaxPapers = maxPapers ?? 5;
+      // Use explicit paperIds from LLM, fall back to defaultPaperIds from @mentions
+      const effectivePaperIds = paperIds?.length ? paperIds : defaultPaperIds;
+
       // Fetch document indices
-      const indices = paperIds?.length
-        ? await getReadyDocumentIndicesByPaperIds(paperIds)
+      const indices = effectivePaperIds?.length
+        ? await getReadyDocumentIndicesByPaperIds(effectivePaperIds)
         : await getReadyDocumentIndicesByUserId(userId);
 
       if (indices.length === 0) {
@@ -69,7 +73,7 @@ export function createLibrarySearchTool(userId: string, dataStream: DataStreamWr
       }
 
       // Use LibraryRAG for two-stage cross-document search
-      const libraryRag = new LibraryRAG({ maxPapers });
+      const libraryRag = new LibraryRAG({ maxPapers: effectiveMaxPapers });
       const { results, citations, totalPapersSearched, totalPapersAvailable } =
         await libraryRag.search(query, papers);
 

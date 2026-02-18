@@ -6,7 +6,7 @@ import { put } from '@vercel/blob';
 import { getLightweightUser } from '@/app/actions';
 import { createPaper, saveDocumentIndex } from '@/lib/db/queries';
 import { processAndIndexPaperPdf } from '@/lib/pdf-processing';
-import { getPaperByDoi, type SemanticScholarPaper } from '@/lib/semantic-scholar';
+import { getPaperByDoi, getDoi, type SemanticScholarPaper } from '@/lib/semantic-scholar';
 
 const ImportSchema = z.object({
   doi: z.string().optional(),
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     const year = metadata?.year ?? undefined;
     const abstract = metadata?.abstract ?? undefined;
     const journal = metadata?.venue ?? undefined;
-    const resolvedDoi = metadata?.doi || doi || undefined;
+    const resolvedDoi = (metadata ? getDoi(metadata) : undefined) || doi || undefined;
 
     // Try to get open access PDF
     const pdfUrl = metadata?.openAccessPdf?.url || url || null;
@@ -86,18 +86,24 @@ export async function POST(req: NextRequest) {
           const fileName = `${title.slice(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
           // Upload to Vercel Blob
-          const blob = await put(`mplx/library/${fileName}`, new Uint8Array(pdfBuffer), {
+          const blob = await put(`mplx/library/${fileName}`, Buffer.from(pdfBuffer), {
             access: 'public',
             addRandomSuffix: true,
           });
 
-          // Process and index the PDF
+          // Create document index record, then process
+          const docIndex = await saveDocumentIndex({
+            paperId: paper.id,
+            userId: lightweightUser.userId,
+            fileName,
+            fileUrl: blob.url,
+          });
+
           await processAndIndexPaperPdf({
             paperId: paper.id,
+            documentIndexId: docIndex.id,
             fileUrl: blob.url,
             fileName,
-            fileSizeMb: pdfBuffer.byteLength / (1024 * 1024),
-            saveDocumentIndex,
           });
         } catch (error) {
           console.error('[Import] Failed to download/index PDF:', error);

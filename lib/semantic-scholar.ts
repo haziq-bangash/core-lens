@@ -1,4 +1,5 @@
 const BASE_URL = 'https://api.semanticscholar.org/graph/v1';
+const RECOMMENDATIONS_URL = 'https://api.semanticscholar.org/recommendations/v1/papers';
 
 const FIELDS = 'paperId,title,authors,year,abstract,venue,citationCount,openAccessPdf,externalIds';
 
@@ -95,7 +96,7 @@ export async function getRecommendations(
   options?: { negativePaperIds?: string[]; limit?: number },
 ): Promise<SemanticScholarPaper[]> {
   const res = await fetchWithRetry(
-    `${BASE_URL}/paper/search/recommendations?fields=${FIELDS}&limit=${options?.limit ?? 10}`,
+    `${RECOMMENDATIONS_URL}?fields=${FIELDS}&limit=${options?.limit ?? 10}`,
     {
       method: 'POST',
       body: JSON.stringify({
