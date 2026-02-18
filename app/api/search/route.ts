@@ -6,9 +6,7 @@ import {
   getLightweightUser,
 } from '@/app/actions';
 import {
-  convertToModelMessages,
   streamText,
-  pruneMessages,
   NoSuchToolError,
   createUIMessageStream,
   generateObject,
@@ -48,6 +46,7 @@ import type { Mention } from '@/lib/mention-types';
 import { OpenAIResponsesProviderOptions } from '@ai-sdk/openai';
 import { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { getCachedCustomInstructionsByUserId, getCachedUserPreferencesByUserId } from '@/lib/user-data-server';
+import { summarizeContext } from '@/lib/context-summarization';
 import { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
 import { unauthenticatedRateLimit, getClientIdentifier } from '@/lib/rate-limit';
 import { CohereChatModelOptions } from '@ai-sdk/cohere';
@@ -372,21 +371,11 @@ export async function POST(req: Request) {
   const streamStartTime = Date.now();
   const initialMessageIds = new Set(messages.map((message: any) => message.id));
 
-  const shouldPrune = messages.length > 10;
-
-  const prunedMessages = shouldPrune
-    ? await (async () => {
-        console.log(`🔧 Pruning messages: ${messages.length} messages`);
-        const pruned = pruneMessages({
-          reasoning: 'none',
-          messages: await convertToModelMessages(messages),
-          toolCalls: 'before-last-3-messages',
-          emptyMessages: 'remove',
-        });
-        console.log(`✂️ Pruned to ${pruned.length} messages`);
-        return pruned;
-      })()
-    : await convertToModelMessages(messages);
+  // Context summarization: summarizes older messages to stay within token limits
+  const { messages: processedMessages, wasSummarized, summaryText } = await summarizeContext(messages);
+  if (wasSummarized) {
+    console.log(`📝 Context was summarized. Summary: ${summaryText?.slice(0, 100)}...`);
+  }
 
   const stream = createUIMessageStream<ChatMessage>({
     execute: async ({ writer: dataStream }) => {
@@ -401,7 +390,7 @@ export async function POST(req: Request) {
 
       const result = streamText({
         model: contractLens.languageModel(model),
-        messages: prunedMessages,
+        messages: processedMessages,
         ...getModelParameters(model),
         stopWhen: stepCountIs(5),
         ...(model === "contract-lens-default" || model === "contract-lens-grok4.1-fast-thinking" || model === "contract-lens-glm-4.6" || model === "contract-lens-glm-4.6v-flash" || model === "contract-lens-glm-4.6v" ? {

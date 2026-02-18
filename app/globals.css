@@ -312,68 +312,80 @@
 }
 
 :root {
-  /* Sugar-high syntax highlighting - Light theme */
-  --sh-identifier: #003d3a;
-  --sh-keyword: #00524e;
-  --sh-string: #2a6b68;
-  --sh-class: #005f5b;
-  --sh-property: #003d3a;
-  --sh-entity: #4a7f7c;
-  --sh-jsxliterals: #6b9693;
-  --sh-sign: #00302e;
-  --sh-comment: #8aaba9;
+  /* Sugar-high syntax highlighting — Newspaper ink tones */
+  --sh-identifier: #1a1a1a;
+  --sh-keyword: #2c2c2c;
+  --sh-string: #5a4a3a;
+  --sh-class: #222222;
+  --sh-property: #1a1a1a;
+  --sh-entity: #4a4a3e;
+  --sh-jsxliterals: #6b6b5e;
+  --sh-sign: #111111;
+  --sh-comment: #9a9a8e;
 
+  /* Font — unchanged */
   --font-be-vietnam-pro: 'Be Vietnam Pro';
-  --background: #fdfbed;
-  --foreground: #0c1618;
-  --card: #ffffff;
-  --card-foreground: #0c1618;
-  --popover: #ffffff;
-  --popover-foreground: #0c1618;
-  --primary: #003d3a;
-  --primary-foreground: #fdfbed;
-  --secondary: #e8f0ef;
-  --secondary-foreground: #003d3a;
-  --muted: #f0f4f3;
-  --muted-foreground: #4a5c5b;
-  --accent: #d9e5e4;
-  --accent-foreground: #0c1618;
-  --destructive: #d9534f;
+
+  /* Core palette — warm newsprint paper */
+  --background: #f4f0e5;
+  --foreground: #121212;
+  --card: #faf7ee;
+  --card-foreground: #121212;
+  --popover: #faf7ee;
+  --popover-foreground: #121212;
+  --primary: #121212;
+  --primary-foreground: #f4f0e5;
+  --secondary: #e8e3d6;
+  --secondary-foreground: #121212;
+  --muted: #ece7da;
+  --muted-foreground: #5c5c52;
+  --accent: #ddd8ca;
+  --accent-foreground: #121212;
+  --destructive: #c41e1e;
   --destructive-foreground: #ffffff;
-  --border: #c5d5d4;
-  --input: #d1dfde;
-  --ring: #003d3a;
-  --chart-1: #003d3a;
-  --chart-2: #2a6b68;
-  --chart-3: #4a7f7c;
-  --chart-4: #00524e;
-  --chart-5: #6b9693;
-  --sidebar: #f7f5e8;
-  --sidebar-foreground: #0c1618;
-  --sidebar-primary: #003d3a;
-  --sidebar-primary-foreground: #fdfbed;
-  --sidebar-accent: #e8f0ef;
-  --sidebar-accent-foreground: #0c1618;
-  --sidebar-border: #c5d5d4;
-  --sidebar-ring: #8aaba9;
+  --border: #c8c2b2;
+  --input: #d4cfc1;
+  --ring: #121212;
+
+  /* Charts — monochrome ink tones */
+  --chart-1: #121212;
+  --chart-2: #3a3a3a;
+  --chart-3: #5c5c5c;
+  --chart-4: #7a7a7a;
+  --chart-5: #999999;
+
+  /* Sidebar — aged paper tone */
+  --sidebar: #ece7d8;
+  --sidebar-foreground: #121212;
+  --sidebar-primary: #121212;
+  --sidebar-primary-foreground: #f4f0e5;
+  --sidebar-accent: #e0dace;
+  --sidebar-accent-foreground: #121212;
+  --sidebar-border: #c8c2b2;
+  --sidebar-ring: #999999;
+
+  /* Layout — unchanged */
   --radius: 0.625rem;
+
+  /* Shadows — warmed up to match newsprint */
   --shadow-x: 0;
   --shadow-y: 1px;
   --shadow-blur: 3px;
   --shadow-spread: 0px;
   --shadow-opacity: 0.1;
-  --shadow-color: #0c1618;
-  --shadow-2xs: 0 1px 3px 0px rgba(12, 22, 24, 0.05);
-  --shadow-xs: 0 1px 3px 0px rgba(12, 22, 24, 0.05);
-  --shadow-sm: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 1px 2px -1px rgba(12, 22, 24, 0.1);
-  --shadow: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 1px 2px -1px rgba(12, 22, 24, 0.1);
-  --shadow-md: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 2px 4px -1px rgba(12, 22, 24, 0.1);
-  --shadow-lg: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 4px 6px -1px rgba(12, 22, 24, 0.1);
-  --shadow-xl: 0 1px 3px 0px rgba(12, 22, 24, 0.1), 0 8px 10px -1px rgba(12, 22, 24, 0.1);
-  --shadow-2xl: 0 1px 3px 0px rgba(12, 22, 24, 0.25);
+  --shadow-color: #1a1a1a;
+  --shadow-2xs: 0 1px 3px 0px rgba(26, 26, 26, 0.05);
+  --shadow-xs: 0 1px 3px 0px rgba(26, 26, 26, 0.05);
+  --shadow-sm: 0 1px 3px 0px rgba(26, 26, 26, 0.1), 0 1px 2px -1px rgba(26, 26, 26, 0.1);
+  --shadow: 0 1px 3px 0px rgba(26, 26, 26, 0.1), 0 1px 2px -1px rgba(26, 26, 26, 0.1);
+  --shadow-md: 0 1px 3px 0px rgba(26, 26, 26, 0.1), 0 2px 4px -1px rgba(26, 26, 26, 0.1);
+  --shadow-lg: 0 1px 3px 0px rgba(26, 26, 26, 0.1), 0 4px 6px -1px rgba(26, 26, 26, 0.1);
+  --shadow-xl: 0 1px 3px 0px rgba(26, 26, 26, 0.1), 0 8px 10px -1px rgba(26, 26, 26, 0.1);
+  --shadow-2xl: 0 1px 3px 0px rgba(26, 26, 26, 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }
+
 
 .dark {
   /* Sugar-high syntax highlighting - Dark theme */
@@ -436,6 +448,18 @@
   --shadow-xl: 0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 8px 10px -1px rgba(0, 0, 0, 0.2);
   --shadow-2xl: 0 1px 3px 0px rgba(0, 0, 0, 0.35);
 }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
 
 @theme inline {
   --font-be-vietnam-pro: var(--font-be-vietnam-pro);

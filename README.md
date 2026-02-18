@@ -1,202 +1,160 @@
 # Contract Lens
 
-A minimalistic AI-powered search engine that helps you find information on the internet.
-
-<a href="https://vercel.com/oss">
-  <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge.svg" />
-</a>
-
-<br />
+An agentic AI research platform that finds, analyzes, and cites information from the web and your personal research library.
 
 ![Contract Lens](/app/opengraph-image.png)
 
-<br />
-
 🔗 **[Try Contract Lens at contract-lens.ai](https://contract-lens.ai)**
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/haziqbangash/contract-lens)
-
-## Powered By
-
-<div align="center">
-
-|          [Vercel AI SDK](https://sdk.vercel.ai/docs)          |                [Exa AI](https://exa.ai)                |
-| :-----------------------------------------------------------: | :----------------------------------------------------: |
-| <img src="/public/one.svg" alt="Vercel AI SDK" height="40" /> | <img src="/public/exa.png" alt="Exa AI" height="40" /> |
-|            For AI model integration and streaming             |          For web search and content retrieval          |
-
-</div>
-
-## Special Thanks
-
-<div align="center" markdown="1">
-
-[![Warp](https://github.com/user-attachments/assets/2bda420d-4211-4900-a37e-e3c7056d799c)](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=contract-lens)<br>
-
-### **[Warp, the intelligent terminal](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=contract-lens)**<br>
-
-[Available for MacOS, Linux, & Windows](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=contract-lens)<br>
-[Visit warp.dev to learn more](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=contract-lens)
-
-</div>
 
 ## Features
 
-### Core Search & Information
+### Research Tools
 
-- **AI-powered search**: Get answers to your questions using multiple AI models including xAI's Grok, Anthropic's Claude, Google's Gemini, and OpenAI's GPT models
-- **Web search**: Search the web using Exa's API with support for multiple queries, search depths, and topics
-- **URL content retrieval**: Extract and analyze content from any URL using Exa AI with live crawling capabilities
-- **Reddit search**: Search Reddit content with time range filtering using Tavily API
-- **X (Twitter) search**: Search X posts with date ranges and specific handle filtering using xAI Live Search
-- **Extreme search**: Advanced multi-step search capability for complex queries
+- **Web Search** — Search the web using Exa AI with support for multiple queries, search depths, and topic filtering
+- **Academic Search** — Find scholarly papers and research articles with abstracts and summaries via Exa AI
+- **Library Search** — Search across your personal research library of uploaded papers with RAG-powered retrieval
+- **Extreme Search** — Deep, multi-step research for complex queries requiring extensive investigation
+- **PDF Search** — Search within specific PDFs attached to a chat conversation
+- **URL Retrieval** — Extract and analyze content from any URL with live crawling
+- **Text Translation** — Translate research content between languages using AI models
 
-### Academic & Research
+### Research Library
 
-- **Academic search**: Search for academic papers and research using Exa AI with abstracts and summaries
-- **YouTube search**: Find YouTube videos with detailed information, captions, and timestamps powered by Exa AI
+- Upload and manage academic papers (PDF)
+- Organize papers into collections with tags
+- Full-text search across your entire library
+- AI-generated notes and annotations
+- Paper discovery panel for finding related work
+- Cross-reference and synthesize across multiple papers using `@mentions`
+- Inline citations with source tracking (paper title, section, page numbers)
 
-### Entertainment & Media
+### AI Models
 
-- **Movie & TV show search**: Get detailed information about movies and TV shows using TMDB API
-- **Trending movies**: Discover trending movies with cast, ratings, and detailed information
-- **Trending TV shows**: Find popular TV shows with comprehensive metadata
+Contract Lens supports **90+ AI models** across multiple providers:
 
-### Financial & Data Analysis
+| Provider | Models |
+| :--- | :--- |
+| **xAI** | Grok 4, Grok 4.1 Fast, Grok 3, Grok 3 Mini, Grok Code |
+| **OpenAI** | GPT-5.2, GPT-5.1, GPT-5, GPT-4.1, o3, o4-mini, Codex |
+| **Anthropic** | Claude Opus 4.5, Claude Sonnet 4.5, Claude Haiku 4.5 |
+| **Google** | Gemini 3 Pro, Gemini 3 Flash, Gemini 2.5 Pro/Flash |
+| **DeepSeek** | DeepSeek V3.2, DeepSeek R1 |
+| **Alibaba** | Qwen 3 (4B–235B), Qwen 3 Coder, Qwen 3 VL |
+| **Mistral** | Mistral Large, Magistral Medium/Small, Devstral |
+| **Cohere** | Command A, Command A Reasoning |
+| **GLM** | GLM 4.7, GLM 4.6, GLM 4.6V |
+| **MiniMax** | MiniMax M2.1, M2 |
+| **Others** | Kimi K2, Llama 3.3 70B, Trinity Mini, Nova 2 Lite |
 
-- **Stock charts**: Generate interactive stock charts with news integration using yfinance and Tavily
-- **Currency converter**: Convert between currencies with real-time exchange rates using yfinance
-- **Code interpreter**: Write and execute Python code with chart generation capabilities using Daytona sandbox
+Many models support both standard and thinking/reasoning modes.
 
-### Location & Travel
+## Tech Stack
 
-- **Weather information**: Get current weather and forecasts for any location using OpenWeather API
-- **Maps & geocoding**: Find places and get coordinates using Google Maps API
-- **Nearby places search**: Discover nearby restaurants, attractions, and services with Google Places API
-- **Flight tracking**: Track real-time flight information using Aviation Stack API
+- [Next.js](https://nextjs.org/) — React framework
+- [Vercel AI SDK](https://sdk.vercel.ai/docs) — AI model integration and streaming
+- [Exa AI](https://exa.ai/) — Web search and content retrieval
+- [Tailwind CSS](https://tailwindcss.com/) — Styling
+- [Shadcn/UI](https://ui.shadcn.com/) — UI components
+- [PostgreSQL](https://www.postgresql.org/) + [Drizzle ORM](https://orm.drizzle.team/) — Database
+- [Better Auth](https://github.com/better-auth/better-auth) — Authentication (GitHub, Google, X OAuth)
+- [Redis](https://redis.io/) / [Upstash](https://upstash.com/) — Caching and rate limiting
+- [Vercel AI Gateway](https://sdk.vercel.ai/docs/ai-sdk-core/settings#gateway) — Multi-provider model routing
 
-### Productivity & Utilities
+## Getting Started
 
-- **Text translation**: Translate text between languages using AI models
-- **Date & time**: Get current date and time in user's timezone with multiple format options
-- **Memory management**: Add and search personal memories using Mem0 AI
-- **MCP server search**: Search for Model Context Protocol servers using Smithery Registry
+### Prerequisites
 
-### Search Groups
+- [Node.js](https://nodejs.org/) 22+ or [Bun](https://bun.sh/)
+- [pnpm](https://pnpm.io/) package manager
+- PostgreSQL database
+- API keys for AI providers (see Environment Variables below)
 
-- **Web**: Search across the entire internet powered by Tavily
-- **Memory**: Your personal memory companion (requires authentication)
-- **Analysis**: Code execution, stock charts, and currency conversion
-- **Chat**: Direct conversation with AI models
-- **X**: Search X (Twitter) posts
-- **Reddit**: Search Reddit posts
-- **Academic**: Search academic papers and pdfs
-- **YouTube**: Search YouTube videos powered by Exa
-- **Extreme**: Deep research with multiple sources and analysis
+### Local Development
 
-## LLM Models Supported
-
-- **xAI**: Grok 3, Grok 3 Mini, Grok 2 Vision
-- **Google**: Gemini 2.5 Flash (Preview), Gemini 2.5 Pro (Preview)
-- **Anthropic**: Claude 4 Sonnet
-- **OpenAI**: GPT-4o, o4-mini, o3 (with reasoning capabilities)
-- **Groq**: Qwen QwQ 32B, Qwen 3 32B, Meta's Llama 4 Maverick
-
-## Built with
-
-- [Next.js](https://nextjs.org/) - React framework
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [Vercel AI SDK](https://sdk.vercel.ai/docs) - AI model integration
-- [Shadcn/UI](https://ui.shadcn.com/) - UI components
-- [Exa.AI](https://exa.ai/) - Web search and content retrieval
-- [Tavily](https://tavily.com/) - Search grounding for reddit search
-- [OpenWeather](https://openweathermap.org/) - Weather data
-- [Daytona](https://daytona.io/) - Code execution sandbox
-- [Google Maps](https://developers.google.com/maps) - Location services
-- [Aviation Stack](https://aviationstack.com/) - Flight tracking
-- [TMDB](https://www.themoviedb.org/) - Movie and TV data
-- [Mem0](https://mem0.ai/) - Memory management
-- [Better Auth](https://github.com/better-auth/better-auth) - Authentication
-- [Drizzle ORM](https://orm.drizzle.team/) - Database management
-- [Novita AI](https://novita.ai) - AI Inference
-
-## Set Contract Lens as your default search engine
-
-1. **Open the Chrome browser settings**:
-   - Click on the three vertical dots in the upper right corner of the browser.
-   - Select "Settings" from the dropdown menu.
-
-2. **Go to the search engine settings**:
-   - In the left sidebar, click on "Search engine."
-   - Then select "Manage search engines and site search."
-
-3. **Add a new search engine**:
-   - Click on "Add" next to "Site search."
-
-4. **Set the search engine name**:
-   - Enter `Contract Lens` in the "Search engine" field.
-
-5. **Set the search engine URL**:
-   - Enter `https://contract-lens.ai?q=%s` in the "URL with %s in place of query" field.
-
-6. **Set the search engine shortcut**:
-   - Enter `sh` in the "Shortcut" field.
-
-7. **Set Default**:
-   - Click on the three dots next to the search engine you just added.
-   - Select "Make default" from the dropdown menu.
-
-After completing these steps, you should be able to use Contract Lens as your default search engine in Chrome.
-
-### Local development
-
-#### Run via Docker
-
-The application can be run using Docker in two ways:
-
-##### Using Docker Compose (Recommended)
-
-1. Make sure you have Docker and Docker Compose installed on your system
-2. Create a `.env` file based on `.env.example` with your API keys
-3. Run the following command in the project root:
-   ```bash
-   docker compose up
-   ```
-4. The application will be available at `http://localhost:3000`
-
-##### Using Docker Directly
-
-1. Create a `.env` file based on `.env.example` with your API keys
-2. Build the Docker image:
-   ```bash
-   docker build -t contract-lens.app .
-   ```
-3. Run the container:
-   ```bash
-   docker run --env-file .env -p 3000:3000 contract-lens.app
-   ```
-
-The application uses a multi-stage build process to minimize the final image size and implements security best practices. The production image runs on Node.js LTS with Alpine Linux for a minimal footprint.
-
-#### Run with Node.js
-
-To run the application locally without Docker:
-
-1. Sign up for accounts with the required AI providers:
-   - OpenAI (required)
-   - Anthropic (required)
-   - Exa (required for web search feature)
-2. Copy `.env.example` to `.env.local` and fill in your API keys
-3. Install dependencies:
+1. Clone the repository and install dependencies:
    ```bash
    pnpm install
    ```
+
+2. Copy `.env.example` to `.env.local` and fill in your API keys
+
+3. Run database migrations:
+   ```bash
+   pnpm drizzle-kit push
+   ```
+
 4. Start the development server:
    ```bash
    pnpm dev
    ```
-5. Open `http://localhost:3000` in your browser
 
-# License
+5. Open `http://localhost:3000`
 
-This project is licensed under the AGPLv3 License - see the [LICENSE](LICENSE) file for details.
+### Docker
+
+#### Docker Compose (Recommended)
+
+```bash
+docker compose up
+```
+
+#### Docker Directly
+
+```bash
+docker build -t contract-lens.app .
+docker run --env-file .env -p 3000:3000 contract-lens.app
+```
+
+The production image uses a multi-stage build with Node.js 22 Alpine for a minimal footprint.
+
+### Environment Variables
+
+<details>
+<summary>Required server-side variables</summary>
+
+| Variable | Purpose |
+| :--- | :--- |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Authentication secret |
+| `REDIS_URL` | Redis connection |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis URL |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis token |
+| `XAI_API_KEY` | xAI / Grok models |
+| `OPENAI_API_KEY` | OpenAI models |
+| `ANTHROPIC_API_KEY` | Anthropic models |
+| `GROQ_API_KEY` | Groq inference |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Google Gemini models |
+| `EXA_API_KEY` | Exa web/academic search |
+| `TAVILY_API_KEY` | Tavily search |
+| `FIRECRAWL_API_KEY` | Web scraping |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth |
+| `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | X/Twitter OAuth |
+| `RESEND_API_KEY` | Email delivery |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob storage |
+| `QSTASH_TOKEN` | Message queue |
+
+</details>
+
+<details>
+<summary>Required client-side variables</summary>
+
+| Variable | Purpose |
+| :--- | :--- |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps |
+| `NEXT_PUBLIC_VAPI_PUBLIC_KEY` | Voice assistant |
+
+</details>
+
+## Set Contract Lens as Your Default Search Engine
+
+1. Open Chrome → **Settings** → **Search engine** → **Manage search engines and site search**
+2. Click **Add** next to "Site search"
+3. Set search engine name: `Contract Lens`
+4. Set URL: `https://contract-lens.ai?q=%s`
+5. Set shortcut: `sh`
+6. Click the three dots next to it → **Make default**
+
+## License
+
+This project is licensed under the AGPLv3 License — see the [LICENSE](LICENSE) file for details.

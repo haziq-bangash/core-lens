@@ -1711,6 +1711,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(
                   key={key}
                   citationKey={citationKey}
                   citation={citation}
+                  allCitations={libraryCitations}
                 />
               );
             } else if (type === 'citation-group') {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Brain, Search, ArrowUpRight, Bot, GraduationCap, Eye, Filter, X } from 'lucide-react';
+import { Brain, Search, ArrowUpRight, GraduationCap, Eye, Filter, X, Library, FileText, Globe, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
@@ -77,41 +77,42 @@ export default function AboutPage() {
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium rounded-none h-8 md:h-9 px-3 md:px-4"
                 onClick={() => router.push('/')}
               >
-                <span>Try Free</span>
+                <span>Start Researching</span>
               </Button>
             </div>
           </div>
         </div>
       </header>
-      {/* Hero Section - Grid Layout */}
+
+      {/* Hero Section */}
       <section className="border-b border-border bg-muted/30">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Hero Content - Takes 8 columns */}
+            {/* Hero Content */}
             <div className="col-span-12 lg:col-span-8 bg-card p-10 border-r border-b border-border">
               <div className="mb-6 inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/30">
                 <span className="text-xs font-medium text-primary uppercase tracking-wider">Open Source</span>
               </div>
-              <h2 className="text-4xl font-bold text-foreground mb-6 tracking-tight">Agentic Research Platform</h2>
+              <h2 className="text-4xl font-bold text-foreground mb-6 tracking-tight">
+                Your AI Research Assistant
+              </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                A clean, minimalistic agentic research platform for grounded, up-to-date answers. Contract Lens plans multi-step
-                work, uses tools for web grounding and document retrieval (including PDFs), cites sources, and can
-                automate recurring research with Lookout.
+                Contract Lens helps you find, read, and cite research papers faster. Ask a question in plain language
+                and get grounded answers drawn from the live web, academic databases, and your own uploaded papers
+                &mdash; complete with inline citations you can trace back to the source.
               </p>
+
               <form onSubmit={handleSearch} className="mb-6">
                 <div className="mb-4 border border-border bg-background flex flex-col">
-                  {/* Textarea area */}
                   <div className="px-4 pt-3">
                     <textarea
                       name="query"
-                      placeholder="Ask anything..."
+                      placeholder="What are the latest findings on CRISPR gene therapy for sickle cell disease?"
                       rows={2}
                       className="w-full leading-6 text-base bg-transparent focus:outline-none placeholder:text-muted-foreground resize-none"
                     />
                   </div>
-                  {/* Bottom toolbar: boxy strip */}
                   <div className="border-t border-border flex items-stretch h-12">
-                    {/* XS: Group selector visible on mobile */}
                     <div className="flex sm:hidden pl-2 pr-1">
                       <Popover>
                         <PopoverTrigger asChild>
@@ -150,7 +151,6 @@ export default function AboutPage() {
                         </PopoverContent>
                       </Popover>
                     </div>
-                    {/* Left: Group selector (sm+) */}
                     <div className="hidden sm:flex sm:w-48 md:w-56">
                       <Popover>
                         <PopoverTrigger asChild>
@@ -189,9 +189,7 @@ export default function AboutPage() {
                         </PopoverContent>
                       </Popover>
                     </div>
-                    {/* Spacer */}
                     <div className="flex-1" />
-                    {/* Right: Submit button */}
                     <div className="w-auto sm:w-40 md:w-44 border-l border-border">
                       <button
                         type="submit"
@@ -208,30 +206,58 @@ export default function AboutPage() {
                   href="/"
                   className="flex items-center justify-center h-11 gap-2 px-6 border border-border hover:border-primary hover:bg-accent transition-colors rounded-none group/link"
                 >
-                  <span className="font-medium">Try Now</span>
+                  <span className="font-medium">Try Now &mdash; No Sign-up Required</span>
                   <ArrowUpRight className="h-4 w-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
                 </Link>
               </div>
             </div>
 
-            {/* Stats Card - Takes 4 columns */}
+            {/* What Researchers Use It For */}
             <div className="col-span-12 lg:col-span-4 bg-card p-8 border-b border-border group">
-              <h3 className="text-lg font-semibold mb-6 group-hover:text-primary transition-colors">Platform Stats</h3>
+              <h3 className="text-lg font-semibold mb-6 group-hover:text-primary transition-colors">What Researchers Use It For</h3>
               <div className="grid grid-cols-1 gap-px bg-border">
                 <div className="bg-background p-4 group/stat hover:bg-accent/50 transition-colors">
-                  <div className="text-3xl font-bold mb-1 group-hover/stat:scale-110 transition-transform inline-block">
-                    1M+
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <Search className="size-4 text-primary" />
+                    <p className="text-sm font-medium group-hover/stat:text-foreground transition-colors">
+                      Literature Reviews
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground group-hover/stat:text-foreground transition-colors">
-                    Questions Answered
+                  <p className="text-xs text-muted-foreground pl-6.5">
+                    Find and compare papers across topics in seconds, not hours.
                   </p>
                 </div>
                 <div className="bg-background p-4 group/stat hover:bg-accent/50 transition-colors">
-                  <div className="text-3xl font-bold mb-1 group-hover/stat:scale-110 transition-transform inline-block">
-                    100K+
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <FileText className="size-4 text-primary" />
+                    <p className="text-sm font-medium group-hover/stat:text-foreground transition-colors">
+                      Paper Analysis
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground group-hover/stat:text-foreground transition-colors">
-                    Active Users
+                  <p className="text-xs text-muted-foreground pl-6.5">
+                    Upload PDFs, ask questions, and get answers with page-level citations.
+                  </p>
+                </div>
+                <div className="bg-background p-4 group/stat hover:bg-accent/50 transition-colors">
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <Globe className="size-4 text-primary" />
+                    <p className="text-sm font-medium group-hover/stat:text-foreground transition-colors">
+                      Fact-Checking &amp; Verification
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-6.5">
+                    Cross-reference claims against live web sources and academic papers.
+                  </p>
+                </div>
+                <div className="bg-background p-4 group/stat hover:bg-accent/50 transition-colors">
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <MessageSquare className="size-4 text-primary" />
+                    <p className="text-sm font-medium group-hover/stat:text-foreground transition-colors">
+                      Research Q&amp;A
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-6.5">
+                    Ask follow-up questions in a conversation &mdash; it remembers your context.
                   </p>
                 </div>
               </div>
@@ -239,33 +265,32 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* Features Section - Grid Layout */}
+
+      {/* How It Works */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
-              <h2 className="text-2xl font-semibold mb-2">Key Features</h2>
+              <h2 className="text-2xl font-semibold mb-2">How It Works</h2>
               <p className="text-muted-foreground">
-                Built for multi-step research: planning, tool use, citations, and automation
+                Ask a question. Contract Lens figures out the rest.
               </p>
             </div>
 
-            {/* Features Grid */}
             <div className="col-span-12 grid grid-cols-12">
               <div className="col-span-12 md:col-span-6 lg:col-span-3 bg-card p-6 border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
                 </div>
-                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                  <Brain className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 text-sm font-bold text-primary">
+                  1
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                  Agentic Planning
+                  You Ask
                 </h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Breaks complex questions into steps, selects the right models/tools, and executes the workflow end to
-                  end.
+                  Type your research question in plain language. It can be broad (&ldquo;summarize recent work on
+                  transformer architectures&rdquo;) or specific (&ldquo;what does Table 3 in my uploaded paper show?&rdquo;).
                 </p>
               </div>
 
@@ -273,15 +298,15 @@ export default function AboutPage() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
                 </div>
-                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                  <Search className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 text-sm font-bold text-primary">
+                  2
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                  Grounded Retrieval
+                  It Plans &amp; Searches
                 </h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Pulls up-to-date sources, extracts the relevant parts, and produces answers with citations you can
-                  audit.
+                  The AI breaks your question into steps, then searches the live web, academic databases, and your
+                  personal library for relevant sources.
                 </p>
               </div>
 
@@ -289,15 +314,15 @@ export default function AboutPage() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
                 </div>
-                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                  <Bot className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 text-sm font-bold text-primary">
+                  3
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                  Extensible & Open
+                  You Get Cited Answers
                 </h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Open source by default. Self-host, bring your own models/tools, and tailor Contract Lens to your research
-                  stack.
+                  Every claim links back to its source &mdash; a web page, a paper, or a specific page in your PDF.
+                  Click a citation to read the original passage.
                 </p>
               </div>
 
@@ -305,31 +330,133 @@ export default function AboutPage() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
                 </div>
-                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                  <Eye className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300 text-sm font-bold text-primary">
+                  4
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                  Lookouts & Automations
+                  Keep Going
                 </h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Schedule recurring research agents to monitor topics and get regular updates when something changes.
+                  Ask follow-ups, upload more papers, save sources to your library, or set up a Lookout to monitor a
+                  topic automatically over time.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* Awards Section - Grid Layout */}
+
+      {/* Key Capabilities */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
-              <h2 className="text-2xl font-semibold mb-2">Recognition & Awards</h2>
-              <p className="text-muted-foreground">Recognized by leading platforms and communities</p>
+              <h2 className="text-2xl font-semibold mb-2">Built for the Research Workflow</h2>
+              <p className="text-muted-foreground">
+                Not just a chatbot. A workspace for finding, reading, and building on scholarship.
+              </p>
             </div>
 
-            {/* Awards Grid */}
+            <div className="col-span-12 grid grid-cols-12">
+              <div className="col-span-12 md:col-span-6 bg-card p-8 border-r border-b border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
+                </div>
+                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                  <Library className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  Personal Research Library
+                </h3>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors mb-3">
+                  Upload PDFs or import papers from Semantic Scholar. Your library is indexed so the AI can search
+                  across all your papers at once and cite specific pages.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Upload PDFs &amp; import by DOI / Semantic Scholar URL</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Full-text search across your entire library</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> @mention specific papers in conversations</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Page-level citations linked to in-app PDF viewer</li>
+                </ul>
+              </div>
+
+              <div className="col-span-12 md:col-span-6 bg-card p-8 border-b border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
+                </div>
+                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                  <Search className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  Academic &amp; Web Search
+                </h3>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors mb-3">
+                  Search the live web and academic databases in one place. The AI picks the right source type
+                  automatically, or you can guide it.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Live web search via Exa for up-to-date information</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Academic search for papers, preprints, and citations</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Extreme Search for deep, multi-step research tasks</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> URL retrieval to extract content from any web page</li>
+                </ul>
+              </div>
+
+              <div className="col-span-12 md:col-span-6 bg-card p-8 border-r border-b border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
+                </div>
+                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                  <Brain className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  Inline Citations &amp; Source Viewer
+                </h3>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors mb-3">
+                  Every answer is grounded. Numbered citations link to exact passages. Click any citation to read the
+                  source excerpt, jump to the PDF page, or discover related papers.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Clickable [1] [2] markers inline with the answer</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Source excerpt, PDF view, and related papers in one panel</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Find Related Papers from any citation via Semantic Scholar</li>
+                </ul>
+              </div>
+
+              <div className="col-span-12 md:col-span-6 bg-card p-8 border-b border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
+                </div>
+                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                  <Eye className="h-6 w-6 text-primary group-hover:rotate-6 transition-transform duration-300" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  Lookouts &mdash; Automated Monitoring
+                </h3>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors mb-3">
+                  Set up a Lookout on any topic and get regular updates when new information appears. Useful for
+                  tracking new publications, policy changes, or emerging findings in your area.
+                </p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Schedule recurring research on any topic</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Get notified when new sources appear</li>
+                  <li className="flex items-start gap-2"><span className="text-primary mt-0.5">&bull;</span> Pro feature &mdash; included with your subscription</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Awards Section */}
+      <section className="border-b border-border">
+        <div className="container max-w-7xl mx-auto">
+          <div className="grid grid-cols-12 border-l border-r border-border">
+            <div className="col-span-12 bg-card p-6 border-b border-border">
+              <h2 className="text-2xl font-semibold mb-2">Recognition</h2>
+              <p className="text-muted-foreground">Recognized by developer and startup communities</p>
+            </div>
+
             <div className="col-span-12 grid grid-cols-12">
               <div className="col-span-12 md:col-span-4 bg-card p-8 text-center border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
@@ -395,17 +522,16 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* Technology Stack - Grid Layout */}
+
+      {/* Powered By */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
-              <h2 className="text-2xl font-semibold mb-2">Built With Industry Leaders</h2>
-              <p className="text-muted-foreground">Powered by cutting-edge technology from leading companies</p>
+              <h2 className="text-2xl font-semibold mb-2">Powered By</h2>
+              <p className="text-muted-foreground">The infrastructure behind Contract Lens</p>
             </div>
 
-            {/* Tech Stack Grid */}
             <div className="col-span-12 grid grid-cols-12">
               <div className="col-span-12 md:col-span-4 bg-card p-8 text-center border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
@@ -416,7 +542,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Vercel AI SDK</h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Advanced AI framework powering intelligent responses
+                  Routes queries across {models.length}+ AI models from OpenAI, Anthropic, Google, and more.
                 </p>
               </div>
 
@@ -429,7 +555,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Exa Search</h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Real-time web grounding for agentic research
+                  Real-time web and academic retrieval so answers reflect the latest published work.
                 </p>
               </div>
 
@@ -444,14 +570,15 @@ export default function AboutPage() {
                   ElevenLabs Voice
                 </h3>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Natural voice synthesis with human-like quality
+                  Listen to answers read aloud with natural voice synthesis.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* Featured on Vercel - Grid Layout */}
+
+      {/* Featured on Vercel */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
@@ -463,8 +590,8 @@ export default function AboutPage() {
                 Featured on Vercel&apos;s Blog
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6 group-hover:text-foreground/80 transition-colors">
-                Recognized for our innovative use of AI technology and contribution to the developer community through
-                the Vercel AI SDK.
+                Recognized for innovative use of AI SDK to power multi-model research workflows across
+                {models.length}+ language models.
               </p>
               <Link
                 href="https://vercel.com/blog/ai-sdk-4-1"
@@ -483,15 +610,16 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* Models Section - Grid Layout */}
+
+      {/* Models Section */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
-              <h2 className="text-2xl font-semibold mb-2">AI Models</h2>
+              <h2 className="text-2xl font-semibold mb-2">Choose Your AI Model</h2>
               <p className="text-muted-foreground">
-                Production-ready models from leading AI providers, each optimized for specific use cases.
+                {models.length}+ models from OpenAI, Anthropic, Google, xAI, and others. Switch models mid-conversation
+                &mdash; your research keeps flowing.
               </p>
             </div>
 
@@ -618,7 +746,7 @@ export default function AboutPage() {
             {/* Models Grid */}
             <div className="col-span-12 grid grid-cols-12 border-b border-border">
               {(() => {
-                let filteredModels = models.filter((model) => {
+                const filteredModels = models.filter((model) => {
                   const categoryMatch = selectedCategory === 'all' || model.category === selectedCategory;
                   const capabilityMatch =
                     selectedCapabilities.length === 0 ||
@@ -676,7 +804,7 @@ export default function AboutPage() {
 
                 return (
                   <>
-                    {modelsToShow.map((model: any, index: number) => (
+                    {modelsToShow.map((model: any) => (
                       <div
                         key={model.value}
                         className="col-span-12 md:col-span-6 lg:col-span-4 bg-card p-6 group relative overflow-hidden hover:bg-card/90 transition-all duration-300 border-r border-b border-border"
@@ -753,21 +881,20 @@ export default function AboutPage() {
               })()}
             </div>
 
-            {/* Models Footer */}
             <div className="col-span-12 bg-card p-6">
               <div className="grid grid-cols-12 gap-px bg-border">
                 <div className="col-span-12 md:col-span-8 bg-background p-4">
                   <p className="text-sm text-muted-foreground">
-                    {models.length} models available across multiple providers
+                    {models.length} models available &mdash; switch anytime, even mid-conversation
                   </p>
-                  <p className="text-xs text-muted-foreground/60 mt-1">Search with any model, switch anytime</p>
+                  <p className="text-xs text-muted-foreground/60 mt-1">Free models included at no cost. Pro unlocks the full catalog.</p>
                 </div>
                 <div className="col-span-12 md:col-span-4 bg-background p-4 flex items-center justify-center">
                   <Button
                     onClick={() => router.push('/')}
                     className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 w-full rounded-none"
                   >
-                    Start Searching
+                    Start Researching
                     <ArrowUpRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
@@ -776,17 +903,16 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* Pricing Section - Grid Layout */}
+
+      {/* Pricing Section */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <h2 className="text-2xl font-semibold mb-2">Pricing</h2>
-              <p className="text-muted-foreground">Simple, transparent pricing for everyone</p>
+              <p className="text-muted-foreground">Start for free. Upgrade when you need more.</p>
             </div>
 
-            {/* Pricing Grid */}
             <div className="col-span-12 grid grid-cols-12">
               {/* Free Plan */}
               <div className="col-span-12 md:col-span-6 bg-card p-8 flex flex-col border-b border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
@@ -796,7 +922,7 @@ export default function AboutPage() {
                 <div className="mb-8">
                   <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Free</h3>
                   <p className="text-muted-foreground mb-4 group-hover:text-foreground/80 transition-colors">
-                    Get started with essential features
+                    Try Contract Lens with no commitment
                   </p>
                   <div className="space-y-1">
                     <div className="flex items-baseline transition-colors duration-200">
@@ -804,7 +930,7 @@ export default function AboutPage() {
                       <span className="text-muted-foreground ml-2">/month</span>
                     </div>
                     <div className="flex items-baseline">
-                      <span className="text-2xl font-medium text-muted-foreground">₹0</span>
+                      <span className="text-2xl font-medium text-muted-foreground">{'\u20B9'}0</span>
                       <span className="text-muted-foreground ml-2 text-sm">/month</span>
                     </div>
                   </div>
@@ -814,19 +940,25 @@ export default function AboutPage() {
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/60 mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      {SEARCH_LIMITS.DAILY_SEARCH_LIMIT} research runs per day
+                      {SEARCH_LIMITS.DAILY_SEARCH_LIMIT} research queries per day
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/60 mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      Basic AI models
+                      Free-tier AI models (GPT-4o Mini, Gemini Flash, etc.)
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/60 mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      Research history
+                      Web &amp; academic search with citations
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 bg-primary/60 mt-2 shrink-0"></div>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                      Search history saved across sessions
                     </span>
                   </li>
                 </ul>
@@ -852,11 +984,11 @@ export default function AboutPage() {
                       variant="secondary"
                       className="text-xs group-hover:bg-primary/20 group-hover:text-primary transition-colors"
                     >
-                      Popular
+                      For Serious Research
                     </Badge>
                   </div>
                   <p className="text-muted-foreground mb-4 group-hover:text-foreground/80 transition-colors">
-                    Everything you need for serious work
+                    Unlimited access for active researchers
                   </p>
                   <div className="space-y-1">
                     <div className="flex items-baseline transition-colors duration-200">
@@ -864,7 +996,7 @@ export default function AboutPage() {
                       <span className="text-muted-foreground ml-2">/month</span>
                     </div>
                     <div className="flex items-baseline">
-                      <span className="text-2xl font-medium text-muted-foreground">₹{PRICING.PRO_MONTHLY_INR}</span>
+                      <span className="text-2xl font-medium text-muted-foreground">{'\u20B9'}{PRICING.PRO_MONTHLY_INR}</span>
                       <span className="text-muted-foreground ml-2 text-sm">(excl. GST)/month</span>
                     </div>
                   </div>
@@ -874,31 +1006,37 @@ export default function AboutPage() {
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      Unlimited research
+                      Unlimited research queries
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      All AI models
+                      All {models.length}+ AI models (Claude, GPT-4o, Gemini Pro, Grok, etc.)
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      PDF analysis
+                      PDF upload &amp; library with full-text search
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                      Extreme Search for deep multi-step research
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                      Lookout automated topic monitoring
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
                     <span className="text-muted-foreground group-hover:text-foreground transition-colors">
                       Priority support
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 bg-primary mt-2 shrink-0"></div>
-                    <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                      Contract Lens Lookout
                     </span>
                   </li>
                 </ul>
@@ -919,10 +1057,10 @@ export default function AboutPage() {
                   <div className="w-10 h-10 bg-primary/10 flex items-center justify-center mx-auto md:mx-0 mb-3">
                     <GraduationCap className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Student discount available</h3>
+                  <h3 className="font-semibold mb-2">Student &amp; Academic Discount</h3>
                   <p className="text-sm text-muted-foreground">
-                    Get Pro for just $5/month! Simply sign up with your university email address and the discount will
-                    be applied automatically.
+                    Sign up with your university email (.edu, .ac.uk, .ac.in, etc.) and get Pro for just $5/month.
+                    The discount is applied automatically &mdash; no verification forms needed.
                   </p>
                 </div>
                 <div className="col-span-12 md:col-span-4 bg-background p-6 flex items-center justify-center">
@@ -940,73 +1078,89 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* FAQ Section - Grid Layout */}
+
+      {/* FAQ Section */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
-            {/* Section Header */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <h2 className="text-2xl font-semibold mb-2">Frequently Asked Questions</h2>
-              <p className="text-muted-foreground">Find answers to common questions about Contract Lens</p>
+              <p className="text-muted-foreground">Common questions from researchers</p>
             </div>
 
-            {/* FAQ Accordion */}
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <ProAccordion type="single" collapsible className="w-full">
                 <ProAccordionItem value="item-1">
                   <ProAccordionTrigger>What is Contract Lens?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens is an open-source agentic research platform. It combines planning + tool use with RAG
-                    (Retrieval-Augmented Generation) and search grounding to produce accurate, up-to-date answers with
-                    citations.
+                    Contract Lens is an AI research assistant that helps you find, read, and cite information faster.
+                    Ask a question in plain language and get an answer grounded in live web sources, academic papers, and
+                    your own uploaded PDFs &mdash; with inline citations linking back to the original material.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-2">
-                  <ProAccordionTrigger>What&apos;s the difference between Free and Pro plans?</ProAccordionTrigger>
+                  <ProAccordionTrigger>How is this different from ChatGPT or Perplexity?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    The Free plan includes limited daily research runs with essential models, while the Pro plan
-                    ($15/month) unlocks unlimited research, access to all AI models, PDF document analysis, Lookout
-                    automations, and priority support.
+                    Contract Lens is built specifically for research. It has a personal paper library with full-text search,
+                    page-level PDF citations, academic search, Extreme Search for deep multi-step research, and Lookout for
+                    automated topic monitoring. You can also @mention specific papers from your library in conversations.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-3">
-                  <ProAccordionTrigger>Is there a student discount?</ProAccordionTrigger>
+                  <ProAccordionTrigger>Can I upload my own papers?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Yes! Students with university email addresses (.edu, .ac.in, .ac.uk, etc.) automatically get Pro for
-                    just $5/month - that&apos;s $120 in annual savings. No verification required, the discount is
-                    applied automatically at checkout.
+                    Yes. Upload any PDF to your research library, or import papers directly from Semantic Scholar by URL
+                    or DOI. Once indexed, the AI can search across all your papers and cite specific sections with page numbers.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-4">
-                  <ProAccordionTrigger>Can I cancel my subscription anytime?</ProAccordionTrigger>
+                  <ProAccordionTrigger>Is there a student discount?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Yes, you can cancel your Pro subscription at any time. Your benefits will continue until the end of
-                    your current billing period.
+                    Yes. Students with university email addresses (.edu, .ac.in, .ac.uk, etc.) get Pro for $5/month instead
+                    of $15/month. The discount is applied automatically at checkout &mdash; no verification required.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-5">
-                  <ProAccordionTrigger>What AI models does Contract Lens use?</ProAccordionTrigger>
+                  <ProAccordionTrigger>How accurate are the citations?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens uses a range of advanced AI models including Grok, Claude, OpenAI GPT, Gemini, and more to
-                    provide the best possible answers for different types of queries.
+                    Every numbered citation links to a specific source &mdash; a web page, an academic paper, or a page in
+                    your uploaded PDF. You can click any citation to read the original excerpt, open the PDF at that page,
+                    or find related papers. The AI is designed to cite rather than fabricate, but you should always verify
+                    critical claims.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-6">
-                  <ProAccordionTrigger>How does Contract Lens ensure information accuracy?</ProAccordionTrigger>
+                  <ProAccordionTrigger>Can I cancel my subscription anytime?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens grounds outputs in retrieved sources (RAG + search grounding) and includes citations so you
-                    can audit the evidence. Agents can cross-check multiple sources before synthesizing an answer.
+                    Yes, you can cancel your Pro subscription at any time. Your access continues until the end of your
+                    current billing period.
+                  </ProAccordionContent>
+                </ProAccordionItem>
+
+                <ProAccordionItem value="item-7">
+                  <ProAccordionTrigger>What AI models are available?</ProAccordionTrigger>
+                  <ProAccordionContent>
+                    Contract Lens gives you access to {models.length}+ models from OpenAI (GPT-4o, o3), Anthropic (Claude),
+                    Google (Gemini), xAI (Grok), and more. Free users get access to a selection of fast, capable models.
+                    Pro unlocks the full catalog, including reasoning models and those with vision and PDF capabilities.
+                  </ProAccordionContent>
+                </ProAccordionItem>
+
+                <ProAccordionItem value="item-8">
+                  <ProAccordionTrigger>Is Contract Lens open source?</ProAccordionTrigger>
+                  <ProAccordionContent>
+                    Yes. Contract Lens is open source and available on GitHub. You can self-host it, contribute, or inspect
+                    how it works under the hood.
                   </ProAccordionContent>
                 </ProAccordionItem>
               </ProAccordion>
             </div>
 
-            {/* FAQ Footer */}
             <div className="col-span-12 bg-card p-6 border-border">
               <div className="grid grid-cols-12 gap-px bg-border">
                 <div className="col-span-12 md:col-span-8 bg-background p-4">
@@ -1041,7 +1195,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* Footer - Grid Layout */}
+
+      {/* Footer */}
       <footer>
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-12 border-l border-r border-border">
@@ -1049,7 +1204,7 @@ export default function AboutPage() {
               <div className="flex items-center gap-3">
                 <ContractLensLogo className="size-8" />
                 <p className="text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Contract Lens. All rights reserved.
+                  &copy; {new Date().getFullYear()} Contract Lens. All rights reserved.
                 </p>
               </div>
             </div>
