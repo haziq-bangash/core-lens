@@ -65,15 +65,15 @@ const PdfSearchResults = dynamic(
 
 // Error component for tool errors
 const ToolErrorDisplay = ({ errorText, toolName }: { errorText: string; toolName: string }) => (
-  <div className="w-full my-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950">
+  <div className="w-full my-4 rounded-lg border border-destructive/30 bg-destructive/5">
     <div className="p-4">
       <div className="flex items-start gap-3">
-        <div className="shrink-0 w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900 flex items-center justify-center">
-          <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+        <div className="shrink-0 w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+          <XCircle className="h-4 w-4 text-destructive" />
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-medium text-red-900 dark:text-red-100">{toolName} failed</h3>
-          <p className="text-xs text-red-700 dark:text-red-300 mt-1">{errorText}</p>
+          <h3 className="text-sm font-medium text-foreground">{toolName} failed</h3>
+          <p className="text-xs text-destructive mt-1">{errorText}</p>
         </div>
       </div>
     </div>
@@ -726,7 +726,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             switch (part.state) {
               case 'input-streaming':
                 return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
+                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-muted-foreground">
                     Preparing time request...
                   </div>
                 );
@@ -734,9 +734,9 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                 return (
                   <div key={`${messageIndex}-${partIndex}-tool`} className="flex items-center gap-3 py-4 px-2">
                     <div className="h-5 w-5 relative">
-                      <div className="absolute inset-0 rounded-full border-2 border-neutral-300 dark:border-neutral-700 border-t-blue-500 dark:border-t-blue-400 animate-spin" />
+                      <div className="absolute inset-0 rounded-full border-2 border-border border-t-primary animate-spin" />
                     </div>
-                    <span className="text-neutral-700 dark:text-neutral-300 text-sm font-medium">
+                    <span className="text-foreground text-sm font-medium">
                       Fetching current time...
                     </span>
                   </div>
@@ -791,22 +791,22 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   return (
                     <div className="mt-3">
                       <div className="flex items-baseline">
-                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-neutral-900 dark:text-white">
+                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-foreground">
                           {timeParts.hour.padStart(2, '0')}
                         </div>
-                        <div className="mx-1 sm:mx-2 text-4xl sm:text-5xl md:text-6xl font-light text-neutral-400 dark:text-neutral-500">
+                        <div className="mx-1 sm:mx-2 text-4xl sm:text-5xl md:text-6xl font-light text-muted-foreground/50">
                           :
                         </div>
-                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-neutral-900 dark:text-white">
+                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-foreground">
                           {timeParts.minute.padStart(2, '0')}
                         </div>
-                        <div className="mx-1 sm:mx-2 text-4xl sm:text-5xl md:text-6xl font-light text-neutral-400 dark:text-neutral-500">
+                        <div className="mx-1 sm:mx-2 text-4xl sm:text-5xl md:text-6xl font-light text-muted-foreground/50">
                           :
                         </div>
-                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-neutral-900 dark:text-white">
+                        <div className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-foreground">
                           {timeParts.second.padStart(2, '0')}
                         </div>
-                        <div className="ml-2 sm:ml-4 text-xl sm:text-2xl font-light self-center text-neutral-400 dark:text-neutral-500">
+                        <div className="ml-2 sm:ml-4 text-xl sm:text-2xl font-light self-center text-muted-foreground/50">
                           {timeParts.dayPeriod}
                         </div>
                       </div>
@@ -818,21 +818,21 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
 
                 return (
                   <div key={`${messageIndex}-${partIndex}-tool`} className="w-full my-6">
-                    <div className="bg-white dark:bg-neutral-950 rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800">
+                    <div className="bg-card rounded-xl overflow-hidden border border-border">
                       <div className="p-4 sm:p-6">
                         <div className="flex flex-col gap-4 sm:gap-6">
                           <div>
                             <div className="flex justify-between items-center mb-2">
-                              <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400 tracking-wider uppercase">
+                              <h3 className="text-xs font-medium text-muted-foreground tracking-wider uppercase">
                                 Current Time
                               </h3>
-                              <div className="bg-neutral-100 dark:bg-neutral-800 rounded px-2 py-1 text-xs text-neutral-600 dark:text-neutral-300 font-medium flex items-center gap-1.5">
-                                <PhosphorClockIcon className="h-3 w-3 text-blue-500" />
+                              <div className="bg-muted rounded px-2 py-1 text-xs text-muted-foreground font-medium flex items-center gap-1.5">
+                                <PhosphorClockIcon className="h-3 w-3 text-primary" />
                                 {part.output.timezone || new Intl.DateTimeFormat().resolvedOptions().timeZone}
                               </div>
                             </div>
                             <LiveClock />
-                            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2">
+                            <p className="text-sm text-muted-foreground mt-2">
                               {part.output.formatted?.date}
                             </p>
                           </div>
@@ -840,18 +840,18 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                           {/* Compact Technical Details */}
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             {part.output.formatted?.iso_local && (
-                              <div className="bg-neutral-50 dark:bg-neutral-900 rounded p-3">
-                                <div className="text-neutral-500 dark:text-neutral-400 mb-1">Local</div>
-                                <div className="font-mono text-neutral-700 dark:text-neutral-300 text-[11px]">
+                              <div className="bg-muted/50 rounded p-3">
+                                <div className="text-muted-foreground mb-1">Local</div>
+                                <div className="font-mono text-foreground/80 text-[11px]">
                                   {part.output.formatted.iso_local}
                                 </div>
                               </div>
                             )}
 
                             {part.output.timestamp && (
-                              <div className="bg-neutral-50 dark:bg-neutral-900 rounded p-3">
-                                <div className="text-neutral-500 dark:text-neutral-400 mb-1">Timestamp</div>
-                                <div className="font-mono text-neutral-700 dark:text-neutral-300 text-[11px]">
+                              <div className="bg-muted/50 rounded p-3">
+                                <div className="text-muted-foreground mb-1">Timestamp</div>
+                                <div className="font-mono text-foreground/80 text-[11px]">
                                   {part.output.timestamp}
                                 </div>
                               </div>
@@ -869,7 +869,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             switch (part.state) {
               case 'input-streaming':
                 return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
+                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-muted-foreground">
                     Preparing extreme search...
                   </div>
                 );
@@ -912,7 +912,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             switch (part.state) {
               case 'input-streaming':
                 return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
+                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-muted-foreground">
                     Preparing content retrieval...
                   </div>
                 );
@@ -920,39 +920,39 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                 return (
                   <div
                     key={`${messageIndex}-${partIndex}-tool`}
-                    className="border border-neutral-200 rounded-xl my-4 overflow-hidden dark:border-neutral-800 bg-white dark:bg-neutral-900"
+                    className="border border-border rounded-xl my-4 overflow-hidden bg-card"
                   >
-                    <div className="h-36 bg-neutral-50 dark:bg-neutral-800/50 animate-pulse relative overflow-hidden">
+                    <div className="h-36 bg-muted/50 animate-pulse relative overflow-hidden">
                       <div className="absolute inset-0 bg-linear-to-b from-transparent to-white/10 dark:to-black/10" />
                     </div>
                     <div className="p-4">
                       <div className="flex gap-3">
-                        <div className="relative w-12 h-12 shrink-0 rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse">
-                          <Globe className="h-5 w-5 text-neutral-300 dark:text-neutral-700 absolute inset-0 m-auto" />
+                        <div className="relative w-12 h-12 shrink-0 rounded-lg bg-muted animate-pulse">
+                          <Globe className="h-5 w-5 text-muted-foreground/40 absolute inset-0 m-auto" />
                         </div>
                         <div className="flex-1 min-w-0 space-y-3">
                           <div className="space-y-2">
-                            <div className="h-6 w-full bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-md" />
+                            <div className="h-6 w-full bg-muted animate-pulse rounded-md" />
                             <div className="flex gap-2">
-                              <div className="h-4 w-24 bg-violet-100 dark:bg-violet-900/30 animate-pulse rounded-md" />
-                              <div className="h-4 w-32 bg-emerald-100 dark:bg-emerald-900/30 animate-pulse rounded-md" />
+                              <div className="h-4 w-24 bg-primary/10 animate-pulse rounded-md" />
+                              <div className="h-4 w-32 bg-primary/10 animate-pulse rounded-md" />
                             </div>
                           </div>
                           <div className="space-y-1.5">
-                            <div className="h-3 w-full bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-md" />
-                            <div className="h-3 w-4/5 bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-md" />
+                            <div className="h-3 w-full bg-muted animate-pulse rounded-md" />
+                            <div className="h-3 w-4/5 bg-muted animate-pulse rounded-md" />
                           </div>
                           <div className="flex justify-between items-center pt-2">
-                            <div className="h-4 w-24 bg-blue-100 dark:bg-blue-900/30 animate-pulse rounded-md" />
-                            <div className="h-4 w-32 bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-md" />
+                            <div className="h-4 w-24 bg-primary/10 animate-pulse rounded-md" />
+                            <div className="h-4 w-32 bg-muted animate-pulse rounded-md" />
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="border-t border-border">
                       <div className="p-3 flex items-center gap-2">
-                        <div className="h-4 w-4 bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded" />
-                        <div className="h-4 w-28 bg-neutral-100 dark:bg-neutral-800 animate-pulse rounded-md" />
+                        <div className="h-4 w-4 bg-muted animate-pulse rounded" />
+                        <div className="h-4 w-28 bg-muted animate-pulse rounded-md" />
                       </div>
                     </div>
                   </div>
@@ -963,17 +963,17 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   return (
                     <div
                       key={`${messageIndex}-${partIndex}-tool`}
-                      className="border border-red-200 dark:border-red-500 rounded-xl my-4 p-4 bg-red-50 dark:bg-red-950/50"
+                      className="border border-destructive/30 rounded-xl my-4 p-4 bg-destructive/5"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center shrink-0">
-                          <Globe className="h-4 w-4 text-red-600 dark:text-red-300" />
+                        <div className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
+                          <Globe className="h-4 w-4 text-destructive" />
                         </div>
                         <div>
-                          <div className="text-red-700 dark:text-red-300 text-sm font-medium">
+                          <div className="text-foreground text-sm font-medium">
                             Error retrieving content
                           </div>
-                          <div className="text-red-600/80 dark:text-red-400/80 text-xs mt-1">{String(part.output.error)}</div>
+                          <div className="text-destructive text-xs mt-1">{String(part.output.error)}</div>
                         </div>
                       </div>
                     </div>
@@ -989,7 +989,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             switch (part.state) {
               case 'input-streaming':
                 return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
+                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-muted-foreground">
                     Preparing PDF search...
                   </div>
                 );
@@ -1013,18 +1013,18 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   return (
                     <div
                       key={`${messageIndex}-${partIndex}-tool`}
-                      className="w-full my-4 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950"
+                      className="w-full my-4 rounded-lg border border-border bg-muted/50"
                     >
                       <div className="p-4">
                         <div className="flex items-start gap-3">
-                          <div className="shrink-0 w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-                            <FileText className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                          <div className="shrink-0 w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                            <h3 className="text-sm font-medium text-foreground">
                               No results found
                             </h3>
-                            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                            <p className="text-xs text-muted-foreground mt-1">
                               {pdfOutput?.message ?? 'No indexed PDF documents found in this chat.'}
                             </p>
                           </div>
@@ -1077,7 +1077,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
             switch (part.state) {
               case 'input-streaming':
                 return (
-                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-neutral-500">
+                  <div key={`${messageIndex}-${partIndex}-tool`} className="text-sm text-muted-foreground">
                     Preparing library search...
                   </div>
                 );
@@ -1102,18 +1102,18 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   return (
                     <div
                       key={`${messageIndex}-${partIndex}-tool`}
-                      className="w-full my-4 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950"
+                      className="w-full my-4 rounded-lg border border-border bg-muted/50"
                     >
                       <div className="p-4">
                         <div className="flex items-start gap-3">
-                          <div className="shrink-0 w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-                            <FileText className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                          <div className="shrink-0 w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                            <h3 className="text-sm font-medium text-foreground">
                               No results found
                             </h3>
-                            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                            <p className="text-xs text-muted-foreground mt-1">
                               {libOutput?.message ?? 'No indexed papers found in your library.'}
                             </p>
                           </div>
@@ -1126,23 +1126,23 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                 return (
                   <div
                     key={`${messageIndex}-${partIndex}-tool`}
-                    className="w-full my-4 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950"
+                    className="w-full my-4 rounded-lg border border-primary/20 bg-primary/5"
                   >
                     <div className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className="shrink-0 w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                          <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <FileText className="h-4 w-4 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                          <h3 className="text-sm font-medium text-foreground">
                             Found in {libOutput.results.length} paper{libOutput.results.length !== 1 ? 's' : ''}
                           </h3>
-                          <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                          <p className="text-xs text-muted-foreground mt-1">
                             Searched {libOutput.totalPapersSearched} paper{libOutput.totalPapersSearched !== 1 ? 's' : ''}{libOutput.totalPapersAvailable ? ` of ${libOutput.totalPapersAvailable} total` : ''} in your library
                           </p>
                           <div className="mt-2 space-y-1">
                             {libOutput.results.map((r, i) => (
-                              <div key={i} className="text-xs text-blue-600 dark:text-blue-400 truncate">
+                              <div key={i} className="text-xs text-primary truncate">
                                 {r.paperTitle}
                               </div>
                             ))}
@@ -1171,7 +1171,7 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
         return (
           <div
             key={`${messageIndex}-${partIndex}-tool-legacy`}
-            className="my-4 p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg"
+            className="my-4 p-4 bg-muted/50 rounded-lg"
           >
             <h3 className="font-medium mb-2">Tool: Unknown</h3>
             <pre className="text-xs overflow-auto">{JSON.stringify(part, null, 2)}</pre>
@@ -1216,13 +1216,13 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
 
   if (!result) {
     return (
-      <div className="group my-2 p-3 rounded-md border border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-50/30 dark:bg-neutral-900/30">
+      <div className="group my-2 p-3 rounded-md border border-border/60 bg-muted/30">
         <div className="flex items-center gap-3">
-          <div className="w-5 h-5 rounded-md bg-neutral-600 flex items-center justify-center opacity-80">
-            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <div className="w-5 h-5 rounded-md bg-muted-foreground flex items-center justify-center opacity-80">
+            <div className="w-2 h-2 rounded-full bg-background animate-pulse" />
           </div>
           <div className="flex-1">
-            <div className="h-2.5 w-20 bg-neutral-300 dark:bg-neutral-600 rounded-sm animate-pulse" />
+            <div className="h-2.5 w-20 bg-muted rounded-sm animate-pulse" />
           </div>
         </div>
       </div>
@@ -1234,20 +1234,20 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
   const previewText = shouldShowAccordion ? responseText.slice(0, 400) + '...' : responseText;
 
   return (
-    <div className="group my-2 rounded-md border border-neutral-200/60 dark:border-neutral-700/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200">
+    <div className="group my-2 rounded-md border border-border/60 bg-card/50 backdrop-blur-sm hover:border-border transition-all duration-200">
       <div className="p-3">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 w-5 h-5 rounded-md bg-blue-600 flex items-center justify-center">
-            <Code className="w-2.5 h-2.5 text-white" />
+          <div className="mt-0.5 w-5 h-5 rounded-md bg-primary flex items-center justify-center">
+            <Code className="w-2.5 h-2.5 text-primary-foreground" />
           </div>
 
           <div className="flex-1 min-w-0 space-y-3">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs">
-                <span className="font-medium text-neutral-900 dark:text-neutral-100">Code Context</span>
-                <span className="text-neutral-400">•</span>
-                <span className="text-neutral-500 dark:text-neutral-400 truncate max-w-50">
+                <span className="font-medium text-foreground">Code Context</span>
+                <span className="text-muted-foreground/50">•</span>
+                <span className="text-muted-foreground truncate max-w-50">
                   {args ? args.query : ''}
                 </span>
               </div>
@@ -1261,14 +1261,14 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
                     navigator.clipboard.writeText(responseText);
                     toast.success('Code context copied to clipboard');
                   }}
-                  className="h-6 w-6 p-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="h-6 w-6 p-0 hover:bg-muted"
                 >
                   <HugeiconsIcon
                     icon={Copy01Icon}
                     size={12}
                     color="currentColor"
                     strokeWidth={2}
-                    className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+                    className="text-muted-foreground hover:text-foreground"
                   />
                 </Button>
 
@@ -1277,14 +1277,14 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
                   <div className="flex items-center gap-2">
                     <Badge
                       variant="secondary"
-                      className="rounded-md bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-0 text-xs px-2 py-0.5"
+                      className="rounded-md bg-primary/10 hover:bg-primary/15 text-primary border-0 text-xs px-2 py-0.5"
                     >
                       {result.resultsCount} results
                     </Badge>
                     {result.outputTokens && (
                       <Badge
                         variant="secondary"
-                        className="rounded-md bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-0 text-xs px-2 py-0.5"
+                        className="rounded-md bg-primary/10 hover:bg-primary/15 text-primary border-0 text-xs px-2 py-0.5"
                       >
                         {result.outputTokens} tokens
                       </Badge>
@@ -1305,14 +1305,14 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
                 >
                   <AccordionItem value="context" className="border-0">
                     <div className="space-y-2">
-                      <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed wrap-break-word">
+                      <div className="text-sm text-foreground/80 leading-relaxed wrap-break-word">
                         {!isExpanded && previewText}
                       </div>
-                      <AccordionTrigger className="py-2 hover:no-underline text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                      <AccordionTrigger className="py-2 hover:no-underline text-xs text-primary hover:text-primary/80 transition-colors">
                         {isExpanded ? 'Show less' : 'Show full context'}
                       </AccordionTrigger>
                       <AccordionContent className="pb-0">
-                        <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed wrap-break-word whitespace-pre-wrap pt-2 border-t border-neutral-200/60 dark:border-neutral-700/60">
+                        <div className="text-sm text-foreground/80 leading-relaxed wrap-break-word whitespace-pre-wrap pt-2 border-t border-border/60">
                           {responseText}
                         </div>
                       </AccordionContent>
@@ -1320,16 +1320,16 @@ const CodeContextTool: React.FC<{ args: any; result: any }> = ({ args, result })
                   </AccordionItem>
                 </Accordion>
               ) : (
-                <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed wrap-break-word whitespace-pre-wrap">
+                <div className="text-sm text-foreground/80 leading-relaxed wrap-break-word whitespace-pre-wrap">
                   {responseText}
                 </div>
               )}
 
               {/* Footer metadata */}
               {result?.searchTime && (
-                <div className="flex items-center gap-2 pt-2 border-t border-neutral-200/30 dark:border-neutral-700/30">
-                  <Clock className="w-3 h-3 text-neutral-400" />
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                <div className="flex items-center gap-2 pt-2 border-t border-border/30">
+                  <Clock className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
                     Search completed in {(result.searchTime / 1000).toFixed(2)}s
                   </span>
                 </div>
@@ -1404,13 +1404,13 @@ const TranslationTool: React.FC<{ args: any; result: any }> = ({ args, result })
 
   if (!result) {
     return (
-      <div className="group my-2 p-3 rounded-md border border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-50/30 dark:bg-neutral-900/30">
+      <div className="group my-2 p-3 rounded-md border border-border/60 bg-muted/30">
         <div className="flex items-center gap-3">
-          <div className="w-5 h-5 rounded-md bg-neutral-600 flex items-center justify-center opacity-80">
-            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <div className="w-5 h-5 rounded-md bg-muted-foreground flex items-center justify-center opacity-80">
+            <div className="w-2 h-2 rounded-full bg-background animate-pulse" />
           </div>
           <div className="flex-1">
-            <div className="h-2.5 w-20 bg-neutral-300 dark:bg-neutral-600 rounded-sm animate-pulse" />
+            <div className="h-2.5 w-20 bg-muted rounded-sm animate-pulse" />
           </div>
         </div>
       </div>
@@ -1418,37 +1418,37 @@ const TranslationTool: React.FC<{ args: any; result: any }> = ({ args, result })
   }
 
   return (
-    <div className="group my-2 rounded-md border border-neutral-200/60 dark:border-neutral-700/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200">
+    <div className="group my-2 rounded-md border border-border/60 bg-card/50 backdrop-blur-sm hover:border-border transition-all duration-200">
       <div className="p-3">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 w-5 h-5 rounded-md bg-neutral-600 flex items-center justify-center">
-            <TextIcon className="w-2.5 h-2.5 text-white" />
+          <div className="mt-0.5 w-5 h-5 rounded-md bg-muted-foreground flex items-center justify-center">
+            <TextIcon className="w-2.5 h-2.5 text-background" />
           </div>
 
           <div className="flex-1 min-w-0 space-y-2">
             <div className="flex items-center gap-2 text-xs">
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">Translation</span>
-              <span className="text-neutral-400">•</span>
-              <span className="text-neutral-500 dark:text-neutral-400">
+              <span className="font-medium text-foreground">Translation</span>
+              <span className="text-muted-foreground/50">•</span>
+              <span className="text-muted-foreground">
                 {result.detectedLanguage} → {args ? args.to : ''}
               </span>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">
               <div className="group/text">
-                <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-1 opacity-70">
+                <div className="text-xs text-muted-foreground mb-1 opacity-70">
                   {result.detectedLanguage}
                 </div>
-                <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed wrap-break-word">
+                <div className="text-sm text-foreground/80 leading-relaxed wrap-break-word">
                   {args ? args.text : ''}
                 </div>
               </div>
 
               <div className="group/text">
-                <div className="text-xs text-neutral-600 dark:text-neutral-400 mb-1 opacity-70">
+                <div className="text-xs text-muted-foreground mb-1 opacity-70">
                   {args ? args.to : ''}
                 </div>
-                <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 leading-relaxed wrap-break-word">
+                <div className="text-sm font-medium text-foreground leading-relaxed wrap-break-word">
                   {result.translatedText}
                 </div>
               </div>
@@ -1461,8 +1461,8 @@ const TranslationTool: React.FC<{ args: any; result: any }> = ({ args, result })
                 className={cn(
                   'w-5 h-5 rounded-sm flex items-center justify-center transition-all duration-150',
                   isPlaying
-                    ? 'bg-neutral-700 text-white shadow-sm'
-                    : 'bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200',
+                    ? 'bg-foreground text-background shadow-sm'
+                    : 'bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground',
                 )}
               >
                 {isGeneratingAudio ? (
@@ -1474,10 +1474,10 @@ const TranslationTool: React.FC<{ args: any; result: any }> = ({ args, result })
                 )}
               </button>
 
-              <div className="flex-1 h-5 bg-neutral-100/80 dark:bg-neutral-800/80 rounded-sm overflow-hidden">
+              <div className="flex-1 h-5 bg-muted/80 rounded-sm overflow-hidden">
                 {!audioUrl && !isGeneratingAudio && (
                   <div className="w-full h-full flex items-center justify-center">
-                    <div className="w-full h-0.5 bg-neutral-200 dark:bg-neutral-700 rounded-full" />
+                    <div className="w-full h-0.5 bg-border rounded-full" />
                   </div>
                 )}
                 <canvas
@@ -1489,7 +1489,7 @@ const TranslationTool: React.FC<{ args: any; result: any }> = ({ args, result })
                 />
               </div>
 
-              <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-xs text-muted-foreground font-mono opacity-0 group-hover:opacity-100 transition-opacity">
                 {isGeneratingAudio ? '...' : audioUrl ? '●' : '○'}
               </span>
             </div>

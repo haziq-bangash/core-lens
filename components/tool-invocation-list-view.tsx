@@ -51,11 +51,11 @@ export const SearchLoadingState = ({
       icon: 'text-violet-500',
     },
     gray: {
-      background: 'bg-neutral-50 dark:bg-neutral-950',
+      background: 'bg-muted',
       border:
-        'from-neutral-200 via-neutral-500 to-neutral-200 dark:from-neutral-400 dark:via-neutral-500 dark:to-neutral-700',
-      text: 'text-neutral-500',
-      icon: 'text-neutral-500',
+        'from-muted-foreground/30 via-muted-foreground/60 to-muted-foreground/30',
+      text: 'text-muted-foreground',
+      icon: 'text-muted-foreground',
     },
     blue: {
       background: 'bg-blue-50 dark:bg-blue-950',
@@ -85,7 +85,7 @@ export const SearchLoadingState = ({
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-1.5 rounded-full bg-neutral-200 dark:bg-neutral-700 animate-pulse"
+                    className="h-1.5 rounded-full bg-muted animate-pulse"
                     style={{
                       width: `${Math.random() * 40 + 20}px`,
                       animationDelay: `${i * 0.2}s`,
@@ -104,20 +104,20 @@ export const SearchLoadingState = ({
 // Dedicated nearby search skeleton loading state
 export const NearbySearchSkeleton = ({ type }: { type: string }) => {
   return (
-    <div className="relative w-full h-[70vh] bg-white dark:bg-neutral-900 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800 my-4">
+    <div className="relative w-full h-[70vh] bg-card rounded-lg overflow-hidden border border-border my-4">
       {/* Header skeleton */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:gap-2">
         <div className="flex items-center gap-2">
-          <div className="h-6 w-28 bg-neutral-200 dark:bg-neutral-700 rounded-full animate-pulse" />
-          <div className="h-6 w-40 bg-neutral-200 dark:bg-neutral-700 rounded-full animate-pulse" />
+          <div className="h-6 w-28 bg-muted rounded-full animate-pulse" />
+          <div className="h-6 w-40 bg-muted rounded-full animate-pulse" />
         </div>
         {/* View toggle skeleton */}
-        <div className="relative flex rounded-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 p-0.5 shadow-lg">
-          <div className="px-4 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse">
-            <div className="h-4 w-8 bg-neutral-200 dark:bg-neutral-700 rounded" />
+        <div className="relative flex rounded-full bg-card border border-border p-0.5 shadow-lg">
+          <div className="px-4 py-1 rounded-full bg-muted animate-pulse">
+            <div className="h-4 w-8 bg-muted-foreground/20 rounded" />
           </div>
           <div className="px-4 py-1 rounded-full">
-            <div className="h-4 w-8 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            <div className="h-4 w-8 bg-muted-foreground/20 rounded animate-pulse" />
           </div>
         </div>
       </div>
@@ -125,8 +125,8 @@ export const NearbySearchSkeleton = ({ type }: { type: string }) => {
       {/* Content split: map (top) + list preview (bottom) */}
       <div className="w-full h-full flex flex-col">
         {/* Map area */}
-        <div className="relative flex-1 min-h-[45%] bg-neutral-100 dark:bg-neutral-800 animate-pulse">
-          <div className="absolute inset-0 bg-linear-to-br from-neutral-200 dark:from-neutral-700 to-transparent opacity-50" />
+        <div className="relative flex-1 min-h-[45%] bg-muted animate-pulse">
+          <div className="absolute inset-0 bg-linear-to-br from-muted-foreground/20 to-transparent opacity-50" />
 
           {/* Mock markers */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -141,7 +141,7 @@ export const NearbySearchSkeleton = ({ type }: { type: string }) => {
 
           {/* Loading text overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white/90 dark:bg-black/90 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center gap-2">
+            <div className="bg-background/90 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-blue-500 animate-pulse" />
               <TextShimmer className="text-sm font-medium" duration={2}>
                 {`Finding nearby ${type}...`}
@@ -151,23 +151,23 @@ export const NearbySearchSkeleton = ({ type }: { type: string }) => {
 
           {/* Map controls skeleton */}
           <div className="absolute bottom-4 right-4 space-y-2">
-            <div className="w-8 h-8 bg-neutral-300 dark:bg-neutral-700 rounded shadow-sm animate-pulse" />
-            <div className="w-8 h-8 bg-neutral-300 dark:bg-neutral-700 rounded shadow-sm animate-pulse" />
+            <div className="w-8 h-8 bg-border rounded shadow-sm animate-pulse" />
+            <div className="w-8 h-8 bg-border rounded shadow-sm animate-pulse" />
           </div>
         </div>
 
         {/* List preview area */}
-        <div className="h-[38%] bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 px-4 sm:px-6 py-3 overflow-hidden">
+        <div className="h-[38%] bg-card border-t border-border px-4 sm:px-6 py-3 overflow-hidden">
           <div className="mx-auto max-w-3xl space-y-3">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex gap-3">
-                <div className="h-16 w-20 sm:h-20 sm:w-28 rounded-md bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+                <div className="h-16 w-20 sm:h-20 sm:w-28 rounded-md bg-muted animate-pulse" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-                  <div className="h-3 w-1/2 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+                  <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
+                  <div className="h-3 w-1/2 rounded bg-muted animate-pulse" />
                   <div className="flex gap-2">
-                    <div className="h-5 w-16 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-                    <div className="h-5 w-12 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+                    <div className="h-5 w-16 rounded-full bg-muted animate-pulse" />
+                    <div className="h-5 w-12 rounded-full bg-muted animate-pulse" />
                   </div>
                 </div>
               </div>
@@ -181,11 +181,11 @@ export const NearbySearchSkeleton = ({ type }: { type: string }) => {
 
 // Modern code interpreter components
 const LineNumbers = memo(({ count }: { count: number }) => (
-  <div className="hidden sm:block select-none w-8 sm:w-10 shrink-0 border-r border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-800/30 py-0">
+  <div className="hidden sm:block select-none w-8 sm:w-10 shrink-0 border-r border-border bg-muted/50 py-0">
     {Array.from({ length: count }, (_, i) => (
       <div
         key={i}
-        className="text-[10px] h-5 flex items-center justify-end text-neutral-500 dark:text-neutral-400 pr-2 font-mono"
+        className="text-[10px] h-5 flex items-center justify-end text-muted-foreground pr-2 font-mono"
       >
         {i + 1}
       </div>
@@ -199,7 +199,7 @@ const StatusBadge = memo(({ status }: { status: 'running' | 'completed' | 'error
 
   if (status === 'error') {
     return (
-      <div className="flex items-center gap-1 text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 rounded-md text-[9px] font-medium">
+      <div className="flex items-center gap-1 text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-md text-[9px] font-medium">
         <XCircle className="h-2.5 w-2.5" />
         <span className="hidden sm:inline">Error</span>
       </div>
@@ -207,9 +207,9 @@ const StatusBadge = memo(({ status }: { status: 'running' | 'completed' | 'error
   }
 
   return (
-    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-100 dark:bg-blue-500/20">
-      <Loader2 className="h-2.5 w-2.5 animate-spin text-blue-500" />
-      <span className="hidden sm:inline text-[9px] font-medium text-blue-600 dark:text-blue-400">Running</span>
+    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10">
+      <Loader2 className="h-2.5 w-2.5 animate-spin text-primary" />
+      <span className="hidden sm:inline text-[9px] font-medium text-primary">Running</span>
     </div>
   );
 });
@@ -218,10 +218,10 @@ StatusBadge.displayName = 'StatusBadge';
 const CodeBlock = memo(({ code }: { code: string; language: string }) => {
   const lines = code.split('\n');
   return (
-    <div className="flex bg-neutral-50 dark:bg-neutral-900/70">
+    <div className="flex bg-muted/30">
       <LineNumbers count={lines.length} />
       <div className="overflow-x-auto w-full">
-        <pre className="py-0 px-2 sm:px-3 m-0 font-mono text-[11px] sm:text-xs leading-5 text-neutral-800 dark:text-neutral-300">
+        <pre className="py-0 px-2 sm:px-3 m-0 font-mono text-[11px] sm:text-xs leading-5 text-foreground">
           {code}
         </pre>
       </div>
@@ -238,8 +238,8 @@ const OutputBlock = memo(({ output, error }: { output?: string; error?: string }
       className={cn(
         'font-mono text-[11px] sm:text-xs leading-5 py-0 px-2 sm:px-3',
         error
-          ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-          : 'bg-neutral-100 dark:bg-neutral-800/50 text-neutral-700 dark:text-neutral-300',
+          ? 'bg-destructive/10 text-destructive'
+          : 'bg-muted/50 text-foreground/80',
       )}
     >
       <pre className="whitespace-pre-wrap overflow-x-auto">{error || output}</pre>
@@ -280,17 +280,17 @@ export function CodeInterpreterView({
   }, [status, output, error]);
 
   return (
-    <div className="group overflow-hidden bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 shadow-sm transition-all duration-200 hover:shadow">
+    <div className="group overflow-hidden bg-card rounded-lg border border-border shadow-sm transition-all duration-200 hover:shadow">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between px-2.5 sm:px-3 py-2 bg-neutral-50 dark:bg-neutral-800/30 border-b border-neutral-200 dark:border-neutral-800 gap-2">
+      <div className="flex flex-wrap items-center justify-between px-2.5 sm:px-3 py-2 bg-muted/50 border-b border-border gap-2">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-700/50">
-            <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-            <div className="text-[9px] font-medium font-mono text-neutral-500 dark:text-neutral-400 uppercase">
+          <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 py-0.5 rounded-md bg-muted">
+            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+            <div className="text-[9px] font-medium font-mono text-muted-foreground uppercase">
               {language}
             </div>
           </div>
-          <h3 className="text-xs font-medium text-neutral-700 dark:text-neutral-200 truncate max-w-40 sm:max-w-xs">
+          <h3 className="text-xs font-medium text-foreground truncate max-w-40 sm:max-w-xs">
             {title || 'Code Execution'}
           </h3>
           <StatusBadge status={status || 'completed'} />
@@ -301,7 +301,7 @@ export function CodeInterpreterView({
             variant="ghost"
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-6 w-6 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+            className="h-6 w-6 text-muted-foreground hover:text-foreground"
           >
             <ChevronDown
               className={cn('h-3.5 w-3.5 transition-transform duration-200', isExpanded ? 'rotate-180' : '')}
@@ -313,17 +313,17 @@ export function CodeInterpreterView({
       {/* Content */}
       {isExpanded && (
         <div>
-          <div className="max-w-full overflow-x-auto max-h-60 scrollbar-thin scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700 scrollbar-track-transparent">
+          <div className="max-w-full overflow-x-auto max-h-60 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             <CodeBlock code={code} language={language} />
           </div>
           {(output || error) && (
             <>
-              <div className="border-t border-neutral-200 dark:border-neutral-800 px-2.5 sm:px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800/30">
-                <div className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">
+              <div className="border-t border-border px-2.5 sm:px-3 py-1.5 bg-muted/50">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
                   {error ? 'Error Output' : 'Execution Result'}
                 </div>
               </div>
-              <div className="max-w-full overflow-x-auto max-h-60 scrollbar-thin scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700 scrollbar-track-transparent">
+              <div className="max-w-full overflow-x-auto max-h-60 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                 <OutputBlock output={output} error={error} />
               </div>
             </>
@@ -372,7 +372,7 @@ const CopyButton = memo(({ text }: { text: string }) => {
         'h-7 w-7 transition-colors duration-150',
         copied
           ? 'text-green-500'
-          : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
+          : 'text-muted-foreground hover:text-foreground',
       )}
     >
       {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
