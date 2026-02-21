@@ -35,8 +35,8 @@ const anannas = createOpenAICompatible({
   baseURL: 'https://api.anannas.ai/v1',
   apiKey: process.env.ANANNAS_API_KEY,
   headers: {
-    'HTTP-Referer': 'https://contract-lens.ai',
-    'X-Title': 'Contract Lens AI',
+    'HTTP-Referer': 'https://core-lens.ai',
+    'X-Title': 'Core Lens AI',
     'Content-Type': 'application/json',
   },
 });
@@ -59,184 +59,184 @@ const baseten = createOpenAICompatible({
 });
 
 
-export const contractLens = customProvider({
+export const coreLens = customProvider({
   languageModels: {
-    'contract-lens-default': xai('grok-4-1-fast-non-reasoning'),
-    'contract-lens-grok4.1-fast-thinking': xai('grok-4-1-fast'),
-    'contract-lens-nano': groq('llama-3.3-70b-versatile'),
-    'contract-lens-name': mistral('ministral-3b-2512'),
-    'contract-lens-grok-3-mini': xai('grok-3-mini'),
-    'contract-lens-grok-3': xai('grok-3'),
-    'contract-lens-grok-4': xai('grok-4'),
-    'contract-lens-grok-4-fast': xai('grok-4-fast-non-reasoning'),
-    'contract-lens-grok-4-fast-think': xai('grok-4-fast'),
-    'contract-lens-code': xai('grok-code-fast-1'),
-    'contract-lens-enhance': groq('moonshotai/kimi-k2-instruct-0905'),
-    'contract-lens-follow-up': xaiEU('grok-4-1-fast-non-reasoning'),
-    'contract-lens-qwen-4b': huggingface.chatModel('Qwen/Qwen3-4B-Instruct-2507:nscale'),
-    'contract-lens-qwen-4b-thinking': wrapLanguageModel({
+    'core-lens-default': xai('grok-4-1-fast-non-reasoning'),
+    'core-lens-grok4.1-fast-thinking': xai('grok-4-1-fast'),
+    'core-lens-nano': groq('llama-3.3-70b-versatile'),
+    'core-lens-name': mistral('ministral-3b-2512'),
+    'core-lens-grok-3-mini': xai('grok-3-mini'),
+    'core-lens-grok-3': xai('grok-3'),
+    'core-lens-grok-4': xai('grok-4'),
+    'core-lens-grok-4-fast': xai('grok-4-fast-non-reasoning'),
+    'core-lens-grok-4-fast-think': xai('grok-4-fast'),
+    'core-lens-code': xai('grok-code-fast-1'),
+    'core-lens-enhance': groq('moonshotai/kimi-k2-instruct-0905'),
+    'core-lens-follow-up': xaiEU('grok-4-1-fast-non-reasoning'),
+    'core-lens-qwen-4b': huggingface.chatModel('Qwen/Qwen3-4B-Instruct-2507:nscale'),
+    'core-lens-qwen-4b-thinking': wrapLanguageModel({
       model: huggingface.chatModel('Qwen/Qwen3-4B-Thinking-2507:nscale'),
       middleware: [middlewareWithStartWithReasoning],
     }),
-    'contract-lens-gpt-4.1-nano': openai('gpt-4.1-nano'),
-    'contract-lens-gpt-4.1-mini': openai('gpt-4.1-mini'),
-    'contract-lens-gpt-4.1': openai('gpt-4.1'),
-    'contract-lens-gpt-5.1': openai('gpt-5.1'),
-    'contract-lens-gpt-5.1-thinking': openai('gpt-5.1'),
-    'contract-lens-gpt-5.2': openai('gpt-5.2'),
-    'contract-lens-gpt-5.2-thinking': openai('gpt-5.2'),
-    'contract-lens-gpt-5.1-codex': openai('gpt-5.1-codex'),
-    'contract-lens-gpt-5.1-codex-mini': openai('gpt-5.1-codex-mini'),
-    'contract-lens-gpt-5.1-codex-max': openai('gpt-5.1-codex-max'),
-    'contract-lens-gpt5': openai('gpt-5'),
-    'contract-lens-gpt5-medium': openai('gpt-5'),
-    'contract-lens-gpt5-mini': openai('gpt-5-mini'),
-    'contract-lens-gpt5-nano': openai('gpt-5-nano'),
-    'contract-lens-o3': openai('o3'),
-    'contract-lens-o4-mini': openai('o4-mini'),
-    'contract-lens-gpt5-codex': openai('gpt-5-codex'),
-    'contract-lens-qwen-32b': wrapLanguageModel({
+    'core-lens-gpt-4.1-nano': openai('gpt-4.1-nano'),
+    'core-lens-gpt-4.1-mini': openai('gpt-4.1-mini'),
+    'core-lens-gpt-4.1': openai('gpt-4.1'),
+    'core-lens-gpt-5.1': openai('gpt-5.1'),
+    'core-lens-gpt-5.1-thinking': openai('gpt-5.1'),
+    'core-lens-gpt-5.2': openai('gpt-5.2'),
+    'core-lens-gpt-5.2-thinking': openai('gpt-5.2'),
+    'core-lens-gpt-5.1-codex': openai('gpt-5.1-codex'),
+    'core-lens-gpt-5.1-codex-mini': openai('gpt-5.1-codex-mini'),
+    'core-lens-gpt-5.1-codex-max': openai('gpt-5.1-codex-max'),
+    'core-lens-gpt5': openai('gpt-5'),
+    'core-lens-gpt5-medium': openai('gpt-5'),
+    'core-lens-gpt5-mini': openai('gpt-5-mini'),
+    'core-lens-gpt5-nano': openai('gpt-5-nano'),
+    'core-lens-o3': openai('o3'),
+    'core-lens-o4-mini': openai('o4-mini'),
+    'core-lens-gpt5-codex': openai('gpt-5-codex'),
+    'core-lens-qwen-32b': wrapLanguageModel({
       model: groq('qwen/qwen3-32b'),
       middleware,
     }),
-    'contract-lens-qwen-32b-thinking': wrapLanguageModel({
+    'core-lens-qwen-32b-thinking': wrapLanguageModel({
       model: groq('qwen/qwen3-32b'),
       middleware,
     }),
-    'contract-lens-gpt-oss-20': wrapLanguageModel({
+    'core-lens-gpt-oss-20': wrapLanguageModel({
       model: groq('openai/gpt-oss-20b'),
       middleware,
     }),
-    'contract-lens-gpt-oss-120': wrapLanguageModel({
+    'core-lens-gpt-oss-120': wrapLanguageModel({
       model: baseten('openai/gpt-oss-120b'),
       middleware,
     }),
-    'contract-lens-trinity-mini': wrapLanguageModel({
+    'core-lens-trinity-mini': wrapLanguageModel({
       model: gateway('arcee-ai/trinity-mini'),
       middleware,
     }),
-    'contract-lens-kat-coder': novita.chatModel('kat-coder'),
-    'contract-lens-deepseek-v3': baseten('deepseek-ai/DeepSeek-V3-0324'), // baseten
-    'contract-lens-deepseek-v3.1-terminus': novita.chatModel('deepseek/deepseek-v3.1-terminus'),
-    'contract-lens-deepseek-chat': gateway('deepseek/deepseek-v3.2'),
-    'contract-lens-deepseek-chat-think': gateway('deepseek/deepseek-v3.2-thinking'),
-    'contract-lens-deepseek-chat-exp': novita.chatModel('deepseek/deepseek-v3.2-exp'),
-    'contract-lens-deepseek-chat-think-exp': wrapLanguageModel({
+    'core-lens-kat-coder': novita.chatModel('kat-coder'),
+    'core-lens-deepseek-v3': baseten('deepseek-ai/DeepSeek-V3-0324'), // baseten
+    'core-lens-deepseek-v3.1-terminus': novita.chatModel('deepseek/deepseek-v3.1-terminus'),
+    'core-lens-deepseek-chat': gateway('deepseek/deepseek-v3.2'),
+    'core-lens-deepseek-chat-think': gateway('deepseek/deepseek-v3.2-thinking'),
+    'core-lens-deepseek-chat-exp': novita.chatModel('deepseek/deepseek-v3.2-exp'),
+    'core-lens-deepseek-chat-think-exp': wrapLanguageModel({
       model: gateway('deepseek/deepseek-v3.2-exp-thinking'),
       middleware,
     }),
-    'contract-lens-v0-10': gateway('vercel/v0-1.0-md'),
-    'contract-lens-v0-15': gateway('vercel/v0-1.5-md'),
-    'contract-lens-deepseek-r1': wrapLanguageModel({
+    'core-lens-v0-10': gateway('vercel/v0-1.0-md'),
+    'core-lens-v0-15': gateway('vercel/v0-1.5-md'),
+    'core-lens-deepseek-r1': wrapLanguageModel({
       model: novita.chatModel('deepseek/deepseek-r1-turbo'),
       middleware,
     }),
-    'contract-lens-deepseek-r1-0528': wrapLanguageModel({
+    'core-lens-deepseek-r1-0528': wrapLanguageModel({
       model: novita.chatModel('deepseek/deepseek-r1-0528'),
       middleware,
     }),
-    'contract-lens-qwen-coder-small': novita.chatModel('qwen/qwen3-coder-30b-a3b-instruct'),
-    'contract-lens-qwen-coder': baseten('Qwen/Qwen3-Coder-480B-A35B-Instruct'), // baseten
-    'contract-lens-qwen-coder-plus': gateway('alibaba/qwen3-coder-plus'),
-    'contract-lens-qwen-30': huggingface.chatModel('Qwen/Qwen3-30B-A3B-Instruct-2507:nebius'),
-    'contract-lens-qwen-30-think': wrapLanguageModel({
+    'core-lens-qwen-coder-small': novita.chatModel('qwen/qwen3-coder-30b-a3b-instruct'),
+    'core-lens-qwen-coder': baseten('Qwen/Qwen3-Coder-480B-A35B-Instruct'), // baseten
+    'core-lens-qwen-coder-plus': gateway('alibaba/qwen3-coder-plus'),
+    'core-lens-qwen-30': huggingface.chatModel('Qwen/Qwen3-30B-A3B-Instruct-2507:nebius'),
+    'core-lens-qwen-30-think': wrapLanguageModel({
       model: huggingface.chatModel('Qwen/Qwen3-30B-A3B-Thinking-2507:nebius'),
       middleware,
     }),
-    'contract-lens-qwen-3-vl-30b': novita.chatModel('qwen/qwen3-vl-30b-a3b-instruct'),
-    'contract-lens-qwen-3-vl-30b-thinking': wrapLanguageModel({
+    'core-lens-qwen-3-vl-30b': novita.chatModel('qwen/qwen3-vl-30b-a3b-instruct'),
+    'core-lens-qwen-3-vl-30b-thinking': wrapLanguageModel({
       model: novita.chatModel('qwen/qwen3-vl-30b-a3b-thinking'),
       middleware,
     }),
-    'contract-lens-qwen-3-next': huggingface.chatModel('Qwen/Qwen3-Next-80B-A3B-Instruct:hyperbolic'),
-    'contract-lens-qwen-3-next-think': wrapLanguageModel({
+    'core-lens-qwen-3-next': huggingface.chatModel('Qwen/Qwen3-Next-80B-A3B-Instruct:hyperbolic'),
+    'core-lens-qwen-3-next-think': wrapLanguageModel({
       model: huggingface.chatModel('Qwen/Qwen3-Next-80B-A3B-Thinking:hyperbolic'),
       middleware: [middlewareWithStartWithReasoning],
     }),
-    'contract-lens-qwen-3-max': novita.chatModel('qwen/qwen3-max'),
-    'contract-lens-qwen-3-max-preview': gateway('alibaba/qwen3-max-preview'),
-    'contract-lens-qwen-235': gateway('alibaba/qwen-3-235b'),
-    'contract-lens-qwen-235-think': wrapLanguageModel({
+    'core-lens-qwen-3-max': novita.chatModel('qwen/qwen3-max'),
+    'core-lens-qwen-3-max-preview': gateway('alibaba/qwen3-max-preview'),
+    'core-lens-qwen-235': gateway('alibaba/qwen-3-235b'),
+    'core-lens-qwen-235-think': wrapLanguageModel({
       model: huggingface.chatModel('Qwen/Qwen3-235B-A22B-Thinking-2507:fireworks-ai'),
       middleware: [middlewareWithStartWithReasoning],
     }),
-    'contract-lens-qwen-3-vl': novita.chatModel('qwen/qwen3-vl-235b-a22b-instruct'),
-    'contract-lens-qwen-3-vl-thinking': wrapLanguageModel({
+    'core-lens-qwen-3-vl': novita.chatModel('qwen/qwen3-vl-235b-a22b-instruct'),
+    'core-lens-qwen-3-vl-thinking': wrapLanguageModel({
       model: novita.chatModel('qwen/qwen3-vl-235b-a22b-thinking'),
       middleware,
     }),
-    'contract-lens-glm-air': novita.chatModel('zai-org/glm-4.5-air'),
-    'contract-lens-glm': wrapLanguageModel({
+    'core-lens-glm-air': novita.chatModel('zai-org/glm-4.5-air'),
+    'core-lens-glm': wrapLanguageModel({
       model: novita.chatModel('zai-org/glm-4.5'),
       middleware,
     }),
-    'contract-lens-glm-4.6': wrapLanguageModel({
+    'core-lens-glm-4.6': wrapLanguageModel({
       model: huggingface.chatModel('zai-org/GLM-4.6:cerebras'),
       middleware,
     }),
-    'contract-lens-glm-4.6v-flash': wrapLanguageModel({
+    'core-lens-glm-4.6v-flash': wrapLanguageModel({
       model: huggingface.chatModel('zai-org/GLM-4.6V-Flash:zai-org'),
       middleware,
     }),
-    'contract-lens-glm-4.6v': wrapLanguageModel({
+    'core-lens-glm-4.6v': wrapLanguageModel({
       model: huggingface.chatModel('zai-org/GLM-4.6V:zai-org'),
       middleware,
     }),
-    'contract-lens-glm-4.7': wrapLanguageModel({
+    'core-lens-glm-4.7': wrapLanguageModel({
       model: baseten('zai-org/GLM-4.7'),
       middleware,
     }),
-    'contract-lens-minimax': wrapLanguageModel({
+    'core-lens-minimax': wrapLanguageModel({
       model: novita.chatModel('minimaxai/minimax-m1-80k'),
       middleware,
     }),
-    'contract-lens-minimax-m2': wrapLanguageModel({
+    'core-lens-minimax-m2': wrapLanguageModel({
       model: gateway('minimax/minimax-m2'),
       middleware,
     }),
-    'contract-lens-minimax-m2.1': wrapLanguageModel({
+    'core-lens-minimax-m2.1': wrapLanguageModel({
       model: gateway('minimax/minimax-m2.1'),
       middleware,
     }),
-    'contract-lens-minimax-m2.1-lightning': wrapLanguageModel({
+    'core-lens-minimax-m2.1-lightning': wrapLanguageModel({
       model: gateway('minimax/minimax-m2.1-lightning'),
       middleware,
     }),
-    'contract-lens-cmd-a': cohere('command-a-03-2025'),
-    'contract-lens-cmd-a-think': cohere('command-a-reasoning-08-2025'),
-    'contract-lens-kimi-k2-v2': baseten('moonshotai/Kimi-K2-Instruct-0905'), // baseten
-    'contract-lens-kimi-k2-v2-thinking': wrapLanguageModel({
+    'core-lens-cmd-a': cohere('command-a-03-2025'),
+    'core-lens-cmd-a-think': cohere('command-a-reasoning-08-2025'),
+    'core-lens-kimi-k2-v2': baseten('moonshotai/Kimi-K2-Instruct-0905'), // baseten
+    'core-lens-kimi-k2-v2-thinking': wrapLanguageModel({
       model: baseten('moonshotai/Kimi-K2-Thinking'), // baseten
       middleware,
     }),
-    'contract-lens-haiku': anannas.chatModel('anthropic/claude-3-5-haiku-20241022'),
-    'contract-lens-ministral-3b': mistral('ministral-3b-2512'),
-    'contract-lens-ministral-8b': mistral('ministral-8b-2512'),
-    'contract-lens-ministral-14b': mistral('ministral-14b-2512'),
-    'contract-lens-mistral-large': mistral('mistral-large-2512'),
-    'contract-lens-mistral-medium': mistral('mistral-medium-2508'),
-    'contract-lens-magistral-small': mistral('magistral-small-2509'),
-    'contract-lens-magistral-medium': mistral('magistral-medium-2509'),
-    'contract-lens-devstral': mistral('devstral-2512'),
-    'contract-lens-devstral-small': mistral('labs-devstral-small-2512'),
-    'contract-lens-google-lite': google('gemini-flash-lite-latest'),
-    'contract-lens-google': google('gemini-flash-latest'),
-    'contract-lens-google-think': google('gemini-flash-latest'),
-    'contract-lens-google-pro': google('gemini-2.5-pro'),
-    'contract-lens-google-pro-think': google('gemini-2.5-pro'),
-    'contract-lens-gemini-3-flash': google('gemini-3-flash-preview'),
-    'contract-lens-gemini-3-flash-think': google('gemini-3-flash-preview'),
-    'contract-lens-gemini-3-pro': google('gemini-3-pro-preview'),
-    'contract-lens-anthropic-small': anthropic('claude-haiku-4-5'),
-    'contract-lens-anthropic': anthropic('claude-sonnet-4-5'),
-    'contract-lens-anthropic-think': anthropic('claude-sonnet-4-5'),
-    'contract-lens-mimo-v2-flash': wrapLanguageModel({
+    'core-lens-haiku': anannas.chatModel('anthropic/claude-3-5-haiku-20241022'),
+    'core-lens-ministral-3b': mistral('ministral-3b-2512'),
+    'core-lens-ministral-8b': mistral('ministral-8b-2512'),
+    'core-lens-ministral-14b': mistral('ministral-14b-2512'),
+    'core-lens-mistral-large': mistral('mistral-large-2512'),
+    'core-lens-mistral-medium': mistral('mistral-medium-2508'),
+    'core-lens-magistral-small': mistral('magistral-small-2509'),
+    'core-lens-magistral-medium': mistral('magistral-medium-2509'),
+    'core-lens-devstral': mistral('devstral-2512'),
+    'core-lens-devstral-small': mistral('labs-devstral-small-2512'),
+    'core-lens-google-lite': google('gemini-flash-lite-latest'),
+    'core-lens-google': google('gemini-flash-latest'),
+    'core-lens-google-think': google('gemini-flash-latest'),
+    'core-lens-google-pro': google('gemini-2.5-pro'),
+    'core-lens-google-pro-think': google('gemini-2.5-pro'),
+    'core-lens-gemini-3-flash': google('gemini-3-flash-preview'),
+    'core-lens-gemini-3-flash-think': google('gemini-3-flash-preview'),
+    'core-lens-gemini-3-pro': google('gemini-3-pro-preview'),
+    'core-lens-anthropic-small': anthropic('claude-haiku-4-5'),
+    'core-lens-anthropic': anthropic('claude-sonnet-4-5'),
+    'core-lens-anthropic-think': anthropic('claude-sonnet-4-5'),
+    'core-lens-mimo-v2-flash': wrapLanguageModel({
       model: novita.chatModel('xiaomimimo/mimo-v2-flash'),
       middleware,
     }),
-    'contract-lens-anthropic-opus': anthropic('claude-opus-4-5'),
-    'contract-lens-anthropic-opus-think': anthropic('claude-opus-4-5'),
-    'contract-lens-nova-2-lite': gateway('amazon/nova-2-lite'),
+    'core-lens-anthropic-opus': anthropic('claude-opus-4-5'),
+    'core-lens-anthropic-opus-think': anthropic('claude-opus-4-5'),
+    'core-lens-nova-2-lite': gateway('amazon/nova-2-lite'),
   },
 });
 
@@ -272,7 +272,7 @@ interface Model {
 export const models: Model[] = [
   // Models (xAI)
   {
-    value: 'contract-lens-grok-3-mini',
+    value: 'core-lens-grok-3-mini',
     label: 'Grok 3 Mini',
     description: "xAI's recent smallest LLM",
     vision: false,
@@ -286,7 +286,7 @@ export const models: Model[] = [
     maxOutputTokens: 16000,
   },
   {
-    value: 'contract-lens-grok-3',
+    value: 'core-lens-grok-3',
     label: 'Grok 3',
     description: "xAI's recent smartest LLM",
     vision: false,
@@ -300,7 +300,7 @@ export const models: Model[] = [
     maxOutputTokens: 16000,
   },
   {
-    value: 'contract-lens-grok-4',
+    value: 'core-lens-grok-4',
     label: 'Grok 4',
     description: "xAI's most intelligent LLM",
     vision: true,
@@ -314,7 +314,7 @@ export const models: Model[] = [
     maxOutputTokens: 16000,
   },
   {
-    value: 'contract-lens-default',
+    value: 'core-lens-default',
     label: 'Grok 4.1 Fast',
     description: "xAI's greatest and fastest multimodel LLM",
     vision: true,
@@ -331,7 +331,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-grok4.1-fast-thinking',
+    value: 'core-lens-grok4.1-fast-thinking',
     label: 'Grok 4.1 Fast Thinking',
     description: "xAI's greatest and fastest multimodel reasoning LLM",
     vision: true,
@@ -348,7 +348,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-grok-4-fast',
+    value: 'core-lens-grok-4-fast',
     label: 'Grok 4 Fast',
     description: "xAI's previous fastest multimodel LLM",
     vision: true,
@@ -365,7 +365,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-grok-4-fast-think',
+    value: 'core-lens-grok-4-fast-think',
     label: 'Grok 4 Fast Thinking',
     description: "xAI's previous fastest multimodel reasoning LLM",
     vision: true,
@@ -385,7 +385,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-code',
+    value: 'core-lens-code',
     label: 'Grok Code',
     description: "xAI's advanced coding LLM",
     vision: false,
@@ -400,7 +400,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-qwen-32b',
+    value: 'core-lens-qwen-32b',
     label: 'Qwen 3 32B',
     description: "Alibaba's base LLM",
     vision: false,
@@ -421,7 +421,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-32b-thinking',
+    value: 'core-lens-qwen-32b-thinking',
     label: 'Qwen 3 32B Thinking',
     description: "Alibaba's base reasoning LLM",
     vision: false,
@@ -442,7 +442,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-4b',
+    value: 'core-lens-qwen-4b',
     label: 'Qwen 3 4B',
     description: "Alibaba's small base LLM",
     vision: false,
@@ -462,7 +462,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-4b-thinking',
+    value: 'core-lens-qwen-4b-thinking',
     label: 'Qwen 3 4B Thinking',
     description: "Alibaba's small base LLM",
     vision: false,
@@ -482,7 +482,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-gpt-oss-20',
+    value: 'core-lens-gpt-oss-20',
     label: 'GPT OSS 20B',
     description: "OpenAI's small OSS LLM",
     vision: false,
@@ -497,7 +497,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-gpt5-nano',
+    value: 'core-lens-gpt5-nano',
     label: 'GPT 5 Nano',
     description: "OpenAI's smallest flagship LLM",
     vision: true,
@@ -513,7 +513,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-google-lite',
+    value: 'core-lens-google-lite',
     label: 'Gemini 2.5 Flash Lite',
     description: "Google's advanced small LLM",
     vision: true,
@@ -529,7 +529,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-ministral-3b',
+    value: 'core-lens-ministral-3b',
     label: 'Ministral 3 3B',
     description: "Mistral's mini-model 3B multi-modal LLM",
     vision: true,
@@ -544,7 +544,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-ministral-8b',
+    value: 'core-lens-ministral-8b',
     label: 'Ministral 3 8B',
     description: "Mistral's mini-model 8B multi-modal LLM",
     vision: true,
@@ -559,7 +559,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-devstral',
+    value: 'core-lens-devstral',
     label: 'Devstral 2',
     description: "Mistral's coding-focused LLM",
     vision: false,
@@ -574,7 +574,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-devstral-small',
+    value: 'core-lens-devstral-small',
     label: 'Devstral Small 2',
     description: "Mistral's small coding-focused LLM",
     vision: false,
@@ -589,7 +589,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-ministral-14b',
+    value: 'core-lens-ministral-14b',
     label: 'Ministral 3 14B',
     description: "Mistral's mini-model 14B multi-modal LLM",
     vision: true,
@@ -604,7 +604,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-mistral-large',
+    value: 'core-lens-mistral-large',
     label: 'Mistral Large 3',
     description: "Mistral's latest and greatest large multi-modal LLM",
     vision: true,
@@ -619,7 +619,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-mistral-medium',
+    value: 'core-lens-mistral-medium',
     label: 'Mistral Medium',
     description: "Mistral's medium multi-modal LLM",
     vision: true,
@@ -634,7 +634,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-magistral-small',
+    value: 'core-lens-magistral-small',
     label: 'Magistral Small',
     description: "Mistral's small reasoning LLM",
     vision: true,
@@ -649,7 +649,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-magistral-medium',
+    value: 'core-lens-magistral-medium',
     label: 'Magistral Medium',
     description: "Mistral's medium reasoning LLM",
     vision: true,
@@ -664,7 +664,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-trinity-mini',
+    value: 'core-lens-trinity-mini',
     label: 'Trinity Mini',
     description: "Arcee's small reasoning LLM",
     vision: false,
@@ -685,7 +685,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-gpt-oss-120',
+    value: 'core-lens-gpt-oss-120',
     label: 'GPT OSS 120B',
     description: "OpenAI's advanced OSS LLM",
     vision: false,
@@ -700,7 +700,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-gpt-4.1-nano',
+    value: 'core-lens-gpt-4.1-nano',
     label: 'GPT 4.1 Nano',
     description: "OpenAI's smallest LLM",
     vision: true,
@@ -716,7 +716,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-gpt-4.1-mini',
+    value: 'core-lens-gpt-4.1-mini',
     label: 'GPT 4.1 Mini',
     description: "OpenAI's small LLM",
     vision: true,
@@ -732,7 +732,7 @@ export const models: Model[] = [
     experimental: false,
   },
   {
-    value: 'contract-lens-gpt-4.1',
+    value: 'core-lens-gpt-4.1',
     label: 'GPT 4.1',
     description: "OpenAI's LLM",
     vision: true,
@@ -749,7 +749,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.1',
+    value: 'core-lens-gpt-5.1',
     label: 'GPT 5.1 Instant',
     description: "OpenAI's fast and smart LLM",
     vision: true,
@@ -766,7 +766,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.1-thinking',
+    value: 'core-lens-gpt-5.1-thinking',
     label: 'GPT 5.1 Thinking',
     description: "OpenAI's recent and smart reasoning LLM",
     vision: true,
@@ -783,7 +783,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.2',
+    value: 'core-lens-gpt-5.2',
     label: 'GPT 5.2 Instant',
     description: "OpenAI's latest and greatest LLM",
     vision: true,
@@ -800,7 +800,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.2-thinking',
+    value: 'core-lens-gpt-5.2-thinking',
     label: 'GPT 5.2 Thinking',
     description: "OpenAI's latest and greatest reasoning LLM",
     vision: true,
@@ -817,7 +817,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt5-mini',
+    value: 'core-lens-gpt5-mini',
     label: 'GPT 5 Mini',
     description: "OpenAI's small flagship LLM",
     vision: true,
@@ -834,7 +834,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt5',
+    value: 'core-lens-gpt5',
     label: 'GPT 5',
     description: "OpenAI's flagship LLM",
     vision: true,
@@ -851,7 +851,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-o4-mini',
+    value: 'core-lens-o4-mini',
     label: 'o4 mini',
     description: "OpenAI's recent mini reasoning LLM",
     vision: true,
@@ -867,7 +867,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-o3',
+    value: 'core-lens-o3',
     label: 'o3',
     description: "OpenAI's advanced LLM",
     vision: true,
@@ -883,7 +883,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt5-medium',
+    value: 'core-lens-gpt5-medium',
     label: 'GPT 5 Medium',
     description: "OpenAI's latest flagship reasoning LLM",
     vision: true,
@@ -900,7 +900,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.1-codex',
+    value: 'core-lens-gpt-5.1-codex',
     label: 'GPT 5.1 Codex',
     description: "OpenAI's advanced coding LLM",
     vision: true,
@@ -917,7 +917,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.1-codex-mini',
+    value: 'core-lens-gpt-5.1-codex-mini',
     label: 'GPT 5.1 Codex Mini',
     description: "OpenAI's advanced coding LLM",
     vision: true,
@@ -934,7 +934,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt-5.1-codex-max',
+    value: 'core-lens-gpt-5.1-codex-max',
     label: 'GPT 5.1 Codex Max',
     description: "OpenAI's advanced coding LLM",
     vision: true,
@@ -951,7 +951,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gpt5-codex',
+    value: 'core-lens-gpt5-codex',
     label: 'GPT 5 Codex',
     description: "OpenAI's advanced coding LLM",
     vision: true,
@@ -968,7 +968,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-cmd-a',
+    value: 'core-lens-cmd-a',
     label: 'Command A',
     description: "Cohere's advanced command LLM",
     vision: false,
@@ -983,7 +983,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-cmd-a-think',
+    value: 'core-lens-cmd-a-think',
     label: 'Command A Thinking',
     description: "Cohere's advanced command LLM with thinking",
     vision: false,
@@ -998,7 +998,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-kat-coder',
+    value: 'core-lens-kat-coder',
     label: 'KAT-Coder-Pro V1',
     description: "Kwaipilot's advanced coding LLM",
     vision: false,
@@ -1013,7 +1013,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-deepseek-v3',
+    value: 'core-lens-deepseek-v3',
     label: 'DeepSeek v3',
     description: "DeepSeek's previous advanced chat LLM",
     vision: false,
@@ -1034,7 +1034,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-deepseek-v3.1-terminus',
+    value: 'core-lens-deepseek-v3.1-terminus',
     label: 'DeepSeek v3.1 Terminus',
     description: "DeepSeek's advanced chat LLM",
     vision: false,
@@ -1055,7 +1055,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-deepseek-chat',
+    value: 'core-lens-deepseek-chat',
     label: 'DeepSeek v3.2',
     description: "DeepSeek's advanced chat LLM",
     vision: false,
@@ -1074,7 +1074,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-deepseek-chat-think',
+    value: 'core-lens-deepseek-chat-think',
     label: 'DeepSeek v3.2 Thinking',
     description: "DeepSeek's advanced chat LLM with thinking",
     vision: false,
@@ -1089,7 +1089,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-deepseek-chat-exp',
+    value: 'core-lens-deepseek-chat-exp',
     label: 'DeepSeek v3.2 Exp',
     description: "DeepSeek's advanced chat LLM",
     vision: false,
@@ -1104,7 +1104,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-deepseek-chat-think-exp',
+    value: 'core-lens-deepseek-chat-think-exp',
     label: 'DeepSeek v3.2 Exp Thinking',
     description: "DeepSeek's advanced chat LLM with thinking",
     vision: false,
@@ -1119,7 +1119,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-deepseek-r1',
+    value: 'core-lens-deepseek-r1',
     label: 'DeepSeek R1',
     description: "DeepSeek's advanced reasoning LLM",
     vision: false,
@@ -1134,7 +1134,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-deepseek-r1-0528',
+    value: 'core-lens-deepseek-r1-0528',
     label: 'DeepSeek R1 0528',
     description: "DeepSeek's advanced reasoning LLM",
     vision: false,
@@ -1149,7 +1149,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-coder-small',
+    value: 'core-lens-qwen-coder-small',
     label: 'Qwen 3 Coder 30B A3B Instruct',
     description: "Alibaba's advanced coding LLM",
     vision: false,
@@ -1171,7 +1171,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-coder',
+    value: 'core-lens-qwen-coder',
     label: 'Qwen 3 Coder',
     description: "Alibaba's advanced coding LLM",
     vision: false,
@@ -1186,7 +1186,7 @@ export const models: Model[] = [
     fast: true,
   },
   {
-    value: 'contract-lens-qwen-coder-plus',
+    value: 'core-lens-qwen-coder-plus',
     label: 'Qwen 3 Coder Plus',
     description: "Alibaba's extremely advanced coding LLM",
     vision: false,
@@ -1201,7 +1201,7 @@ export const models: Model[] = [
     fast: false,
   },
   {
-    value: 'contract-lens-qwen-3-vl-30b',
+    value: 'core-lens-qwen-3-vl-30b',
     label: 'Qwen 3 VL 30B',
     description: "Alibaba's advanced vision LLM",
     vision: true,
@@ -1222,7 +1222,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-3-vl-30b-thinking',
+    value: 'core-lens-qwen-3-vl-30b-thinking',
     label: 'Qwen 3 VL 30B Thinking',
     description: "Alibaba's advanced vision LLM with thinking",
     vision: true,
@@ -1244,7 +1244,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-3-next',
+    value: 'core-lens-qwen-3-next',
     label: 'Qwen 3 Next 80B A3B Instruct',
     description: "Qwen's advanced instruct LLM",
     vision: false,
@@ -1265,7 +1265,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-3-next-think',
+    value: 'core-lens-qwen-3-next-think',
     label: 'Qwen 3 Next 80B A3B Thinking',
     description: "Qwen's advanced thinking LLM",
     vision: false,
@@ -1285,7 +1285,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-3-max',
+    value: 'core-lens-qwen-3-max',
     label: 'Qwen 3 Max',
     description: "Qwen's advanced instruct LLM",
     vision: false,
@@ -1300,7 +1300,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-3-max-preview',
+    value: 'core-lens-qwen-3-max-preview',
     label: 'Qwen 3 Max Preview',
     description: "Qwen's advanced instruct LLM",
     vision: false,
@@ -1315,7 +1315,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-235',
+    value: 'core-lens-qwen-235',
     label: 'Qwen 3 235B A22B',
     description: "Qwen's advanced instruct LLM",
     vision: false,
@@ -1334,7 +1334,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-235-think',
+    value: 'core-lens-qwen-235-think',
     label: 'Qwen 3 235B A22B Thinking',
     description: "Qwen's advanced thinking LLM",
     vision: false,
@@ -1353,7 +1353,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-qwen-3-vl',
+    value: 'core-lens-qwen-3-vl',
     label: 'Qwen 3 VL 235B A22B Instruct',
     description: "Qwen's advanced vision LLM with thinking",
     vision: true,
@@ -1373,7 +1373,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-qwen-3-vl-thinking',
+    value: 'core-lens-qwen-3-vl-thinking',
     label: 'Qwen 3 VL 235B A22B Thinking',
     description: "Qwen's advanced vision LLM with thinking",
     vision: true,
@@ -1393,7 +1393,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-kimi-k2-v2',
+    value: 'core-lens-kimi-k2-v2',
     label: 'Kimi K2 Latest',
     description: "MoonShot AI's advanced base LLM",
     vision: false,
@@ -1411,7 +1411,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-kimi-k2-v2-thinking',
+    value: 'core-lens-kimi-k2-v2-thinking',
     label: 'Kimi K2 Thinking',
     description: "MoonShot AI's advanced base LLM with thinking",
     vision: false,
@@ -1432,7 +1432,7 @@ export const models: Model[] = [
   // sherlock experimental models
 
   {
-    value: 'contract-lens-minimax',
+    value: 'core-lens-minimax',
     label: 'Minimax M1 80K',
     description: "Minimax's advanced reasoning LLM",
     vision: false,
@@ -1450,7 +1450,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-minimax-m2',
+    value: 'core-lens-minimax-m2',
     label: 'Minimax M2',
     description: "Minimax's advanced reasoning LLM",
     vision: false,
@@ -1470,7 +1470,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-minimax-m2.1',
+    value: 'core-lens-minimax-m2.1',
     label: 'Minimax M2.1',
     description: "Minimax's latest advanced reasoning LLM",
     vision: false,
@@ -1490,7 +1490,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-minimax-m2.1-lightning',
+    value: 'core-lens-minimax-m2.1-lightning',
     label: 'Minimax M2.1 Lightning',
     description: "Minimax's fast advanced reasoning LLM",
     vision: false,
@@ -1511,7 +1511,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm-4.6',
+    value: 'core-lens-glm-4.6',
     label: 'GLM 4.6',
     description: "Zhipu AI's advanced reasoning LLM",
     vision: false,
@@ -1531,7 +1531,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm-4.6v-flash',
+    value: 'core-lens-glm-4.6v-flash',
     label: 'GLM 4.6V Flash',
     description: "Zhipu AI's fast vision reasoning LLM",
     vision: true,
@@ -1553,7 +1553,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm-4.6v',
+    value: 'core-lens-glm-4.6v',
     label: 'GLM 4.6V',
     description: "Zhipu AI's advanced vision reasoning LLM",
     vision: true,
@@ -1574,7 +1574,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm-4.7',
+    value: 'core-lens-glm-4.7',
     label: 'GLM 4.7',
     description: "Zhipu AI's latest advanced reasoning LLM",
     vision: false,
@@ -1594,7 +1594,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm-air',
+    value: 'core-lens-glm-air',
     label: 'GLM 4.5 Air',
     description: "Zhipu AI's efficient base LLM",
     vision: false,
@@ -1612,7 +1612,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-glm',
+    value: 'core-lens-glm',
     label: 'GLM 4.5',
     description: "Zhipu AI's previous advanced LLM",
     vision: false,
@@ -1630,7 +1630,7 @@ export const models: Model[] = [
     },
   },
   {
-    value: 'contract-lens-google',
+    value: 'core-lens-google',
     label: 'Gemini 2.5 Flash',
     description: "Google's advanced small LLM",
     vision: true,
@@ -1646,7 +1646,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-google-think',
+    value: 'core-lens-google-think',
     label: 'Gemini 2.5 Flash Thinking',
     description: "Google's advanced small LLM with thinking",
     vision: true,
@@ -1662,7 +1662,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-google-pro',
+    value: 'core-lens-google-pro',
     label: 'Gemini 2.5 Pro',
     description: "Google's advanced LLM",
     vision: true,
@@ -1678,7 +1678,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-google-pro-think',
+    value: 'core-lens-google-pro-think',
     label: 'Gemini 2.5 Pro Thinking',
     description: "Google's advanced LLM with thinking",
     vision: true,
@@ -1694,7 +1694,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gemini-3-flash',
+    value: 'core-lens-gemini-3-flash',
     label: 'Gemini 3 Flash',
     description: "Google's latest small SOTA LLM",
     vision: true,
@@ -1710,7 +1710,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gemini-3-flash-think',
+    value: 'core-lens-gemini-3-flash-think',
     label: 'Gemini 3 Flash Thinking',
     description: "Google's latest small SOTA LLM with thinking",
     vision: true,
@@ -1726,7 +1726,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-gemini-3-pro',
+    value: 'core-lens-gemini-3-pro',
     label: 'Gemini 3 Pro',
     description: "Google's latest SOTA LLM",
     vision: true,
@@ -1742,7 +1742,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-anthropic-small',
+    value: 'core-lens-anthropic-small',
     label: 'Claude Haiku 4.5',
     description: "Anthropic's fast and efficient LLM",
     vision: true,
@@ -1757,7 +1757,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-anthropic',
+    value: 'core-lens-anthropic',
     label: 'Claude Sonnet 4.5',
     description: "Anthropic's latest and greatest LLM",
     vision: true,
@@ -1772,7 +1772,7 @@ export const models: Model[] = [
     isNew: false,
   },
   {
-    value: 'contract-lens-anthropic-think',
+    value: 'core-lens-anthropic-think',
     label: 'Claude Sonnet 4.5 Thinking',
     description: "Anthropic's latest and greatest LLM with thinking",
     vision: true,
@@ -1787,7 +1787,7 @@ export const models: Model[] = [
     isNew: false,
   },
   {
-    value: 'contract-lens-anthropic-opus',
+    value: 'core-lens-anthropic-opus',
     label: 'Claude 4.5 Opus',
     description: "Anthropic's latest and greatest LLM",
     vision: true,
@@ -1802,7 +1802,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-anthropic-opus-think',
+    value: 'core-lens-anthropic-opus-think',
     label: 'Claude 4.5 Opus Thinking',
     description: "Anthropic's latest and greatest LLM with thinking",
     vision: true,
@@ -1817,7 +1817,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-mimo-v2-flash',
+    value: 'core-lens-mimo-v2-flash',
     label: 'Mimo V2 Flash',
     description: "Xiaomi's fast Mimo V2 Flash model via OpenRouter (thinking disabled)",
     vision: false,
@@ -1832,7 +1832,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-nova-2-lite',
+    value: 'core-lens-nova-2-lite',
     label: 'Nova 2 Lite',
     description: "Amazon's latest and smallest LLM",
     vision: false,
@@ -1847,7 +1847,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-v0-10',
+    value: 'core-lens-v0-10',
     label: 'Vercel v0 1.0',
     description: "Vercel's v0 1.0 model",
     vision: true,
@@ -1862,7 +1862,7 @@ export const models: Model[] = [
     isNew: true,
   },
   {
-    value: 'contract-lens-v0-15',
+    value: 'core-lens-v0-15',
     label: 'Vercel v0 1.5',
     description: "Vercel's v0 1.5 model",
     vision: true,
@@ -1974,32 +1974,32 @@ const RESTRICTED_REGIONS = ['CN', 'KP', 'RU']; // China, North Korea, Russia
 
 // Models that should be filtered in restricted regions
 const OPENAI_MODELS = [
-  'contract-lens-gpt-4.1',
-  'contract-lens-gpt-4.1-mini',
-  'contract-lens-gpt-4.1-nano',
-  'contract-lens-gpt5',
-  'contract-lens-gpt5-mini',
-  'contract-lens-gpt5-nano',
-  'contract-lens-gpt5-medium',
-  'contract-lens-gpt5-codex',
-  'contract-lens-gpt-5.1',
-  'contract-lens-gpt-5.1-codex',
-  'contract-lens-gpt-5.1-codex-mini',
-  'contract-lens-gpt-5.1-codex-max',
-  'contract-lens-gpt-5.1-thinking',
-  'contract-lens-gpt-5.2',
-  'contract-lens-gpt-5.2-thinking',
-  'contract-lens-o3',
-  'contract-lens-o4-mini',
+  'core-lens-gpt-4.1',
+  'core-lens-gpt-4.1-mini',
+  'core-lens-gpt-4.1-nano',
+  'core-lens-gpt5',
+  'core-lens-gpt5-mini',
+  'core-lens-gpt5-nano',
+  'core-lens-gpt5-medium',
+  'core-lens-gpt5-codex',
+  'core-lens-gpt-5.1',
+  'core-lens-gpt-5.1-codex',
+  'core-lens-gpt-5.1-codex-mini',
+  'core-lens-gpt-5.1-codex-max',
+  'core-lens-gpt-5.1-thinking',
+  'core-lens-gpt-5.2',
+  'core-lens-gpt-5.2-thinking',
+  'core-lens-o3',
+  'core-lens-o4-mini',
 ];
 
 const ANTHROPIC_MODELS = [
-  'contract-lens-haiku',
-  'contract-lens-anthropic-small',
-  'contract-lens-anthropic',
-  'contract-lens-anthropic-think',
-  'contract-lens-anthropic-opus',
-  'contract-lens-anthropic-opus-think',
+  'core-lens-haiku',
+  'core-lens-anthropic-small',
+  'core-lens-anthropic',
+  'core-lens-anthropic-think',
+  'core-lens-anthropic-opus',
+  'core-lens-anthropic-opus-think',
 ];
 
 // Check if a model should be filtered based on region

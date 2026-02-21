@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
           // Download the PDF
           const pdfResponse = await fetch(pdfUrl, {
             headers: {
-              'User-Agent': 'ContractLens/1.0 (Research Platform; mailto:support@contractlens.ai)',
+              'User-Agent': 'CoreLens/1.0 (Research Platform; mailto:support@contractlens.ai)',
             },
           });
 

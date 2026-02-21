@@ -5,7 +5,7 @@ import os
 daytona = Daytona(DaytonaConfig(api_key=os.getenv("DAYTONA_API_KEY")))
 
 # Generate a unique name for the image
-snapshot_name = f"contract-lens-analysis:{int(time.time())}"
+snapshot_name = f"core-lens-analysis:{int(time.time())}"
 
 # Create a Python image
 image = (

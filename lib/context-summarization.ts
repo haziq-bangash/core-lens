@@ -18,7 +18,7 @@ import {
   convertToModelMessages,
   pruneMessages,
 } from 'ai';
-import { contractLens } from '@/ai/providers';
+import { coreLens } from '@/ai/providers';
 import { z } from 'zod';
 
 /**
@@ -104,8 +104,8 @@ async function generateConversationSummary(
       : conversationText;
 
   const { output } = await generateText({
-    model: contractLens.languageModel('contract-lens-follow-up'),
-    system: `You are a conversation summarizer for Contract Lens, an AI research platform. Your job is to create a concise but comprehensive summary of a conversation that will be used as context for continuing the conversation.
+    model: coreLens.languageModel('core-lens-follow-up'),
+    system: `You are a conversation summarizer for Core Lens, an AI research platform. Your job is to create a concise but comprehensive summary of a conversation that will be used as context for continuing the conversation.
 
 Rules:
 - Capture the main topics, questions asked, and answers provided

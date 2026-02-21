@@ -27,7 +27,7 @@ export function ShareIconDialog({
   const [copied, setCopied] = useState(false);
 
   // Generate the share URL
-  const shareUrl = chatId ? `https://contract-lens.ai/search/${chatId}` : '';
+  const shareUrl = chatId ? `https://core-lens.ai/search/${chatId}` : '';
 
   const handleMakePublic = async () => {
     if (currentVisibility === 'public') return;
@@ -82,7 +82,7 @@ export function ShareIconDialog({
     if (navigator.share) {
       navigator
         .share({
-          title: 'ShareIcond Chat - Contract Lens',
+          title: 'ShareIcond Chat - Core Lens',
           url: shareUrl,
         })
         .then(() => {

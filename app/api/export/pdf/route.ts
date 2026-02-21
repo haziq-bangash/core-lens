@@ -290,7 +290,7 @@ export async function POST(req: NextRequest) {
       }
     };
 
-    // Professional header with Contract Lens branding and chat title
+    // Professional header with Core Lens branding and chat title
     const drawProfessionalHeader = async () => {
       const titleSize = 16;
       const logoDisplayWidth = 20;
@@ -317,7 +317,7 @@ export async function POST(req: NextRequest) {
       }
 
       const textX = margin + logoDisplayWidth + 8;
-      const headerText = title ?? 'Contract Lens AI';
+      const headerText = title ?? 'Core Lens AI';
       const maxTitleWidth = pageWidth - margin - textX; // available width for title
 
       // Wrap title if it's too long
@@ -1997,7 +1997,7 @@ export async function POST(req: NextRequest) {
     const view = new Uint8Array(ab);
     view.set(pdfBytes);
 
-    const filename = `contract-lens-export.pdf`;
+    const filename = `core-lens-export.pdf`;
     return new Response(ab, {
       status: 200,
       headers: {

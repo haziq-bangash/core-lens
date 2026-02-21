@@ -53,7 +53,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ComprehensiveUserData } from '@/lib/user-data-server';
-import { ContractLensLogo } from '@/components/logos/contract-lens-logo';
+import { CoreLensLogo } from '@/components/logos/core-lens-logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { useTheme } from 'next-themes';
@@ -106,7 +106,7 @@ interface AppSidebarProps {
 
 export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
   const { theme, setTheme } = useTheme();
-  const [blurPersonalInfo] = useSyncedPreferences<boolean>('contract-lens-blur-personal-info', false);
+  const [blurPersonalInfo] = useSyncedPreferences<boolean>('core-lens-blur-personal-info', false);
   const { state, isMobile, setOpenMobile } = useSidebar();
   const [keyboardShortcutsOpen, setKeyboardShortcutsOpen] = React.useState(false);
 
@@ -176,7 +176,7 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
       id: 'feedback',
       label: 'Feedback',
       icon: BugIcon,
-      href: 'https://contract-lensai.userjot.com',
+      href: 'https://core-lensai.userjot.com',
       external: true,
     },
   ];
@@ -300,10 +300,10 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
             <div className="relative flex items-center w-full h-12 px-2 overflow-visible">
               <div className="flex items-center gap-1 w-full group-data-[collapsible=icon]:justify-center">
                 <div className="flex items-center justify-center size-8 transition-opacity duration-200 group-data-[collapsible=icon]:group-hover:opacity-0">
-                  <ContractLensLogo width={26} height={26} />
+                  <CoreLensLogo width={26} height={26} />
                 </div>
                 <div className="flex flex-row items-center gap-2 leading-none group-data-[collapsible=icon]:hidden">
-                  <span className="font-be-vietnam-pro font-light tracking-tighter text-xl">ContractLens</span>
+                  <span className="font-be-vietnam-pro font-light tracking-tighter text-xl">CoreLens</span>
                 </div>
               </div>
 
@@ -624,7 +624,7 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                             {user.name || 'User'}
                           </span>
                           <span className="text-xs text-sidebar-foreground/70 truncate text-left w-full">
-                            ContractLens
+                            CoreLens
                           </span>
                         </div>
                       </div>
@@ -719,7 +719,7 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                     {/* User info header */}
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-semibold">{user.name || 'User'}</p>
-                      <p className="text-xs text-muted-foreground">ContractLens</p>
+                      <p className="text-xs text-muted-foreground">CoreLens</p>
                     </div>
 
                     <DropdownMenuSeparator />

@@ -1,4 +1,4 @@
-export function ContractLensLogo({
+export function CoreLensLogo({
   className,
   width,
   height,

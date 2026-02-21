@@ -99,27 +99,27 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/ph',
-        destination: 'https://www.producthunt.com/posts/contract-lens',
+        destination: 'https://www.producthunt.com/posts/core-lens',
         permanent: true,
       },
       {
         source: '/raycast',
-        destination: 'https://www.raycast.com/haziqbangash/contract-lens',
+        destination: 'https://www.raycast.com/haziqbangash/core-lens',
         permanent: true,
       },
       {
         source: '/plst',
-        destination: 'https://peerlist.io/haziqbangash/project/contract-lens-ai-30',
+        destination: 'https://peerlist.io/haziqbangash/project/core-lens-ai-30',
         permanent: true,
       },
       {
         source: '/blog',
-        destination: 'https://blog.contract-lens.ai',
+        destination: 'https://blog.core-lens.ai',
         permanent: true,
       },
       {
-        source: '/askcontract-lensbot',
-        destination: 'https://t.me/askcontract-lensbot',
+        source: '/askcore-lensbot',
+        destination: 'https://t.me/askcore-lensbot',
         permanent: true,
       },
     ];

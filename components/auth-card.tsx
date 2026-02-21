@@ -128,7 +128,7 @@ export default function AuthCard({ title, description, mode = 'sign-in' }: AuthC
           <p className="text-sm text-center text-muted-foreground">
             {mode === 'sign-in' ? (
               <>
-                New to Contract Lens?{' '}
+                New to Core Lens?{' '}
                 <Link href="/sign-up" className="text-foreground font-medium hover:underline underline-offset-4">
                   Create account
                 </Link>

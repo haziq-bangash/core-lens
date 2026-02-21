@@ -326,6 +326,6 @@ export const auth = betterAuth({
     }),
     nextCookies(),
   ],
-  trustedOrigins: ['http://localhost:3000', 'https://contract-lens.ai', 'https://www.contract-lens.ai'],
-  allowedOrigins: ['http://localhost:3000', 'https://contract-lens.ai', 'https://www.contract-lens.ai'],
+  trustedOrigins: ['http://localhost:3000', 'https://core-lens.ai', 'https://www.core-lens.ai'],
+  allowedOrigins: ['http://localhost:3000', 'https://core-lens.ai', 'https://www.core-lens.ai'],
 });

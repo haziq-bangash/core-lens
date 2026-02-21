@@ -1,4 +1,4 @@
--- Critical Performance Indexes for contract-lens
+-- Critical Performance Indexes for core-lens
 -- Using correct database column names from Drizzle schema
 
 -- 1. MESSAGE USAGE - Most critical (user_id + date range queries)

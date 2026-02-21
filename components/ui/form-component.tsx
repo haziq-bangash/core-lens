@@ -86,7 +86,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = React.memo(
     const [searchQuery, setSearchQuery] = useState('');
 
     // Global model order (Pro users): top-level hook to satisfy Rules of Hooks
-    const [globalModelOrder] = useSyncedPreferences<string[]>('contract-lens-model-order-global', [] as string[]);
+    const [globalModelOrder] = useSyncedPreferences<string[]>('core-lens-model-order-global', [] as string[]);
 
     const normalizeText = useCallback((input: string): string => {
       return input
@@ -301,10 +301,10 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = React.memo(
 
     // Persisted ordering: category order and per-category model order
     const [modelCategoryOrder] = useLocalStorage<string[]>(
-      'contract-lens-model-category-order',
+      'core-lens-model-category-order',
       ['Free', 'Experimental', 'Pro'],
     );
-    const [modelOrderMap] = useLocalStorage<Record<string, string[]>>('contract-lens-model-order', {});
+    const [modelOrderMap] = useLocalStorage<Record<string, string[]>>('core-lens-model-order', {});
 
     const orderedGroupEntries = useMemo(() => {
       const baseOrder =
@@ -355,11 +355,11 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = React.memo(
       const isCurrentModelRestricted = isModelRestrictedInRegion(selectedModel, countryCode || undefined);
 
       // If current model is restricted in user's region, switch to default
-      if (isCurrentModelRestricted && selectedModel !== 'contract-lens-default') {
+      if (isCurrentModelRestricted && selectedModel !== 'core-lens-default') {
         console.log(
-          `Auto-switching from restricted model '${selectedModel}' to 'contract-lens-default' - model not available in region ${countryCode}`,
+          `Auto-switching from restricted model '${selectedModel}' to 'core-lens-default' - model not available in region ${countryCode}`,
         );
-        setSelectedModel('contract-lens-default');
+        setSelectedModel('core-lens-default');
         return;
       }
     }, [selectedModel, setSelectedModel, availableModels, countryCode]);

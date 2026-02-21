@@ -7,7 +7,7 @@ import { UIMessage, generateText, Output } from 'ai';
 import type { ModelMessage } from 'ai';
 import { z } from 'zod';
 import { getUser } from '@/lib/auth-utils';
-import { contractLens } from '@/ai/providers';
+import { coreLens } from '@/ai/providers';
 import {
   getChatsByUserId,
   deleteChatById,
@@ -125,8 +125,8 @@ export async function suggestQuestions(history: any[]) {
   'use server';
 
   const { output } = await generateText({
-    model: contractLens.languageModel('contract-lens-follow-up'),
-    system: `You are a follow-up question generator for Contract Lens, an AI research platform that helps researchers find, organize, and synthesize information from their personal research library and the web. You MUST create between 3 and 5 follow-up questions based on the conversation history.
+    model: coreLens.languageModel('core-lens-follow-up'),
+    system: `You are a follow-up question generator for Core Lens, an AI research platform that helps researchers find, organize, and synthesize information from their personal research library and the web. You MUST create between 3 and 5 follow-up questions based on the conversation history.
 
 ### Question Generation Guidelines:
 - Create 3-5 questions that are open-ended and encourage further research or discussion
@@ -200,7 +200,7 @@ export async function generateTitleFromUserMessage({ message }: { message: UIMes
   const firstTextPart = message.parts.find((part) => part.type === 'text');
   const prompt = JSON.stringify(firstTextPart && firstTextPart.type === 'text' ? firstTextPart.text : '');
   const { text: title } = await generateText({
-    model: contractLens.languageModel('contract-lens-name'),
+    model: coreLens.languageModel('core-lens-name'),
     temperature: 1,
     maxOutputTokens: 10,
     system: `You are an expert title generator. You are given a message and you need to generate a short title based on it.
@@ -261,7 +261,7 @@ Output requirements:
 - No quotes, no commentary, no markdown, and no preface.`;
 
     const { text } = await generateText({
-      model: contractLens.languageModel('contract-lens-enhance'),
+      model: coreLens.languageModel('core-lens-enhance'),
       temperature: 0.6,
       topP: 0.95,
       maxOutputTokens: 1024,
@@ -288,7 +288,7 @@ export async function generateSpeech(text: string) {
   };
 }
 
-// Unified tool set for Contract Lens - single agent workflow
+// Unified tool set for Core Lens - single agent workflow
 const unifiedTools = [
   'web_search',
   'retrieve',
@@ -345,9 +345,9 @@ const LINK_FORMAT_EXAMPLES = `
 8. Never include pipe characters (|) in the citation text inside square brackets - remove or replace them`;
 
 const unifiedInstructions = `
-# Contract Lens AI Research Platform
+# Core Lens AI Research Platform
 
-You are Contract Lens, an AI research assistant designed to help researchers find, organize, and synthesize information from their personal research library and the web. Focus on content delivery in markdown format with precise citations.
+You are Core Lens, an AI research assistant designed to help researchers find, organize, and synthesize information from their personal research library and the web. Focus on content delivery in markdown format with precise citations.
 
 **Today's Date:** ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', weekday: 'short' })}
 
@@ -1066,13 +1066,13 @@ export async function getUserPreferences(providedUser?: any) {
 }
 
 export async function saveUserPreferences(preferences: Partial<{
-  'contract-lens-search-provider'?: 'exa' | 'tavily' | 'firecrawl';
-  'contract-lens-extreme-search-provider'?: 'exa';
-  'contract-lens-group-order'?: string[];
-  'contract-lens-model-order-global'?: string[];
-  'contract-lens-blur-personal-info'?: boolean;
-  'contract-lens-custom-instructions-enabled'?: boolean;
-  'contract-lens-location-metadata-enabled'?: boolean;
+  'core-lens-search-provider'?: 'exa' | 'tavily' | 'firecrawl';
+  'core-lens-extreme-search-provider'?: 'exa';
+  'core-lens-group-order'?: string[];
+  'core-lens-model-order-global'?: string[];
+  'core-lens-blur-personal-info'?: boolean;
+  'core-lens-custom-instructions-enabled'?: boolean;
+  'core-lens-location-metadata-enabled'?: boolean;
 }>) {
   'use server';
 

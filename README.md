@@ -1,10 +1,10 @@
-# Contract Lens
+# Core Lens
 
 An agentic AI research platform that finds, analyzes, and cites information from the web and your personal research library.
 
-![Contract Lens](/app/opengraph-image.png)
+![Core Lens](/app/opengraph-image.png)
 
-🔗 **[Try Contract Lens at contract-lens.ai](https://contract-lens.ai)**
+🔗 **[Try Core Lens at core-lens.ai](https://core-lens.ai)**
 
 ## Features
 
@@ -30,7 +30,7 @@ An agentic AI research platform that finds, analyzes, and cites information from
 
 ### AI Models
 
-Contract Lens supports **90+ AI models** across multiple providers:
+Core Lens supports **90+ AI models** across multiple providers:
 
 | Provider | Models |
 | :--- | :--- |
@@ -101,8 +101,8 @@ docker compose up
 #### Docker Directly
 
 ```bash
-docker build -t contract-lens.app .
-docker run --env-file .env -p 3000:3000 contract-lens.app
+docker build -t core-lens.app .
+docker run --env-file .env -p 3000:3000 core-lens.app
 ```
 
 The production image uses a multi-stage build with Node.js 22 Alpine for a minimal footprint.
@@ -146,12 +146,12 @@ The production image uses a multi-stage build with Node.js 22 Alpine for a minim
 
 </details>
 
-## Set Contract Lens as Your Default Search Engine
+## Set Core Lens as Your Default Search Engine
 
 1. Open Chrome → **Settings** → **Search engine** → **Manage search engines and site search**
 2. Click **Add** next to "Site search"
-3. Set search engine name: `Contract Lens`
-4. Set URL: `https://contract-lens.ai?q=%s`
+3. Set search engine name: `Core Lens`
+4. Set URL: `https://core-lens.ai?q=%s`
 5. Set shortcut: `sh`
 6. Click the three dots next to it → **Make default**
 

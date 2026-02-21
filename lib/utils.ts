@@ -31,7 +31,7 @@ export function getSearchGroups(searchProvider: SearchProvider = 'exa') {
   return [
     {
       id: 'web' as const,
-      name: 'Contract Lens',
+      name: 'Core Lens',
       description: getWebSearchDescription(searchProvider),
       icon: GlobalSearchIcon,
       show: true,

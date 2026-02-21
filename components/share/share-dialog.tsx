@@ -42,7 +42,7 @@ export function ShareDialog({
   const [choice, setChoice] = useState<'public' | 'private'>(selectedVisibilityType);
   const [isShared, setIsShared] = useState<boolean>(selectedVisibilityType === 'public');
 
-  const shareUrl = chatId ? `https://contract-lens.ai/search/${chatId}` : '';
+  const shareUrl = chatId ? `https://core-lens.ai/search/${chatId}` : '';
 
   useEffect(() => {
     if (!isOpen) {
@@ -121,7 +121,7 @@ export function ShareDialog({
   const handleNativeShare = async () => {
     try {
       await navigator.share({
-        title: 'Shared Contract Lens Chat',
+        title: 'Shared Core Lens Chat',
         url: shareUrl,
       });
     } catch (error) {

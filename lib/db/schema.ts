@@ -197,13 +197,13 @@ export const userPreferences = pgTable('user_preferences', {
     .references(() => user.id, { onDelete: 'cascade' }),
   preferences: json('preferences')
     .$type<{
-      'contract-lens-search-provider'?: 'exa' | 'tavily' | 'firecrawl';
-      'contract-lens-extreme-search-provider'?: 'exa';
-      'contract-lens-group-order'?: string[];
-      'contract-lens-model-order-global'?: string[];
-      'contract-lens-blur-personal-info'?: boolean;
-      'contract-lens-custom-instructions-enabled'?: boolean;
-      'contract-lens-location-metadata-enabled'?: boolean;
+      'core-lens-search-provider'?: 'exa' | 'tavily' | 'firecrawl';
+      'core-lens-extreme-search-provider'?: 'exa';
+      'core-lens-group-order'?: string[];
+      'core-lens-model-order-global'?: string[];
+      'core-lens-blur-personal-info'?: boolean;
+      'core-lens-custom-instructions-enabled'?: boolean;
+      'core-lens-location-metadata-enabled'?: boolean;
     }>()
     .notNull()
     .default({}),

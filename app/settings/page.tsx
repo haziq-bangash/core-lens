@@ -37,10 +37,10 @@ function SettingsContent() {
   const defaultTab = searchParams.get('tab') || 'usage';
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [isCustomInstructionsEnabled, setIsCustomInstructionsEnabled] = useSyncedPreferences<boolean>(
-    'contract-lens-custom-instructions-enabled',
+    'core-lens-custom-instructions-enabled',
     true,
   );
-  const [blurPersonalInfo, setBlurPersonalInfo] = useSyncedPreferences<boolean>('contract-lens-blur-personal-info', false);
+  const [blurPersonalInfo, setBlurPersonalInfo] = useSyncedPreferences<boolean>('core-lens-blur-personal-info', false);
 
   const tabs = [
     { value: 'usage', label: 'Usage', icon: Analytics01Icon },

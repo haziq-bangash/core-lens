@@ -1,7 +1,7 @@
 import { tool } from 'ai';
 import { z } from 'zod';
 import { generateObject } from 'ai';
-import { contractLens } from '@/ai/providers';
+import { coreLens } from '@/ai/providers';
 
 export const textTranslateTool = tool({
   description: 'Translate text from one language to another.',
@@ -11,7 +11,7 @@ export const textTranslateTool = tool({
   }),
   execute: async ({ text, to }: { text: string; to: string }) => {
     const { object: translation } = await generateObject({
-      model: contractLens.languageModel('contract-lens-default'),
+      model: coreLens.languageModel('core-lens-default'),
       system: `You are a helpful assistant that translates text from one language to another.`,
       prompt: `Translate the following text to ${to} language: ${text}`,
       schema: z.object({

@@ -81,7 +81,7 @@ const NavigationMenu = memo(() => {
       </Tooltip>
       <DropdownMenuContent className="w-60 z-110 mr-5">
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://api.contract-lens.ai/'} target="_blank" className="w-full flex items-center gap-2">
+          <a href={'https://api.core-lens.ai/'} target="_blank" className="w-full flex items-center gap-2">
             <CodeIcon size={16} />
             <span>API</span>
           </a>
@@ -129,25 +129,25 @@ const NavigationMenu = memo(() => {
 
         {/* Social and External Links */}
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://git.new/contract-lens'} target="_blank" className="w-full flex items-center gap-2">
+          <a href={'https://git.new/core-lens'} target="_blank" className="w-full flex items-center gap-2">
             <GithubLogoIcon size={16} />
             <span>Github</span>
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://x.com/contract-lensai'} target="_blank" className="w-full flex items-center gap-2">
+          <a href={'https://x.com/core-lensai'} target="_blank" className="w-full flex items-center gap-2">
             <XLogoIcon size={16} />
             <span>X.com</span>
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://www.instagram.com/contract-lens.ai'} target="_blank" className="w-full flex items-center gap-2">
+          <a href={'https://www.instagram.com/core-lens.ai'} target="_blank" className="w-full flex items-center gap-2">
             <InstagramLogoIcon size={16} />
             <span>Instagram</span>
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://contract-lensai.userjot.com/'} target="_blank" className="w-full flex items-center gap-2">
+          <a href={'https://core-lensai.userjot.com/'} target="_blank" className="w-full flex items-center gap-2">
             <BugIcon className="size-4" />
             <span>Feature/Bug Request</span>
           </a>
@@ -188,7 +188,7 @@ const UserProfile = memo(
     const [signingIn, setSigningIn] = useState(false);
     const [signInDialogOpen, setSignInDialogOpen] = useState(false);
     const [showEmail, setShowEmail] = useState(false);
-    const [blurPersonalInfo] = useSyncedPreferences<boolean>('contract-lens-blur-personal-info', false);
+    const [blurPersonalInfo] = useSyncedPreferences<boolean>('core-lens-blur-personal-info', false);
     const { data: session, isPending } = useSession();
     const router = useRouter();
 

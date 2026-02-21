@@ -51,7 +51,7 @@ import { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
 import { unauthenticatedRateLimit, getClientIdentifier } from '@/lib/rate-limit';
 import { CohereChatModelOptions } from '@ai-sdk/cohere';
 import { XaiProviderOptions } from '@ai-sdk/xai';
-import { contractLens, getMaxOutputTokens, getModelParameters, requiresAuthentication } from '@/ai/providers';
+import { coreLens, getMaxOutputTokens, getModelParameters, requiresAuthentication } from '@/ai/providers';
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -389,16 +389,16 @@ export async function POST(req: Request) {
       }
 
       const result = streamText({
-        model: contractLens.languageModel(model),
+        model: coreLens.languageModel(model),
         messages: processedMessages,
         ...getModelParameters(model),
         stopWhen: stepCountIs(5),
-        ...(model === "contract-lens-default" || model === "contract-lens-grok4.1-fast-thinking" || model === "contract-lens-glm-4.6" || model === "contract-lens-glm-4.6v-flash" || model === "contract-lens-glm-4.6v" ? {
+        ...(model === "core-lens-default" || model === "core-lens-grok4.1-fast-thinking" || model === "core-lens-glm-4.6" || model === "core-lens-glm-4.6v-flash" || model === "core-lens-glm-4.6v" ? {
           maxOutputTokens: getMaxOutputTokens(model),
         } : {}),
         maxRetries: 10,
         activeTools: [
-          ...(model === 'contract-lens-qwen-coder-plus'
+          ...(model === 'core-lens-qwen-coder-plus'
             ? [...activeTools].filter((tool) => tool !== 'code_interpreter')
             : [...activeTools]),
           'pdf_search',
@@ -409,12 +409,12 @@ export async function POST(req: Request) {
           (customInstructions && (isCustomInstructionsEnabled ?? true)
             ? `\n\nThe user's custom instructions are as follows and YOU MUST FOLLOW THEM AT ALL COSTS: ${customInstructions?.content}`
             : '\n') +
-          (latitude && longitude && userPreferencesResult?.preferences?.['contract-lens-location-metadata-enabled'] === true
+          (latitude && longitude && userPreferencesResult?.preferences?.['core-lens-location-metadata-enabled'] === true
             ? `\n\nThe user's location is ${latitude}, ${longitude}.`
             : '') +
           mentionContext,
         toolChoice: 'auto',
-        ...(model === 'contract-lens-anthropic' || model === 'contract-lens-anthropic-think'
+        ...(model === 'core-lens-anthropic' || model === 'core-lens-anthropic-think'
           ? {
             headers: {
               'anthropic-beta': 'context-1m-2025-08-07',
@@ -423,95 +423,95 @@ export async function POST(req: Request) {
         providerOptions: {
           gateway: {
             only: ['openai', 'google', 'zai', 'arcee-ai', 'deepseek', 'alibaba', 'baseten', 'minimax', 'fireworks', 'bedrock', 'vercel'],
-            ...(model === 'contract-lens-kimi-k2-v2-thinking' || model === 'contract-lens-kimi-k2-v2'
+            ...(model === 'core-lens-kimi-k2-v2-thinking' || model === 'core-lens-kimi-k2-v2'
               ? {
                 order: ['baseten', 'fireworks'],
               }
               : {}),
-            ...(model === 'contract-lens-qwen-coder' || model === 'contract-lens-deepseek-v3' || model === 'contract-lens-qwen-235'
+            ...(model === 'core-lens-qwen-coder' || model === 'core-lens-deepseek-v3' || model === 'core-lens-qwen-235'
               ? {
                 order: ['baseten'],
               }
               : {}),
-            ...(model === 'contract-lens-nova-2-lite'
+            ...(model === 'core-lens-nova-2-lite'
               ? {
                 order: ['bedrock'],
               }
               : {}),
           },
           openai: {
-            ...(model !== 'contract-lens-qwen-coder'
+            ...(model !== 'core-lens-qwen-coder'
               ? {
                 parallelToolCalls: false,
               }
               : {}),
-            ...((model === 'contract-lens-gpt5' ||
-              model === 'contract-lens-gpt5-mini' ||
-              model === 'contract-lens-o3' ||
-              model === 'contract-lens-gpt5-nano' ||
-              model === 'contract-lens-gpt5-codex' ||
-              model === 'contract-lens-gpt5-medium' ||
-              model === 'contract-lens-o4-mini' ||
-              model === 'contract-lens-gpt-4.1' ||
-              model === 'contract-lens-gpt-4.1-mini' ||
-              model === 'contract-lens-gpt-4.1-nano' ||
-              model === 'contract-lens-gpt-5.1' ||
-              model === 'contract-lens-gpt-5.1-thinking' ||
-              model === 'contract-lens-gpt-5.1-codex' ||
-              model === 'contract-lens-gpt-5.1-codex-mini' ||
-              model === 'contract-lens-gpt-5.1-codex-max' ||
-              model === 'contract-lens-gpt-5.2' ||
-              model === 'contract-lens-gpt-5.2-thinking'
+            ...((model === 'core-lens-gpt5' ||
+              model === 'core-lens-gpt5-mini' ||
+              model === 'core-lens-o3' ||
+              model === 'core-lens-gpt5-nano' ||
+              model === 'core-lens-gpt5-codex' ||
+              model === 'core-lens-gpt5-medium' ||
+              model === 'core-lens-o4-mini' ||
+              model === 'core-lens-gpt-4.1' ||
+              model === 'core-lens-gpt-4.1-mini' ||
+              model === 'core-lens-gpt-4.1-nano' ||
+              model === 'core-lens-gpt-5.1' ||
+              model === 'core-lens-gpt-5.1-thinking' ||
+              model === 'core-lens-gpt-5.1-codex' ||
+              model === 'core-lens-gpt-5.1-codex-mini' ||
+              model === 'core-lens-gpt-5.1-codex-max' ||
+              model === 'core-lens-gpt-5.2' ||
+              model === 'core-lens-gpt-5.2-thinking'
               ? {
                 reasoningEffort:
-                  model === 'contract-lens-gpt5-nano' || model === 'contract-lens-gpt5' || model === 'contract-lens-gpt5-mini'
+                  model === 'core-lens-gpt5-nano' || model === 'core-lens-gpt5' || model === 'core-lens-gpt5-mini'
                     ? 'minimal'
-                    : model === 'contract-lens-gpt-5.1' || model === 'contract-lens-gpt-5.2'
+                    : model === 'core-lens-gpt-5.1' || model === 'core-lens-gpt-5.2'
                       ? 'none'
                       : 'medium',
                 parallelToolCalls: false,
                 reasoningSummary: 'detailed',
-                promptCacheKey: 'contract-lens-oai',
-                ...(model === 'contract-lens-gpt-5.1' ||
-                  model === 'contract-lens-gpt-5.2' ||
-                  model === 'contract-lens-gpt-5.2-thinking' ||
-                  model === 'contract-lens-gpt-5.1-codex' ||
-                  model === 'contract-lens-gpt-5.1-codex-mini' ||
-                  model === 'contract-lens-gpt-5.1-codex-max' ||
-                  model === 'contract-lens-gpt5' ||
-                  model === 'contract-lens-gpt5-codex' ||
-                  model === 'contract-lens-gpt4.1'
+                promptCacheKey: 'core-lens-oai',
+                ...(model === 'core-lens-gpt-5.1' ||
+                  model === 'core-lens-gpt-5.2' ||
+                  model === 'core-lens-gpt-5.2-thinking' ||
+                  model === 'core-lens-gpt-5.1-codex' ||
+                  model === 'core-lens-gpt-5.1-codex-mini' ||
+                  model === 'core-lens-gpt-5.1-codex-max' ||
+                  model === 'core-lens-gpt5' ||
+                  model === 'core-lens-gpt5-codex' ||
+                  model === 'core-lens-gpt4.1'
                   ? {
                     promptCacheRetention: '24h',
                   }
                   : {}),
                 store: false,
                 // only for reasoning models
-                ...(model === 'contract-lens-gpt-5.1' ||
-                  model === 'contract-lens-gpt-5.1-codex' ||
-                  model === 'contract-lens-gpt-5.1-codex-mini' ||
-                  model === 'contract-lens-gpt5' ||
-                  model === 'contract-lens-gpt5-codex' ||
-                  model === 'contract-lens-gpt-5.1-thinking' ||
-                  model === 'contract-lens-gpt5-nano' ||
-                  model === 'contract-lens-gpt5-mini' ||
-                  model === 'contract-lens-gpt-5.1-codex-max' ||
-                  model === 'contract-lens-gpt-5.2' ||
-                  model === 'contract-lens-gpt-5.2-thinking'
+                ...(model === 'core-lens-gpt-5.1' ||
+                  model === 'core-lens-gpt-5.1-codex' ||
+                  model === 'core-lens-gpt-5.1-codex-mini' ||
+                  model === 'core-lens-gpt5' ||
+                  model === 'core-lens-gpt5-codex' ||
+                  model === 'core-lens-gpt-5.1-thinking' ||
+                  model === 'core-lens-gpt5-nano' ||
+                  model === 'core-lens-gpt5-mini' ||
+                  model === 'core-lens-gpt-5.1-codex-max' ||
+                  model === 'core-lens-gpt-5.2' ||
+                  model === 'core-lens-gpt-5.2-thinking'
                   ? {
                     include: ['reasoning.encrypted_content'],
                   }
                   : {}),
                 textVerbosity:
-                  model === 'contract-lens-o3' ||
-                    model === 'contract-lens-gpt5-codex' ||
-                    model === 'contract-lens-gpt-5.1-codex' ||
-                    model === 'contract-lens-gpt-5.1-codex-mini' ||
-                    model === 'contract-lens-gpt-5.1-codex-max' ||
-                    model === 'contract-lens-o4-mini' ||
-                    model === 'contract-lens-gpt-4.1' ||
-                    model === 'contract-lens-gpt-4.1-mini' ||
-                    model === 'contract-lens-gpt-4.1-nano'
+                  model === 'core-lens-o3' ||
+                    model === 'core-lens-gpt5-codex' ||
+                    model === 'core-lens-gpt-5.1-codex' ||
+                    model === 'core-lens-gpt-5.1-codex-mini' ||
+                    model === 'core-lens-gpt-5.1-codex-max' ||
+                    model === 'core-lens-o4-mini' ||
+                    model === 'core-lens-gpt-4.1' ||
+                    model === 'core-lens-gpt-4.1-mini' ||
+                    model === 'core-lens-gpt-4.1-nano'
                     ? 'medium'
                     : 'high',
               }
@@ -521,13 +521,13 @@ export async function POST(req: Request) {
             parallelToolCalls: false,
           },
           groq: {
-            ...(model === 'contract-lens-gpt-oss-20' || model === 'contract-lens-gpt-oss-120'
+            ...(model === 'core-lens-gpt-oss-20' || model === 'core-lens-gpt-oss-120'
               ? {
                 reasoningEffort: 'high',
                 reasoningFormat: 'hidden',
               }
               : {}),
-            ...(model === 'contract-lens-qwen-32b'
+            ...(model === 'core-lens-qwen-32b'
               ? {
                 reasoningEffort: 'none',
               }
@@ -540,7 +540,7 @@ export async function POST(req: Request) {
             parallel_function_calling: false,
           } satisfies XaiProviderOptions,
           cohere: {
-            ...(model === 'contract-lens-cmd-a-think'
+            ...(model === 'core-lens-cmd-a-think'
               ? {
                 thinking: {
                   type: 'enabled',
@@ -550,7 +550,7 @@ export async function POST(req: Request) {
               : {}),
           } satisfies CohereChatModelOptions,
           anthropic: {
-            ...(model === 'contract-lens-anthropic-think' || model === 'contract-lens-anthropic-opus-think'
+            ...(model === 'core-lens-anthropic-think' || model === 'core-lens-anthropic-opus-think'
               ? {
                 sendReasoning: true,
                 thinking: {
@@ -562,7 +562,7 @@ export async function POST(req: Request) {
             disableParallelToolUse: true,
           } satisfies AnthropicProviderOptions,
           google: {
-            ...(model === 'contract-lens-google-think' || model === 'contract-lens-google-pro-think'
+            ...(model === 'core-lens-google-think' || model === 'core-lens-google-pro-think'
               ? {
                 thinkingConfig: {
                   thinkingBudget: 400,
@@ -570,7 +570,7 @@ export async function POST(req: Request) {
                 },
               }
               : {}),
-            ...(model === 'contract-lens-gemini-3-pro'
+            ...(model === 'core-lens-gemini-3-pro'
               ? {
                 thinkingConfig: {
                   thinkingLevel: 'low',
@@ -578,7 +578,7 @@ export async function POST(req: Request) {
                 },
               }
               : {}),
-            ...(model === 'contract-lens-gemini-3-flash-think'
+            ...(model === 'core-lens-gemini-3-flash-think'
               ? {
                 thinkingConfig: {
                   thinkingLevel: 'medium',
@@ -589,7 +589,7 @@ export async function POST(req: Request) {
             threshold: 'OFF',
           } satisfies GoogleGenerativeAIProviderOptions,
           openrouter: {
-            ...(model === 'contract-lens-anthropic-think' || model === 'contract-lens-anthropic-opus-think'
+            ...(model === 'core-lens-anthropic-think' || model === 'core-lens-anthropic-opus-think'
               ? {
                 reasoning: {
                   exclude: false,
@@ -644,7 +644,7 @@ export async function POST(req: Request) {
           }
 
           const { object: repairedArgs } = await generateObject({
-            model: contractLens.languageModel('contract-lens-default'),
+            model: coreLens.languageModel('core-lens-default'),
             schema: tool.inputSchema,
             prompt: [
               `The model tried to call the tool "${toolCall.toolName}"` + ` with the following arguments:`,

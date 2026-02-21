@@ -14,4 +14,4 @@ export const CURRENCIES = {
   INR: 'INR',
 } as const;
 
-export const SNAPSHOT_NAME = 'contract-lens-analysis:1752127473';
+export const SNAPSHOT_NAME = 'core-lens-analysis:1752127473';

@@ -93,7 +93,7 @@ const ChatInterface = memo(
     const [query] = useQueryState('query', parseAsString.withDefault(''));
     const [q] = useQueryState('q', parseAsString.withDefault(''));
     const [paperId] = useQueryState('paperId', parseAsString.withDefault(''));
-    const [input, setInput] = useLocalStorage<string>('contract-lens-draft-input', '');
+    const [input, setInput] = useLocalStorage<string>('core-lens-draft-input', '');
     const { mentions, addMention, removeMention, clearMentions } = useMentions();
     const mentionsRef = useRef(mentions);
     mentionsRef.current = mentions;
@@ -143,9 +143,9 @@ const ChatInterface = memo(
       queueMicrotask(() => measureHeaderMenuAlignment());
     }, [pathname, localChatTitle, headerMenuOpen, measureHeaderMenuAlignment]);
 
-    const [selectedModel, setSelectedModel] = useLocalStorage('contract-lens-selected-model', 'contract-lens-default');
+    const [selectedModel, setSelectedModel] = useLocalStorage('core-lens-selected-model', 'core-lens-default');
     const [isCustomInstructionsEnabled, setIsCustomInstructionsEnabled] = useLocalStorage(
-      'contract-lens-custom-instructions-enabled',
+      'core-lens-custom-instructions-enabled',
       true,
     );
 
@@ -163,7 +163,7 @@ const ChatInterface = memo(
 
     // Get persisted values for dialog states
     const [persistedHasShownSignInPrompt, setPersitedHasShownSignInPrompt] = useLocalStorage(
-      'contract-lens-signin-prompt-shown',
+      'core-lens-signin-prompt-shown',
       false,
     );
 
@@ -945,7 +945,7 @@ const ChatInterface = memo(
                     </div>
                     <div className="inline-flex items-center gap-3">
                       <h1 className="text-4xl sm:text-5xl mb-0! text-foreground dark:text-foreground font-be-vietnam-pro! font-light tracking-tighter">
-                        ContractLens
+                        CoreLens
                       </h1>
                     </div>
                   </div>

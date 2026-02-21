@@ -30,7 +30,7 @@ const cache = new RedisDrizzleCache({
   redis,
   defaultTtl: 20,
   strategy: 'explicit',
-  namespace: 'contract-lens:drizzle',
+  namespace: 'core-lens:drizzle',
 });
 
 const sql = neon(serverEnv.DATABASE_URL!);

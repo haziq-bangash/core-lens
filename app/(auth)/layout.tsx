@@ -4,32 +4,32 @@ import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import { useState, useEffect } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
-import { ContractLensLogo } from '@/components/logos/contract-lens-logo';
+import { CoreLensLogo } from '@/components/logos/core-lens-logo';
 
 const testimonials = [
   {
     content:
-      '"Contract Lens @contract-lensai is better than Grok at digging up information from X, its own platform! I asked it 3 different queries to help scrape and find some data points I was interested in about my own account and Contract Lens did much much better with insanely accurate answers!"',
+      '"Core Lens @core-lensai is better than Grok at digging up information from X, its own platform! I asked it 3 different queries to help scrape and find some data points I was interested in about my own account and Core Lens did much much better with insanely accurate answers!"',
     author: 'Chris Universe',
     handle: '@chrisuniverseb',
     link: 'https://x.com/chrisuniverseb/status/1943025911043100835',
   },
   {
-    content: '"contract-lens dot ai does a really good job scraping through the reddit mines btw"',
+    content: '"core-lens dot ai does a really good job scraping through the reddit mines btw"',
     author: 'nyaaier',
     handle: '@nyaaier',
     link: 'https://x.com/nyaaier/status/1932810453107065284',
   },
   {
     content:
-      "Hi @contract-lensai, just for curiosity, I searched for myself using its Gemini 2.5 Pro and in extreme mode to see what results it could generate. And it created this 👇🏻 It is not just the best, it is wild. And the best part is it's 10000% accurate.",
+      "Hi @core-lensai, just for curiosity, I searched for myself using its Gemini 2.5 Pro and in extreme mode to see what results it could generate. And it created this 👇🏻 It is not just the best, it is wild. And the best part is it's 10000% accurate.",
     author: 'Aniruddha Dak',
     handle: '@aniruddhadak',
     link: 'https://x.com/aniruddhadak/status/1917140602107445545',
   },
   {
     content:
-      '"read nothing the whole sem and here I am with @contract-lensai to top my mid sems !! Literally so good to get all the related diagram, points and even topics from the website my professor uses to teach us 🙌"',
+      '"read nothing the whole sem and here I am with @core-lensai to top my mid sems !! Literally so good to get all the related diagram, points and even topics from the website my professor uses to teach us 🙌"',
     author: 'Rajnandinit',
     handle: '@itsRajnandinit',
     link: 'https://x.com/itsRajnandinit/status/1897896134837682288',
@@ -56,8 +56,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="flex-1 flex flex-col justify-between p-12">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <ContractLensLogo className="size-8" />
-              <span className="text-lg font-medium">Contract Lens AI</span>
+              <CoreLensLogo className="size-8" />
+              <span className="text-lg font-medium">Core Lens AI</span>
             </Link>
           </div>
 
@@ -123,7 +123,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
           <div className="space-y-3">
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <a href="https://git.new/contract-lens" target="_blank" className="hover:text-foreground transition-colors">
+              <a href="https://git.new/core-lens" target="_blank" className="hover:text-foreground transition-colors">
                 Open Source
               </a>
               <span>•</span>
@@ -142,7 +142,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               </a>{' '}
               •{' '}
               <a
-                href="https://peerlist.io/haziqbangash/project/contract-lens-ai-20"
+                href="https://peerlist.io/haziqbangash/project/core-lens-ai-20"
                 target="_blank"
                 className="hover:text-foreground transition-colors"
               >

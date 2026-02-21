@@ -4,7 +4,7 @@ import { generateText } from 'ai';
 
 import { getLightweightUser } from '@/app/actions';
 import { getPaperById, getReadyDocumentIndicesByPaperIds } from '@/lib/db/queries';
-import { contractLens } from '@/ai/providers';
+import { coreLens } from '@/ai/providers';
 import { PageIndexRAG } from '@/lib/page-index-rag';
 import type { DocumentIndex, PageContent } from '@/lib/page-index-rag';
 
@@ -89,7 +89,7 @@ export async function POST(
 
   try {
     const result = await generateText({
-      model: contractLens.languageModel('contract-lens-gpt-4.1'),
+      model: coreLens.languageModel('core-lens-gpt-4.1'),
       system: systemPrompt,
       prompt: userPrompt,
       maxOutputTokens: 4096,

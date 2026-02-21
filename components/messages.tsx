@@ -428,7 +428,7 @@ const Messages: React.FC<MessagesProps> = ({
           className={`flex items-start ${shouldReserveLoaderMinHeight ? 'min-h-[calc(100vh-18rem)]' : ''} m-0! p-0!`}
         >
           <div className="w-full m-0! p-0!">
-            {/* <ContractLensLogoHeader /> */}
+            {/* <CoreLensLogoHeader /> */}
             <div className="flex space-x-2 mt-5 ml-2">
               <div
                 className="size-3 rounded-full bg-muted-foreground dark:bg-muted-foreground animate-bounce"

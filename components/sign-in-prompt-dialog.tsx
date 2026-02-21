@@ -131,10 +131,7 @@ export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogPro
 
       {/* Auth Options */}
       <div className="space-y-2 mb-4">
-        <SignInButton provider="github" loading={githubLoading} setLoading={setGithubLoading} />
         <SignInButton provider="google" loading={googleLoading} setLoading={setGoogleLoading} />
-        <SignInButton provider="twitter" loading={twitterLoading} setLoading={setTwitterLoading} />
-        <SignInButton provider="microsoft" loading={microsoftLoading} setLoading={setMicrosoftLoading} />
       </div>
 
       {/* Divider */}
@@ -177,10 +174,7 @@ export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogPro
           <div className="overflow-y-auto pt-4">
             {/* Auth Options */}
             <div className="space-y-2 mb-4">
-              <SignInButton provider="github" loading={githubLoading} setLoading={setGithubLoading} />
               <SignInButton provider="google" loading={googleLoading} setLoading={setGoogleLoading} />
-              <SignInButton provider="twitter" loading={twitterLoading} setLoading={setTwitterLoading} />
-              <SignInButton provider="microsoft" loading={microsoftLoading} setLoading={setMicrosoftLoading} />
             </div>
 
             {/* Divider */}

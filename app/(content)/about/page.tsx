@@ -23,7 +23,7 @@ import { ElevenLabsLogo } from '@/components/logos/elevenlabs-logo';
 import { PRICING, SEARCH_LIMITS } from '@/lib/constants';
 
 import { ThemeSwitcher } from '@/components/theme-switcher';
-import { ContractLensLogo } from '@/components/logos/contract-lens-logo';
+import { CoreLensLogo } from '@/components/logos/core-lens-logo';
 import { getSearchGroups } from '@/lib/utils';
 
 export default function AboutPage() {
@@ -60,8 +60,8 @@ export default function AboutPage() {
           <div className="grid grid-cols-12 items-center h-16 border-x border-border">
             <div className="col-span-6 flex items-center h-full pl-4 border-border">
               <Link href="/" className="flex items-center gap-2 group">
-                <ContractLensLogo className="size-7 transition-transform group-hover:scale-110" />
-                <span className="text-2xl font-normal tracking-tighter font-be-vietnam-pro">Contract Lens</span>
+                <CoreLensLogo className="size-7 transition-transform group-hover:scale-110" />
+                <span className="text-2xl font-normal tracking-tighter font-be-vietnam-pro">Core Lens</span>
               </Link>
             </div>
 
@@ -97,7 +97,7 @@ export default function AboutPage() {
                 Your AI Research Assistant
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Contract Lens helps you find, read, and cite research papers faster. Ask a question in plain language
+                Core Lens helps you find, read, and cite research papers faster. Ask a question in plain language
                 and get grounded answers drawn from the live web, academic databases, and your own uploaded papers
                 &mdash; complete with inline citations you can trace back to the source.
               </p>
@@ -273,7 +273,7 @@ export default function AboutPage() {
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <h2 className="text-2xl font-semibold mb-2">How It Works</h2>
               <p className="text-muted-foreground">
-                Ask a question. Contract Lens figures out the rest.
+                Ask a question. Core Lens figures out the rest.
               </p>
             </div>
 
@@ -505,15 +505,15 @@ export default function AboutPage() {
                   <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
                 </div>
                 <a
-                  href="https://openalternative.co/contract-lens?utm_source=openalternative&utm_medium=badge&utm_campaign=embed&utm_content=tool-contract-lens"
+                  href="https://openalternative.co/core-lens?utm_source=openalternative&utm_medium=badge&utm_campaign=embed&utm_content=tool-core-lens"
                   target="_blank"
                   className="inline-block"
                 >
                   <Image
-                    src="https://openalternative.co/contract-lens/badge.svg?theme=dark&width=200&height=50"
+                    src="https://openalternative.co/core-lens/badge.svg?theme=dark&width=200&height=50"
                     width={200}
                     height={50}
-                    alt="Contract Lens badge"
+                    alt="Core Lens badge"
                     className="mx-auto"
                   />
                 </a>
@@ -529,7 +529,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-12 border-l border-r border-border">
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <h2 className="text-2xl font-semibold mb-2">Powered By</h2>
-              <p className="text-muted-foreground">The infrastructure behind Contract Lens</p>
+              <p className="text-muted-foreground">The infrastructure behind Core Lens</p>
             </div>
 
             <div className="col-span-12 grid grid-cols-12">
@@ -922,7 +922,7 @@ export default function AboutPage() {
                 <div className="mb-8">
                   <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Free</h3>
                   <p className="text-muted-foreground mb-4 group-hover:text-foreground/80 transition-colors">
-                    Try Contract Lens with no commitment
+                    Try Core Lens with no commitment
                   </p>
                   <div className="space-y-1">
                     <div className="flex items-baseline transition-colors duration-200">
@@ -1091,9 +1091,9 @@ export default function AboutPage() {
             <div className="col-span-12 bg-card p-6 border-b border-border">
               <ProAccordion type="single" collapsible className="w-full">
                 <ProAccordionItem value="item-1">
-                  <ProAccordionTrigger>What is Contract Lens?</ProAccordionTrigger>
+                  <ProAccordionTrigger>What is Core Lens?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens is an AI research assistant that helps you find, read, and cite information faster.
+                    Core Lens is an AI research assistant that helps you find, read, and cite information faster.
                     Ask a question in plain language and get an answer grounded in live web sources, academic papers, and
                     your own uploaded PDFs &mdash; with inline citations linking back to the original material.
                   </ProAccordionContent>
@@ -1102,7 +1102,7 @@ export default function AboutPage() {
                 <ProAccordionItem value="item-2">
                   <ProAccordionTrigger>How is this different from ChatGPT or Perplexity?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens is built specifically for research. It has a personal paper library with full-text search,
+                    Core Lens is built specifically for research. It has a personal paper library with full-text search,
                     page-level PDF citations, academic search, Extreme Search for deep multi-step research, and Lookout for
                     automated topic monitoring. You can also @mention specific papers from your library in conversations.
                   </ProAccordionContent>
@@ -1145,16 +1145,16 @@ export default function AboutPage() {
                 <ProAccordionItem value="item-7">
                   <ProAccordionTrigger>What AI models are available?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Contract Lens gives you access to {models.length}+ models from OpenAI (GPT-4o, o3), Anthropic (Claude),
+                    Core Lens gives you access to {models.length}+ models from OpenAI (GPT-4o, o3), Anthropic (Claude),
                     Google (Gemini), xAI (Grok), and more. Free users get access to a selection of fast, capable models.
                     Pro unlocks the full catalog, including reasoning models and those with vision and PDF capabilities.
                   </ProAccordionContent>
                 </ProAccordionItem>
 
                 <ProAccordionItem value="item-8">
-                  <ProAccordionTrigger>Is Contract Lens open source?</ProAccordionTrigger>
+                  <ProAccordionTrigger>Is Core Lens open source?</ProAccordionTrigger>
                   <ProAccordionContent>
-                    Yes. Contract Lens is open source and available on GitHub. You can self-host it, contribute, or inspect
+                    Yes. Core Lens is open source and available on GitHub. You can self-host it, contribute, or inspect
                     how it works under the hood.
                   </ProAccordionContent>
                 </ProAccordionItem>
@@ -1167,7 +1167,7 @@ export default function AboutPage() {
                   <p className="text-sm font-medium text-foreground mb-1">Ready to get started?</p>
                   <p className="text-xs text-muted-foreground">
                     Have more questions?{' '}
-                    <a href="mailto:haziqbangash@contract-lens.ai" className="text-primary hover:text-primary/80 transition-colors">
+                    <a href="mailto:haziqbangash@core-lens.ai" className="text-primary hover:text-primary/80 transition-colors">
                       Contact us
                     </a>
                   </p>
@@ -1202,9 +1202,9 @@ export default function AboutPage() {
           <div className="grid grid-cols-12 border-l border-r border-border">
             <div className="col-span-12 md:col-span-8 bg-card p-4 md:p-6 border-r border-b border-border">
               <div className="flex items-center gap-3">
-                <ContractLensLogo className="size-8" />
+                <CoreLensLogo className="size-8" />
                 <p className="text-sm text-muted-foreground">
-                  &copy; {new Date().getFullYear()} Contract Lens. All rights reserved.
+                  &copy; {new Date().getFullYear()} Core Lens. All rights reserved.
                 </p>
               </div>
             </div>
@@ -1223,14 +1223,14 @@ export default function AboutPage() {
                   Privacy
                 </Link>
                 <Link
-                  href="https://x.com/contract-lensai"
+                  href="https://x.com/core-lensai"
                   className="flex items-center justify-center h-12 text-muted-foreground hover:text-foreground transition-colors border-r md:border-r-0 md:border-0 border-border"
                   target="_blank"
                 >
                   <XLogoIcon className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="https://git.new/contract-lens"
+                  href="https://git.new/core-lens"
                   className="flex items-center justify-center h-12 text-muted-foreground hover:text-foreground transition-colors"
                   target="_blank"
                 >

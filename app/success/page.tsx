@@ -13,7 +13,7 @@ const PRO_FEATURES = [
   { icon: Infinity, label: 'Unlimited searches', description: 'No daily limits' },
   { icon: Cpu, label: 'All AI models', description: 'Access every model' },
   { icon: FileText, label: 'PDF analysis', description: 'Upload & analyze documents' },
-  { icon: Eye, label: 'Contract Lens Lookout', description: 'Real-time monitoring' },
+  { icon: Eye, label: 'Core Lens Lookout', description: 'Real-time monitoring' },
 ];
 
 export default function SuccessPage() {
@@ -176,7 +176,7 @@ export default function SuccessPage() {
         </div>
 
         {/* Content */}
-        <h1 className="text-3xl font-medium text-foreground mb-3 tracking-tight">Welcome to Contract Lens Pro</h1>
+        <h1 className="text-3xl font-medium text-foreground mb-3 tracking-tight">Welcome to Core Lens Pro</h1>
         <p className="text-muted-foreground mb-10">Your subscription is now active. Here&apos;s what you&apos;ve unlocked.</p>
 
         {/* Features Grid */}

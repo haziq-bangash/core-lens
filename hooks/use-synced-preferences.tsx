@@ -6,18 +6,18 @@ import { getUserPreferences, saveUserPreferences } from '@/app/actions';
 import { useUser } from '@/contexts/user-context';
 
 type PreferenceKey =
-  | 'contract-lens-search-provider'
-  | 'contract-lens-extreme-search-provider'
-  | 'contract-lens-group-order'
-  | 'contract-lens-model-order-global'
-  | 'contract-lens-blur-personal-info'
-  | 'contract-lens-custom-instructions-enabled'
-  | 'contract-lens-location-metadata-enabled';
+  | 'core-lens-search-provider'
+  | 'core-lens-extreme-search-provider'
+  | 'core-lens-group-order'
+  | 'core-lens-model-order-global'
+  | 'core-lens-blur-personal-info'
+  | 'core-lens-custom-instructions-enabled'
+  | 'core-lens-location-metadata-enabled';
 
 type PreferenceValue = string | string[] | boolean | undefined;
 
 const DEBOUNCE_MS = 300; // Debounce DB writes by 300ms
-const MIGRATION_KEY_PREFIX = 'contract-lens-prefs-migrated-';
+const MIGRATION_KEY_PREFIX = 'core-lens-prefs-migrated-';
 
 // Get the initial value from localStorage synchronously
 function getStoredValue<T>(key: string, defaultValue: T): T {
@@ -54,13 +54,13 @@ function collectLocalStoragePreferences(): Partial<Record<PreferenceKey, Prefere
   const preferences: Partial<Record<PreferenceKey, PreferenceValue>> = {};
 
   const keys: PreferenceKey[] = [
-    'contract-lens-search-provider',
-    'contract-lens-extreme-search-provider',
-    'contract-lens-group-order',
-    'contract-lens-model-order-global',
-    'contract-lens-blur-personal-info',
-    'contract-lens-custom-instructions-enabled',
-    'contract-lens-location-metadata-enabled',
+    'core-lens-search-provider',
+    'core-lens-extreme-search-provider',
+    'core-lens-group-order',
+    'core-lens-model-order-global',
+    'core-lens-blur-personal-info',
+    'core-lens-custom-instructions-enabled',
+    'core-lens-location-metadata-enabled',
   ];
 
   keys.forEach((key) => {
