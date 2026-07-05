@@ -14,6 +14,21 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, so they
+# must be supplied as build args (server-only secrets are injected at Cloud Run
+# runtime instead, see the "runner" stage). SKIP_ENV_VALIDATION lets the build
+# proceed without the full server secret set present in the build context.
+ARG SKIP_ENV_VALIDATION=1
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_VAPI_PUBLIC_KEY
+ARG NEXT_PUBLIC_VAPI_ASSISTANT_ID
+ARG NEXT_PUBLIC_VOICE_BACKEND_URL
+ENV SKIP_ENV_VALIDATION=$SKIP_ENV_VALIDATION \
+    NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
+    NEXT_PUBLIC_VAPI_PUBLIC_KEY=$NEXT_PUBLIC_VAPI_PUBLIC_KEY \
+    NEXT_PUBLIC_VAPI_ASSISTANT_ID=$NEXT_PUBLIC_VAPI_ASSISTANT_ID \
+    NEXT_PUBLIC_VOICE_BACKEND_URL=$NEXT_PUBLIC_VOICE_BACKEND_URL
+
 RUN bun run build
 
 # Stage 3: Production

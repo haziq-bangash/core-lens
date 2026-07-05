@@ -11,4 +11,5 @@ export const clientEnv = createEnv({
     NEXT_PUBLIC_VAPI_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY,
     NEXT_PUBLIC_VAPI_ASSISTANT_ID: process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID,
   },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

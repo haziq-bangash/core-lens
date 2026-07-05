@@ -165,6 +165,21 @@ export const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-02-25.clover',
 });
 
+// Known production domains stay trusted regardless of deployment target;
+// NEXT_PUBLIC_APP_URL/BETTER_AUTH_URL pick up whatever URL Cloud Run assigns
+// (or a custom domain) without needing a code change per environment.
+const trustedOrigins = Array.from(
+  new Set(
+    [
+      'http://localhost:3000',
+      'https://core-lens.ai',
+      'https://www.core-lens.ai',
+      process.env.NEXT_PUBLIC_APP_URL,
+      process.env.BETTER_AUTH_URL,
+    ].filter((origin): origin is string => Boolean(origin)),
+  ),
+);
+
 export const auth = betterAuth({
   rateLimit: {
     max: 100,
@@ -318,6 +333,6 @@ export const auth = betterAuth({
     }),
     nextCookies(),
   ],
-  trustedOrigins: ['http://localhost:3000', 'https://core-lens.ai', 'https://www.core-lens.ai'],
-  allowedOrigins: ['http://localhost:3000', 'https://core-lens.ai', 'https://www.core-lens.ai'],
+  trustedOrigins,
+  allowedOrigins: trustedOrigins,
 });

@@ -36,4 +36,5 @@ export const serverEnv = createEnv({
     ALLOWED_ORIGINS: z.string().optional().default('http://localhost:3000'),
   },
   experimental__runtimeEnv: process.env,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });
