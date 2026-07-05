@@ -99,12 +99,12 @@ export const viewport: Viewport = {
 const sfPro = localFont({
   src: [
     {
-      path: '../public/fonts/SF-Pro.ttf',
+      path: './fonts/SF-Pro.ttf',
       weight: '100 900',
       style: 'normal',
     },
     {
-      path: '../public/fonts/SF-Pro-Italic.ttf',
+      path: './fonts/SF-Pro-Italic.ttf',
       weight: '100 900',
       style: 'italic',
     },

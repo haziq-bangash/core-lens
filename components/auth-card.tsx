@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
-type AuthProvider = 'github' | 'google' | 'twitter' | 'microsoft';
+type AuthProvider = 'google' | 'microsoft';
 
 interface AuthIconProps extends React.ComponentProps<'svg'> {}
 
