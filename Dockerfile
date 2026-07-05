@@ -1,38 +1,43 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Stage 1: Dependencies
-FROM oven/bun:1 AS deps
+FROM oven/bun:1.3.9 AS deps
 WORKDIR /app
 
 COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
 # Stage 2: Build
-FROM oven/bun:1 AS builder
+FROM oven/bun:1.3.9 AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, so they
-# must be supplied as build args (server-only secrets are injected at Cloud Run
-# runtime instead, see the "runner" stage). SKIP_ENV_VALIDATION lets the build
-# proceed without the full server secret set present in the build context.
+# Several modules construct DB/API clients at import time (drizzle/neon, redis,
+# stripe, etc.), which throws on `undefined` -- so `bun run build` needs real
+# env values, not just NEXT_PUBLIC_* ones. prod.env (written by CI from the
+# ENV_FILE secret, see deploy.yml) is picked up here via COPY . . above and
+# sourced safely (values aren't shell-reinterpreted) so build-time behavior
+# matches Cloud Run runtime. SKIP_ENV_VALIDATION is a fallback for builds with
+# no env file present at all (e.g. a quick local test build).
 ARG SKIP_ENV_VALIDATION=1
-ARG NEXT_PUBLIC_APP_URL
-ARG NEXT_PUBLIC_VAPI_PUBLIC_KEY
-ARG NEXT_PUBLIC_VAPI_ASSISTANT_ID
-ARG NEXT_PUBLIC_VOICE_BACKEND_URL
-ENV SKIP_ENV_VALIDATION=$SKIP_ENV_VALIDATION \
-    NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
-    NEXT_PUBLIC_VAPI_PUBLIC_KEY=$NEXT_PUBLIC_VAPI_PUBLIC_KEY \
-    NEXT_PUBLIC_VAPI_ASSISTANT_ID=$NEXT_PUBLIC_VAPI_ASSISTANT_ID \
-    NEXT_PUBLIC_VOICE_BACKEND_URL=$NEXT_PUBLIC_VOICE_BACKEND_URL
-
-RUN bun run build
+ENV SKIP_ENV_VALIDATION=$SKIP_ENV_VALIDATION
+RUN set -a; \
+    if [ -f prod.env ]; then \
+      tr -d '\r' < prod.env > prod.env.normalized && mv prod.env.normalized prod.env; \
+      while IFS= read -r line || [ -n "$line" ]; do \
+        case "$line" in ''|'#'*) continue ;; esac; \
+        key="${line%%=*}"; \
+        value="${line#*=}"; \
+        export "$key=$value"; \
+      done < prod.env; \
+      rm -f prod.env; \
+    fi; \
+    bun run build
 
 # Stage 3: Production
-FROM oven/bun:1 AS runner
+FROM oven/bun:1.3.9 AS runner
 LABEL org.opencontainers.image.name="core-lens.app"
 WORKDIR /app
 

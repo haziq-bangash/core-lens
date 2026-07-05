@@ -43,28 +43,13 @@ jobs:
           ENV_FILE_CONTENTS: ${{ secrets.ENV_FILE }}
         run: printf '%s\n' "$ENV_FILE_CONTENTS" > prod.env
 
-      - name: Derive NEXT_PUBLIC_* build args
-        run: |
-          get_var() { grep -m1 "^$1=" prod.env | cut -d '=' -f2- ; }
-          {
-            echo "NEXT_PUBLIC_APP_URL=$(get_var NEXT_PUBLIC_APP_URL)"
-            echo "NEXT_PUBLIC_VAPI_PUBLIC_KEY=$(get_var NEXT_PUBLIC_VAPI_PUBLIC_KEY)"
-            echo "NEXT_PUBLIC_VAPI_ASSISTANT_ID=$(get_var NEXT_PUBLIC_VAPI_ASSISTANT_ID)"
-            echo "NEXT_PUBLIC_VOICE_BACKEND_URL=$(get_var NEXT_PUBLIC_VOICE_BACKEND_URL)"
-          } >> "$GITHUB_ENV"
-
-      # NEXT_PUBLIC_* values get inlined into the client bundle at build time,
-      # so they're passed as build args here. Server-only secrets are NOT
-      # passed at build time -- they're injected at Cloud Run runtime below,
-      # via the same prod.env, converted into --env-vars-file format.
+      # prod.env sits in the build context root (not excluded by .dockerignore)
+      # and gets picked up by the Dockerfile's `COPY . .` + sourced internally,
+      # so both NEXT_PUBLIC_* (client bundle) and server-only vars (several
+      # modules construct DB/API clients at import time) are real during the
+      # build -- matching Cloud Run runtime instead of crashing on `undefined`.
       - name: Build image
-        run: |
-          docker build \
-            --build-arg NEXT_PUBLIC_APP_URL="$NEXT_PUBLIC_APP_URL" \
-            --build-arg NEXT_PUBLIC_VAPI_PUBLIC_KEY="$NEXT_PUBLIC_VAPI_PUBLIC_KEY" \
-            --build-arg NEXT_PUBLIC_VAPI_ASSISTANT_ID="$NEXT_PUBLIC_VAPI_ASSISTANT_ID" \
-            --build-arg NEXT_PUBLIC_VOICE_BACKEND_URL="$NEXT_PUBLIC_VOICE_BACKEND_URL" \
-            -t "$IMAGE" .
+        run: docker build -t "$IMAGE" .
 
       - name: Push image
         run: docker push "$IMAGE"
