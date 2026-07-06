@@ -2,7 +2,6 @@
 
 import { Brain, Search, ArrowUpRight, GraduationCap, Eye, Filter, X, Library, FileText, Globe, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -448,81 +447,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Awards Section */}
-      <section className="border-b border-border">
-        <div className="container max-w-7xl mx-auto">
-          <div className="grid grid-cols-12 border-l border-r border-border">
-            <div className="col-span-12 bg-card p-6 border-b border-border">
-              <h2 className="text-2xl font-semibold mb-2">Recognition</h2>
-              <p className="text-muted-foreground">Recognized by developer and startup communities</p>
-            </div>
-
-            <div className="col-span-12 grid grid-cols-12">
-              <div className="col-span-12 md:col-span-4 bg-card p-8 text-center border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
-                </div>
-                <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Image
-                    src="https://cdn.prod.website-files.com/657b3d8ca1cab4015f06c850/680a4d679063da73487739e0_No1prgold-caps-removebg-preview.png"
-                    alt="Tiny Startups #1 Product"
-                    width={64}
-                    height={64}
-                    className="size-16 object-contain mx-auto"
-                  />
-                </div>
-                <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
-                  #1 Product of the Week
-                </h3>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Tiny Startups
-                </p>
-              </div>
-
-              <div className="col-span-12 md:col-span-4 bg-card p-8 text-center border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
-                </div>
-                <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Image
-                    src="/Winner-Medal-Weekly.svg"
-                    alt="Peerlist #1 Project"
-                    width={64}
-                    height={64}
-                    className="h-16 w-16 object-contain mx-auto"
-                  />
-                </div>
-                <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
-                  #1 Project of the Week
-                </h3>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Peerlist
-                </p>
-              </div>
-
-              <div className="col-span-12 md:col-span-4 bg-card p-6 text-center flex items-center justify-center border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
-                </div>
-                <a
-                  href="https://openalternative.co/core-lens?utm_source=openalternative&utm_medium=badge&utm_campaign=embed&utm_content=tool-core-lens"
-                  target="_blank"
-                  className="inline-block"
-                >
-                  <Image
-                    src="https://openalternative.co/core-lens/badge.svg?theme=dark&width=200&height=50"
-                    width={200}
-                    height={50}
-                    alt="Core Lens badge"
-                    className="mx-auto"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Powered By */}
       <section className="border-b border-border">
         <div className="container max-w-7xl mx-auto">
@@ -572,39 +496,6 @@ export default function AboutPage() {
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors">
                   Listen to answers read aloud with natural voice synthesis.
                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured on Vercel */}
-      <section className="border-b border-border">
-        <div className="container max-w-7xl mx-auto">
-          <div className="grid grid-cols-12 border-l border-r border-border">
-            <div className="col-span-12 lg:col-span-6 bg-card p-8 border-r border-border group relative overflow-hidden hover:bg-card/95 transition-all duration-300">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute top-0 left-0 w-full h-px bg-primary animate-reveal-line" />
-              </div>
-              <h2 className="text-2xl font-semibold mb-4 group-hover:text-primary transition-colors">
-                Featured on Vercel&apos;s Blog
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6 group-hover:text-foreground/80 transition-colors">
-                Recognized for innovative use of AI SDK to power multi-model research workflows across
-                {models.length}+ language models.
-              </p>
-              <Link
-                href="https://vercel.com/blog/ai-sdk-4-1"
-                className="inline-flex items-center gap-2 font-medium text-primary hover:text-primary/80 transition-all duration-300 hover:gap-3 group/link"
-                target="_blank"
-              >
-                Read the Feature
-                <ArrowUpRight className="h-4 w-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
-              </Link>
-            </div>
-            <div className="col-span-12 lg:col-span-6 bg-card overflow-hidden group hover:bg-card/95 transition-all duration-300">
-              <div className="relative aspect-video w-full h-full group-hover:scale-105 transition-transform duration-500">
-                <Image src="/vercel-featured.png" alt="Featured on Vercel Blog" fill className="object-cover" />
               </div>
             </div>
           </div>

@@ -1,55 +1,26 @@
-'use client';
-
 import Link from 'next/link';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
-import { useState, useEffect } from 'react';
-import Autoplay from 'embla-carousel-autoplay';
+import { Library, Search, Eye } from 'lucide-react';
 import { CoreLensLogo } from '@/components/logos/core-lens-logo';
 
-const testimonials = [
+const highlights = [
   {
-    content:
-      '"Core Lens @core-lensai is better than Grok at digging up information from X, its own platform! I asked it 3 different queries to help scrape and find some data points I was interested in about my own account and Core Lens did much much better with insanely accurate answers!"',
-    author: 'Chris Universe',
-    handle: '@chrisuniverseb',
-    link: 'https://x.com/chrisuniverseb/status/1943025911043100835',
+    icon: Library,
+    title: 'Personal research library',
+    description: 'Upload PDFs and get page-level citations back.',
   },
   {
-    content: '"core-lens dot ai does a really good job scraping through the reddit mines btw"',
-    author: 'nyaaier',
-    handle: '@nyaaier',
-    link: 'https://x.com/nyaaier/status/1932810453107065284',
+    icon: Search,
+    title: 'Web & academic search',
+    description: 'Grounded answers from live sources, with inline citations.',
   },
   {
-    content:
-      "Hi @core-lensai, just for curiosity, I searched for myself using its Gemini 2.5 Pro and in extreme mode to see what results it could generate. And it created this 👇🏻 It is not just the best, it is wild. And the best part is it's 10000% accurate.",
-    author: 'Aniruddha Dak',
-    handle: '@aniruddhadak',
-    link: 'https://x.com/aniruddhadak/status/1917140602107445545',
-  },
-  {
-    content:
-      '"read nothing the whole sem and here I am with @core-lensai to top my mid sems !! Literally so good to get all the related diagram, points and even topics from the website my professor uses to teach us 🙌"',
-    author: 'Rajnandinit',
-    handle: '@itsRajnandinit',
-    link: 'https://x.com/itsRajnandinit/status/1897896134837682288',
+    icon: Eye,
+    title: 'Automated Lookouts',
+    description: 'Track a topic over time and get notified on updates.',
   },
 ];
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    if (!api) return;
-
-    setCurrent(api.selectedScrollSnap());
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap());
-    });
-  }, [api]);
-
   return (
     <div className="flex items-center justify-between h-svh bg-background w-full md:w-auto">
       <div className="hidden lg:flex lg:w-1/2 h-full bg-muted/30 flex-col">
@@ -69,86 +40,29 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                What people are saying
+                What you can do
               </h3>
 
-              <Carousel
-                className="w-full"
-                opts={{ loop: true }}
-                setApi={setApi}
-                plugins={[
-                  Autoplay({
-                    delay: 4000,
-                    stopOnInteraction: true,
-                    stopOnMouseEnter: true,
-                  }),
-                ]}
-              >
-                <CarouselContent>
-                  {testimonials.map((testimonial, index) => (
-                    <CarouselItem key={index}>
-                      <Link href={testimonial.link} target="_blank" className="block group h-full">
-                        <blockquote className="relative h-full flex flex-col bg-background/50 backdrop-blur-sm border border-border/50 rounded-lg p-6 transition-all duration-200 hover:bg-background/70">
-                          <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors flex-1 text-balance">
-                            {testimonial.content}
-                          </div>
-                          <footer className="mt-3">
-                            <div className="flex items-center gap-2">
-                              <cite className="text-sm font-medium not-italic text-foreground">
-                                {testimonial.author}
-                              </cite>
-                              <span className="text-xs text-muted-foreground">{testimonial.handle}</span>
-                            </div>
-                          </footer>
-                        </blockquote>
-                      </Link>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="flex items-center justify-center gap-1 mt-4">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => api?.scrollTo(index)}
-                      className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                        index === current ? 'bg-foreground' : 'bg-muted-foreground/30'
-                      }`}
-                      aria-label={`Go to testimonial ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </Carousel>
+              <ul className="space-y-4">
+                {highlights.map((highlight) => (
+                  <li key={highlight.title} className="flex items-start gap-3">
+                    <highlight.icon className="size-4 text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{highlight.title}</p>
+                      <p className="text-xs text-muted-foreground">{highlight.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <a href="https://git.new/core-lens" target="_blank" className="hover:text-foreground transition-colors">
-                Open Source
-              </a>
-              <span>•</span>
-              <span>Live Search</span>
-              <span>•</span>
-              <span>1M+ Searches served</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Featured on{' '}
-              <a
-                href="https://vercel.com/blog/ai-sdk-4-1"
-                target="_blank"
-                className="hover:text-foreground transition-colors"
-              >
-                Vercel
-              </a>{' '}
-              •{' '}
-              <a
-                href="https://peerlist.io/haziqbangash/project/core-lens-ai-20"
-                target="_blank"
-                className="hover:text-foreground transition-colors"
-              >
-                #1 Product of the Week on Peerlist
-              </a>
-            </p>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <a href="https://git.new/core-lens" target="_blank" className="hover:text-foreground transition-colors">
+              Open Source
+            </a>
+            <span>•</span>
+            <span>Live Search</span>
           </div>
         </div>
       </div>

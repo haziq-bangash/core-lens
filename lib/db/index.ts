@@ -3,26 +3,19 @@ import { neon } from "@neondatabase/serverless";
 import { withReplicas } from 'drizzle-orm/pg-core';
 import { serverEnv } from '@/env/server';
 import { RedisDrizzleCache } from '@databuddy/cache';
-import Redis from 'ioredis';
+import { Redis as UpstashRedis } from '@upstash/redis';
 import * as schema from './schema';
 
-// Create Redis client with error handling
-const redis = new Redis(serverEnv.REDIS_URL, {
-  maxRetriesPerRequest: 3,
-  enableReadyCheck: true,
-  retryStrategy(times) {
-    const delay = Math.min(times * 50, 2000);
-    return delay;
-  },
-});
-
-// Handle Redis connection errors
-redis.on('error', (err) => {
-  console.error('Redis connection error:', err.message);
-});
-
-redis.on('connect', () => {
-  console.log('✅ Redis connected successfully');
+// Upstash's REST client instead of a persistent ioredis TCP connection --
+// Upstash's Redis proxy aggressively closes idle TCP connections, which made
+// a long-lived ioredis client cycle through constant connect/disconnect/retry
+// errors. The REST client is stateless per-call, so there's no connection to
+// drop. automaticDeserialization is off because RedisDrizzleCache already
+// does its own JSON.stringify/JSON.parse around raw string values.
+const redis = new UpstashRedis({
+  url: serverEnv.UPSTASH_REDIS_REST_URL,
+  token: serverEnv.UPSTASH_REDIS_REST_TOKEN,
+  automaticDeserialization: false,
 });
 
 // Create shared cache instance
