@@ -50,6 +50,7 @@ import { useUser } from '@/contexts/user-context';
 import { PaperCard } from './paper-card';
 import { LibraryUploadDialog } from './library-upload-dialog';
 import { PaperStatusBadge } from './paper-status-badge';
+import { ExportLibraryMenu } from './cite-menus';
 import { cn } from '@/lib/utils';
 import type { Paper, Collection } from '@/lib/db/schema';
 
@@ -390,6 +391,9 @@ export function LibraryPage() {
               </Badge>
             )}
           </Button>
+
+          {/* Export citations for whatever is currently shown */}
+          <ExportLibraryMenu papers={filteredPapers} />
 
           {/* Upload button */}
           <Button onClick={() => setUploadDialogOpen(true)} size="sm" className="gap-2">
