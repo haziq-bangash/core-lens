@@ -1,3 +1,9 @@
+// How many paper alerts (Lookouts) a user can keep active
+export const LOOKOUT_LIMITS = {
+  FREE: 2,
+  PRO: 10,
+} as const;
+
 // Search limits for free users
 export const SEARCH_LIMITS = {
   DAILY_SEARCH_LIMIT: 10,

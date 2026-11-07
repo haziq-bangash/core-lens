@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { and, asc, desc, eq, gt, gte, inArray, lt, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, gte, inArray, lt, lte, or, type SQL } from 'drizzle-orm';
 import {
   user,
   chat,
@@ -921,6 +921,121 @@ export async function getLookoutRunStats({ id }: { id: string }) {
   } catch (error) {
     console.error('Error getting lookout run stats:', error);
     return null;
+  }
+}
+
+export async function countActiveLookoutsByUserId({ userId }: { userId: string }): Promise<number> {
+  try {
+    const rows = await db
+      .select({ id: lookout.id })
+      .from(lookout)
+      .where(and(eq(lookout.userId, userId), inArray(lookout.status, ['active', 'paused', 'running'])));
+    return rows.length;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to count lookouts');
+  }
+}
+
+const LOOKOUT_STUCK_AFTER_MS = 30 * 60 * 1000;
+
+/**
+ * Atomically claims lookouts that are due so overlapping scheduler calls can't run the same
+ * one twice. Claimed rows are flipped to 'running'. A lookout stuck in 'running' (the instance
+ * died mid-run) becomes claimable again after 30 minutes.
+ */
+export async function claimDueLookouts({ limit = 20 }: { limit?: number } = {}) {
+  try {
+    const now = new Date();
+    const stuckBefore = new Date(now.getTime() - LOOKOUT_STUCK_AFTER_MS);
+
+    const due = await db
+      .select({ id: lookout.id })
+      .from(lookout)
+      .where(
+        or(
+          and(eq(lookout.status, 'active'), lte(lookout.nextRunAt, now)),
+          and(eq(lookout.status, 'running'), lt(lookout.updatedAt, stuckBefore)),
+        ),
+      )
+      .orderBy(asc(lookout.nextRunAt))
+      .limit(limit);
+
+    if (due.length === 0) return [];
+
+    // Re-check the condition in the UPDATE so a concurrent claimer gets zero rows for a lookout.
+    return await db
+      .update(lookout)
+      .set({ status: 'running', updatedAt: now })
+      .where(
+        and(
+          inArray(
+            lookout.id,
+            due.map((d) => d.id),
+          ),
+          or(
+            and(eq(lookout.status, 'active'), lte(lookout.nextRunAt, now)),
+            and(eq(lookout.status, 'running'), lt(lookout.updatedAt, stuckBefore)),
+          ),
+        ),
+      )
+      .returning();
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to claim due lookouts');
+  }
+}
+
+export async function recordLookoutRun({
+  id,
+  runAt,
+  nextRunAt,
+  status,
+  error,
+  duration,
+  paperIds,
+  newPapers,
+  keepStatus,
+}: {
+  id: string;
+  runAt: Date;
+  nextRunAt: Date;
+  status: 'success' | 'error' | 'timeout';
+  error?: string;
+  duration?: number;
+  paperIds?: string[];
+  newPapers?: number;
+  /** Set to leave the lookout paused/archived if the user changed it during the run. */
+  keepStatus?: boolean;
+}) {
+  try {
+    const current = await getLookoutById({ id });
+    if (!current) return null;
+
+    const history = (current.runHistory as Array<Record<string, unknown>>) || [];
+    const entry = {
+      runAt: runAt.toISOString(),
+      status,
+      ...(error && { error }),
+      ...(duration !== undefined && { duration }),
+      ...(paperIds && { paperIds }),
+      ...(newPapers !== undefined && { newPapers }),
+    };
+
+    const [updated] = await db
+      .update(lookout)
+      .set({
+        lastRunAt: runAt,
+        nextRunAt,
+        // A run only ever releases the 'running' claim; a user who paused it mid-run keeps that.
+        status: keepStatus || current.status !== 'running' ? current.status : 'active',
+        runHistory: [...history, entry].slice(-30) as never,
+        updatedAt: new Date(),
+      })
+      .where(eq(lookout.id, id))
+      .returning();
+
+    return updated;
+  } catch (err) {
+    throw new ChatSDKError('bad_request:database', 'Failed to record lookout run');
   }
 }
 

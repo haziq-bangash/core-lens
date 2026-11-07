@@ -1,13 +1,14 @@
 const BASE_URL = 'https://api.semanticscholar.org/graph/v1';
 const RECOMMENDATIONS_URL = 'https://api.semanticscholar.org/recommendations/v1/papers';
 
-const FIELDS = 'paperId,title,authors,year,abstract,venue,citationCount,openAccessPdf,externalIds';
+const FIELDS = 'paperId,title,authors,year,abstract,venue,citationCount,openAccessPdf,externalIds,publicationDate';
 
 interface SemanticScholarPaper {
   paperId: string;
   title: string;
   authors?: { authorId: string; name: string }[];
   year?: number;
+  publicationDate?: string | null;
   abstract?: string;
   venue?: string;
   citationCount?: number;
@@ -65,7 +66,13 @@ async function fetchWithRetry(url: string, options?: RequestInit, retries = 2): 
  */
 export async function searchPapers(
   query: string,
-  options?: { limit?: number; offset?: number; year?: string },
+  options?: {
+    limit?: number;
+    offset?: number;
+    year?: string;
+    /** Semantic Scholar date range, e.g. `2025-01-01:` (since) or `2024-01-01:2024-12-31`. */
+    publicationDateOrYear?: string;
+  },
 ): Promise<{ papers: SemanticScholarPaper[]; total: number }> {
   const params = new URLSearchParams({
     query,
@@ -76,6 +83,9 @@ export async function searchPapers(
 
   if (options?.year) {
     params.set('year', options.year);
+  }
+  if (options?.publicationDateOrYear) {
+    params.set('publicationDateOrYear', options.publicationDateOrYear);
   }
 
   const res = await fetchWithRetry(`${BASE_URL}/paper/search?${params}`);

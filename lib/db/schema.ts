@@ -300,7 +300,9 @@ export const lookout = pgTable('lookout', {
     .$type<
       Array<{
         runAt: string; // ISO date string
-        chatId: string;
+        chatId?: string; // legacy chat-based runs only
+        paperIds?: string[]; // papers included in the digest (used to avoid repeats)
+        newPapers?: number;
         status: 'success' | 'error' | 'timeout';
         error?: string;
         duration?: number; // milliseconds
