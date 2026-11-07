@@ -21,7 +21,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return new ChatSDKError('bad_request:api').toResponse();
   }
 
-  const session = await auth.api.getSession(req);
+  const session = await auth.api.getSession({ headers: req.headers });
 
   if (!session?.user) {
     return new ChatSDKError('unauthorized:chat').toResponse();
