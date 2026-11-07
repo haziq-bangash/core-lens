@@ -41,49 +41,22 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   }
 }
 
-interface ActionEmailOptions {
-  /** Inbox preview text shown next to the subject. */
-  preheader: string;
-  heading: string;
-  /** Plain-text paragraphs rendered above the button. */
-  paragraphs: string[];
-  buttonLabel: string;
-  url: string;
-  /** Small print under the button, e.g. expiry and "didn't request this". */
-  notes: string[];
-  recipient: string;
-}
-
-export function renderActionEmail({
+function renderEmailShell({
   preheader,
-  heading,
-  paragraphs,
-  buttonLabel,
-  url,
-  notes,
+  title,
   recipient,
-}: ActionEmailOptions) {
-  const safeUrl = escapeHtml(url);
+  cardInner,
+}: {
+  preheader: string;
+  title: string;
+  recipient: string;
+  cardInner: string;
+}) {
   const year = new Date().getFullYear();
-
-  const paragraphHtml = paragraphs
-    .map(
-      (p) =>
-        `<p class="text" style="margin:0 0 16px 0;font-size:16px;line-height:26px;color:#3f3f38;">${escapeHtml(p)}</p>`,
-    )
-    .join('');
-
-  const noteHtml = notes
-    .map(
-      (n) =>
-        `<p class="muted" style="margin:0 0 8px 0;font-size:13px;line-height:20px;color:#5c5c52;">${escapeHtml(n)}</p>`,
-    )
-    .join('');
-
   // Hidden filler stops email clients from pulling body text into the inbox preview.
   const preheaderFiller = '&#847;&zwnj;&nbsp;'.repeat(60);
 
-  const html = `<!doctype html>
+  return `<!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
     <meta charset="utf-8" />
@@ -91,7 +64,7 @@ export function renderActionEmail({
     <meta name="x-apple-disable-message-reformatting" />
     <meta name="color-scheme" content="light dark" />
     <meta name="supported-color-schemes" content="light dark" />
-    <title>${escapeHtml(heading)}</title>
+    <title>${escapeHtml(title)}</title>
     <!--[if mso]>
       <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
     <![endif]-->
@@ -146,7 +119,73 @@ export function renderActionEmail({
             <!-- Card -->
             <tr>
               <td class="card" style="background-color:#faf7ee;border:1px solid #e4dfd0;border-radius:16px;padding:40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-                <h1 class="heading" style="margin:0 0 16px 0;font-size:26px;line-height:34px;font-weight:600;letter-spacing:-0.02em;color:#121212;">${escapeHtml(heading)}</h1>
+${cardInner}
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="padding:28px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+                <p class="muted" style="margin:0 0 8px 0;font-size:12px;line-height:18px;color:#5c5c52;">
+                  This email was sent to ${escapeHtml(recipient)} because of activity on your Core Lens AI account.
+                </p>
+                <p class="muted" style="margin:0 0 8px 0;font-size:12px;line-height:18px;color:#5c5c52;">
+                  <a class="link" href="${SITE_URL}/terms" style="color:#5c5c52;text-decoration:underline;">Terms</a>
+                  &nbsp;&middot;&nbsp;
+                  <a class="link" href="${SITE_URL}/privacy-policy" style="color:#5c5c52;text-decoration:underline;">Privacy</a>
+                  &nbsp;&middot;&nbsp;
+                  <a class="link" href="mailto:${SUPPORT_EMAIL}" style="color:#5c5c52;text-decoration:underline;">Support</a>
+                </p>
+                <p class="muted" style="margin:0;font-size:12px;line-height:18px;color:#8a8a7d;">&copy; ${year} Core Lens AI</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+interface ActionEmailOptions {
+  /** Inbox preview text shown next to the subject. */
+  preheader: string;
+  heading: string;
+  /** Plain-text paragraphs rendered above the button. */
+  paragraphs: string[];
+  buttonLabel: string;
+  url: string;
+  /** Small print under the button, e.g. expiry and "didn't request this". */
+  notes: string[];
+  recipient: string;
+}
+
+export function renderActionEmail({
+  preheader,
+  heading,
+  paragraphs,
+  buttonLabel,
+  url,
+  notes,
+  recipient,
+}: ActionEmailOptions) {
+  const safeUrl = escapeHtml(url);
+
+  const paragraphHtml = paragraphs
+    .map(
+      (p) =>
+        `<p class="text" style="margin:0 0 16px 0;font-size:16px;line-height:26px;color:#3f3f38;">${escapeHtml(p)}</p>`,
+    )
+    .join('');
+
+  const noteHtml = notes
+    .map(
+      (n) =>
+        `<p class="muted" style="margin:0 0 8px 0;font-size:13px;line-height:20px;color:#5c5c52;">${escapeHtml(n)}</p>`,
+    )
+    .join('');
+
+  const cardInner = `                <h1 class="heading" style="margin:0 0 16px 0;font-size:26px;line-height:34px;font-weight:600;letter-spacing:-0.02em;color:#121212;">${escapeHtml(heading)}</h1>
                 ${paragraphHtml}
 
                 <!-- Button -->
@@ -175,32 +214,9 @@ export function renderActionEmail({
                       <p class="muted" style="margin:0;font-size:13px;line-height:20px;word-break:break-all;"><a class="link" href="${safeUrl}" style="color:#5c5c52;text-decoration:underline;">${safeUrl}</a></p>
                     </td>
                   </tr>
-                </table>
-              </td>
-            </tr>
+                </table>`;
 
-            <!-- Footer -->
-            <tr>
-              <td align="center" style="padding:28px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-                <p class="muted" style="margin:0 0 8px 0;font-size:12px;line-height:18px;color:#5c5c52;">
-                  This email was sent to ${escapeHtml(recipient)} because of activity on your Core Lens AI account.
-                </p>
-                <p class="muted" style="margin:0 0 8px 0;font-size:12px;line-height:18px;color:#5c5c52;">
-                  <a class="link" href="${SITE_URL}/terms" style="color:#5c5c52;text-decoration:underline;">Terms</a>
-                  &nbsp;&middot;&nbsp;
-                  <a class="link" href="${SITE_URL}/privacy-policy" style="color:#5c5c52;text-decoration:underline;">Privacy</a>
-                  &nbsp;&middot;&nbsp;
-                  <a class="link" href="mailto:${SUPPORT_EMAIL}" style="color:#5c5c52;text-decoration:underline;">Support</a>
-                </p>
-                <p class="muted" style="margin:0;font-size:12px;line-height:18px;color:#8a8a7d;">&copy; ${year} Core Lens AI</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>`;
+  const html = renderEmailShell({ preheader, title: heading, recipient, cardInner });
 
   const text = [
     heading,
@@ -263,4 +279,98 @@ export async function sendPasswordResetEmail({ to, name, url }: { to: string; na
   });
 
   await sendEmail({ to, subject: 'Reset your Core Lens AI password', html, text });
+}
+
+export interface DigestPaper {
+  title: string;
+  authors: string[];
+  year?: number | null;
+  venue?: string | null;
+  abstract?: string | null;
+  citationCount?: number | null;
+  /** Best link to read the paper (open-access PDF, DOI, or Semantic Scholar page). */
+  url: string;
+  pdfUrl?: string | null;
+}
+
+const truncate = (value: string, max: number) => (value.length > max ? `${value.slice(0, max).trimEnd()}…` : value);
+
+const formatAuthors = (authors: string[]) =>
+  authors.length <= 3 ? authors.join(', ') : `${authors.slice(0, 3).join(', ')} et al.`;
+
+interface LookoutDigestOptions {
+  to: string;
+  name?: string | null;
+  topic: string;
+  papers: DigestPaper[];
+}
+
+export function renderLookoutDigestEmail({ to, name, topic, papers }: LookoutDigestOptions) {
+  const count = papers.length;
+  const noun = count === 1 ? 'paper' : 'papers';
+  const heading = `${count} new ${noun} on your topic`;
+  const manageUrl = `${SITE_URL}/lookouts`;
+
+  const itemHtml = papers
+    .map((paper) => {
+      const meta = [paper.venue, paper.year, paper.citationCount ? `${paper.citationCount} citations` : null]
+        .filter(Boolean)
+        .join(' · ');
+      const links = [
+        `<a class="link" href="${escapeHtml(paper.url)}" style="color:#121212;font-weight:600;text-decoration:underline;">View paper</a>`,
+        paper.pdfUrl
+          ? `<a class="link" href="${escapeHtml(paper.pdfUrl)}" style="color:#121212;font-weight:600;text-decoration:underline;">PDF</a>`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(' &nbsp;&middot;&nbsp; ');
+
+      return `<tr>
+        <td class="divider" style="padding:18px 0;border-top:1px solid #e4dfd0;">
+          <a class="heading" href="${escapeHtml(paper.url)}" style="font-size:16px;line-height:24px;font-weight:600;color:#121212;text-decoration:none;">${escapeHtml(paper.title)}</a>
+          ${paper.authors.length ? `<p class="muted" style="margin:4px 0 0 0;font-size:13px;line-height:20px;color:#5c5c52;">${escapeHtml(formatAuthors(paper.authors))}</p>` : ''}
+          ${meta ? `<p class="muted" style="margin:2px 0 0 0;font-size:13px;line-height:20px;color:#5c5c52;">${escapeHtml(meta)}</p>` : ''}
+          ${paper.abstract ? `<p class="text" style="margin:10px 0 0 0;font-size:14px;line-height:22px;color:#3f3f38;">${escapeHtml(truncate(paper.abstract, 260))}</p>` : ''}
+          <p style="margin:10px 0 0 0;font-size:13px;line-height:20px;">${links}</p>
+        </td>
+      </tr>`;
+    })
+    .join('');
+
+  const cardInner = `                <h1 class="heading" style="margin:0 0 8px 0;font-size:26px;line-height:34px;font-weight:600;letter-spacing:-0.02em;color:#121212;">${escapeHtml(heading)}</h1>
+                <p class="text" style="margin:0 0 20px 0;font-size:16px;line-height:26px;color:#3f3f38;">${escapeHtml(greeting(name))} here&rsquo;s what&rsquo;s new for <strong>&ldquo;${escapeHtml(truncate(topic, 120))}&rdquo;</strong>.</p>
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">${itemHtml}</table>
+                <p class="muted" style="margin:20px 0 0 0;font-size:13px;line-height:20px;color:#5c5c52;">You&rsquo;re getting this because of a Lookout you created. <a class="link" href="${manageUrl}" style="color:#5c5c52;text-decoration:underline;">Manage or pause it</a> any time.</p>`;
+
+  const html = renderEmailShell({
+    preheader: truncate(papers.map((p) => p.title).join(' · '), 110),
+    title: heading,
+    recipient: to,
+    cardInner,
+  });
+
+  const text = [
+    heading,
+    '',
+    `${greeting(name)} here's what's new for "${truncate(topic, 120)}":`,
+    '',
+    ...papers.flatMap((paper) => [
+      paper.title,
+      ...(paper.authors.length ? [formatAuthors(paper.authors)] : []),
+      ...([paper.venue, paper.year].filter(Boolean).length ? [[paper.venue, paper.year].filter(Boolean).join(' · ')] : []),
+      paper.url,
+      '',
+    ]),
+    `Manage or pause this Lookout: ${manageUrl}`,
+    '',
+    '--',
+    `Sent to ${to} by Core Lens AI`,
+  ].join('\n');
+
+  return { subject: `${count} new ${noun}: ${truncate(topic, 60)}`, html, text };
+}
+
+export async function sendLookoutDigestEmail(options: LookoutDigestOptions) {
+  const { subject, html, text } = renderLookoutDigestEmail(options);
+  await sendEmail({ to: options.to, subject, html, text });
 }
