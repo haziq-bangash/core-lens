@@ -23,8 +23,7 @@ import {
   getPaperById,
 } from '@/lib/db/queries';
 import { ChatSDKError } from '@/lib/errors';
-import { createResumableStreamContext, type ResumableStreamContext } from 'resumable-stream';
-import { after } from 'next/server';
+import { getStreamContext } from '@/lib/resumable-stream';
 import { CustomInstructions } from '@/lib/db/schema';
 import { v7 as uuidv7 } from 'uuid';
 import { geolocation } from '@vercel/functions';
@@ -53,7 +52,6 @@ import { CohereChatModelOptions } from '@ai-sdk/cohere';
 import { XaiProviderOptions } from '@ai-sdk/xai';
 import { coreLens, getMaxOutputTokens, getModelParameters, requiresAuthentication } from '@/ai/providers';
 
-let globalStreamContext: ResumableStreamContext | null = null;
 
 // Shared config promise to avoid duplicate calls
 let configPromise: Promise<any>;
@@ -164,24 +162,6 @@ function initializeChatAndChecks({
     });
 
   return { criticalChecksPromise, chatInitializationPromise };
-}
-
-export function getStreamContext() {
-  if (!globalStreamContext) {
-    try {
-      globalStreamContext = createResumableStreamContext({
-        waitUntil: after,
-      });
-    } catch (error: any) {
-      if (error.message.includes('REDIS_URL')) {
-        console.log(' > Resumable streams are disabled due to missing REDIS_URL');
-      } else {
-        console.error(error);
-      }
-    }
-  }
-
-  return globalStreamContext;
 }
 
 export async function POST(req: Request) {
@@ -760,7 +740,7 @@ export async function POST(req: Request) {
       });
     },
   });
-  const streamContext = getStreamContext();
+  const streamContext = await getStreamContext();
 
   if (streamContext) {
     // Resumable streams are a nice-to-have (they let a reload re-attach to a running

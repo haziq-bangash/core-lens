@@ -4,13 +4,13 @@ import type { Chat } from '@/lib/db/schema';
 import { ChatSDKError } from '@/lib/errors';
 import type { ChatMessage } from '@/lib/types';
 import { createUIMessageStream, JsonToSseTransformStream } from 'ai';
-import { getStreamContext } from '../../route';
+import { getStreamContext } from '@/lib/resumable-stream';
 import { differenceInSeconds } from 'date-fns';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: chatId } = await params;
 
-  const streamContext = getStreamContext();
+  const streamContext = await getStreamContext();
   const resumeRequestedAt = new Date();
 
   if (!streamContext) {
