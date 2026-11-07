@@ -51,7 +51,7 @@ export async function POST(
   const { citationFormat, language, instructions } = parsed.data;
 
   // Load the document index for this paper
-  const docIndices = await getReadyDocumentIndicesByPaperIds([id]);
+  const docIndices = await getReadyDocumentIndicesByPaperIds([id], lightweightUser.userId);
   if (docIndices.length === 0) {
     return NextResponse.json(
       { error: 'No indexed content available for this paper' },

@@ -297,7 +297,7 @@ export async function POST(req: Request) {
   // Resolve @mentions to paper IDs
   let mentionedPaperIds: string[] = [];
   let mentionContext = '';
-  if (mentions && Array.isArray(mentions) && mentions.length > 0) {
+  if (user && mentions && Array.isArray(mentions) && mentions.length > 0) {
     const paperIdSet = new Set<string>();
     const mentionLabels: string[] = [];
 
@@ -306,7 +306,7 @@ export async function POST(req: Request) {
         paperIdSet.add(mention.id);
         mentionLabels.push(mention.label);
       } else if (mention.type === 'collection') {
-        const collectionPapers = await getPapersByCollectionId(mention.id);
+        const collectionPapers = await getPapersByCollectionId(mention.id, user.id);
         for (const p of collectionPapers) {
           paperIdSet.add(p.id);
         }

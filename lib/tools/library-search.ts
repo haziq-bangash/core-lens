@@ -33,7 +33,7 @@ export function createLibrarySearchTool(userId: string, dataStream: UIMessageStr
 
       // Fetch document indices
       const indices = effectivePaperIds?.length
-        ? await getReadyDocumentIndicesByPaperIds(effectivePaperIds)
+        ? await getReadyDocumentIndicesByPaperIds(effectivePaperIds, userId)
         : await getReadyDocumentIndicesByUserId(userId);
 
       if (indices.length === 0) {

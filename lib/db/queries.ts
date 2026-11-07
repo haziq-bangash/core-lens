@@ -1222,13 +1222,20 @@ export async function getReadyDocumentIndicesByUserId(userId: string): Promise<D
   }
 }
 
-export async function getReadyDocumentIndicesByPaperIds(paperIds: string[]): Promise<DocumentIndexRecord[]> {
+/** Always scoped to `userId`: paper IDs are visible in shared chats, so they must never be trusted alone. */
+export async function getReadyDocumentIndicesByPaperIds(paperIds: string[], userId: string): Promise<DocumentIndexRecord[]> {
   try {
     if (paperIds.length === 0) return [];
     return await getReadReplica()
       .select()
       .from(documentIndex)
-      .where(and(inArray(documentIndex.paperId, paperIds), eq(documentIndex.status, 'ready')));
+      .where(
+        and(
+          inArray(documentIndex.paperId, paperIds),
+          eq(documentIndex.userId, userId),
+          eq(documentIndex.status, 'ready'),
+        ),
+      );
   } catch (error) {
     throw new ChatSDKError('bad_request:database', 'Failed to get document indices by paper IDs');
   }
@@ -1374,13 +1381,14 @@ export async function deletePaper(id: string): Promise<void> {
   }
 }
 
-export async function getPapersByCollectionId(collectionId: string): Promise<Paper[]> {
+/** Only returns papers owned by `userId`, so another user's collection ID yields nothing. */
+export async function getPapersByCollectionId(collectionId: string, userId: string): Promise<Paper[]> {
   try {
     const results = await getReadReplica()
       .select({ paper: paper })
       .from(paperCollection)
       .innerJoin(paper, eq(paperCollection.paperId, paper.id))
-      .where(eq(paperCollection.collectionId, collectionId))
+      .where(and(eq(paperCollection.collectionId, collectionId), eq(paper.userId, userId)))
       .orderBy(desc(paper.createdAt));
     return results.map((r) => r.paper);
   } catch (error) {

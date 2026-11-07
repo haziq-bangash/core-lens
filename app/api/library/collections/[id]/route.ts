@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const { id } = await params;
-  const papers = await getPapersByCollectionId(id);
+  const papers = await getPapersByCollectionId(id, lightweightUser.userId);
 
   return NextResponse.json({ papers });
 }
