@@ -168,7 +168,11 @@ export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px] max-h-[92vh] overflow-y-auto p-8 gap-0">
+      <DialogContent
+        className="sm:max-w-[400px] max-h-[92vh] overflow-y-auto p-8 gap-0"
+        // Don't auto-focus the first button: it would show a heavy focus ring as if it were already selected.
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <div className="mb-6 space-y-1">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in to continue</h2>
           <p className="text-sm text-muted-foreground">Save conversations and sync across devices</p>

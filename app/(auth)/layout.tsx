@@ -24,14 +24,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex h-svh w-full bg-background">
       <aside className="relative hidden lg:flex lg:w-[46%] xl:w-1/2 h-full flex-col overflow-hidden border-r border-border/60 bg-muted/30">
-        {/* Soft brand glow */}
+        {/* Soft brand glow (dark mode only: the light theme's primary is black and would read as grey smudges) */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-40 -left-40 size-[32rem] rounded-full bg-primary/15 blur-3xl"
+          className="pointer-events-none absolute -top-40 -left-40 hidden size-[32rem] rounded-full bg-primary/15 blur-3xl dark:block"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-48 -right-32 size-[28rem] rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -bottom-48 -right-32 hidden size-[28rem] rounded-full bg-primary/10 blur-3xl dark:block"
         />
 
         <div className="relative flex flex-1 flex-col justify-between p-12 xl:p-16">

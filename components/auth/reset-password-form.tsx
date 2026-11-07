@@ -10,6 +10,16 @@ import { AuthError, AuthField, authSubmitClass } from './auth-field';
 import { AuthShell } from './auth-shell';
 import { PasswordInput } from './password-input';
 
+function BackToSignIn() {
+  return (
+    <p className="text-center text-sm text-muted-foreground">
+      <Link href="/sign-in" className="font-medium text-foreground underline-offset-4 hover:underline">
+        Back to sign in
+      </Link>
+    </p>
+  );
+}
+
 export function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
@@ -54,6 +64,7 @@ export function ResetPasswordForm() {
         <Link href="/forgot-password" className={authSubmitClass}>
           Request a new link
         </Link>
+        <BackToSignIn />
       </AuthShell>
     );
   }
@@ -88,6 +99,7 @@ export function ResetPasswordForm() {
           Update password
         </button>
       </form>
+      <BackToSignIn />
     </AuthShell>
   );
 }

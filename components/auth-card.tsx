@@ -116,7 +116,7 @@ export default function AuthCard({ title, description, mode = 'sign-in' }: AuthC
       <EmailAuthForm mode={mode} />
 
       <div className="space-y-5 border-t border-border/60 pt-6">
-        <p className="text-xs text-center text-muted-foreground leading-relaxed">
+        <p className="text-xs text-center text-muted-foreground leading-relaxed text-balance">
           By continuing, you agree to our{' '}
           <Link href="/terms" className="hover:text-foreground underline-offset-2 underline">
             Terms
