@@ -763,9 +763,21 @@ export async function POST(req: Request) {
   const streamContext = getStreamContext();
 
   if (streamContext) {
-    return new Response(
-      await streamContext.resumableStream(streamId, () => stream.pipeThrough(new JsonToSseTransformStream())),
-    );
+    // Resumable streams are a nice-to-have (they let a reload re-attach to a running
+    // response). If Redis is unreachable, serve a plain stream instead of failing the chat.
+    let streamConsumed = false;
+    try {
+      return new Response(
+        await streamContext.resumableStream(streamId, () => {
+          streamConsumed = true;
+          return stream.pipeThrough(new JsonToSseTransformStream());
+        }),
+      );
+    } catch (error) {
+      // If the stream was already handed to the resumable layer it can't be reused.
+      if (streamConsumed) throw error;
+      console.error('Resumable stream unavailable, falling back to a plain stream:', error);
+    }
   }
   return new Response(stream.pipeThrough(new JsonToSseTransformStream()));
 }
