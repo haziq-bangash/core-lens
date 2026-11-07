@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { EmailAuthForm } from '@/components/auth/email-auth-form';
 
 interface SignInPromptDialogProps {
   open: boolean;
@@ -31,7 +32,7 @@ const SignInButton = ({ provider, loading, setLoading }: SignInButtonProps) => {
   return (
     <Button
       variant="outline"
-      className="relative w-full h-11 px-4 font-normal text-sm border-0!"
+      className="relative w-full h-12 rounded-xl px-4 font-medium text-sm"
       disabled={loading}
       onClick={async () => {
         await signIn.social(
@@ -47,7 +48,7 @@ const SignInButton = ({ provider, loading, setLoading }: SignInButtonProps) => {
         );
       }}
     >
-      <div className="flex items-center justify-start w-full gap-3">
+      <div className="flex items-center justify-center w-full gap-3">
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin shrink-0" />
@@ -98,93 +99,67 @@ const SignInButton = ({ provider, loading, setLoading }: SignInButtonProps) => {
   );
 };
 
-export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogProps) {
+function PromptBody({ onClose }: { onClose: () => void }) {
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [microsoftLoading, setMicrosoftLoading] = useState(false);
-  const isMobile = useIsMobile();
+  const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-in');
 
-  const content = (
-    <>
-      {/* Compact Header */}
-      <div className="mb-6">
-        <h2 className="text-lg font-medium text-foreground mb-1">Sign in to continue</h2>
-        <p className="text-sm text-muted-foreground">Save conversations and sync across devices</p>
+  return (
+    <div className="space-y-5">
+      <SignInButton provider="google" loading={googleLoading} setLoading={setGoogleLoading} />
+
+      <div className="flex items-center gap-3" role="separator" aria-label="or">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
       </div>
 
-      {/* Auth Options */}
-      <div className="space-y-2 mb-4">
-        <SignInButton provider="google" loading={googleLoading} setLoading={setGoogleLoading} />
-      </div>
+      <EmailAuthForm key={mode} mode={mode} />
 
-      {/* Divider */}
-      <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
-        </div>
-        <div className="relative flex justify-center text-xs">
-          <span className="px-2 bg-background text-muted-foreground">or</span>
-        </div>
-      </div>
-
-      {/* Guest Option */}
-      <Button variant="ghost" onClick={() => onOpenChange(false)} className="w-full h-10 font-normal text-sm">
-        Continue without account
-      </Button>
-
-      {/* Legal */}
-      <p className="text-xs text-muted-foreground text-center mt-4">
-        By continuing, you accept our{' '}
-        <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
-          Terms
-        </Link>
-        {' & '}
-        <Link href="/privacy-policy" className="underline underline-offset-2 hover:text-foreground">
-          Privacy Policy
-        </Link>
+      <p className="text-sm text-center text-muted-foreground">
+        {mode === 'sign-in' ? 'New to Core Lens?' : 'Already have an account?'}{' '}
+        <button
+          type="button"
+          onClick={() => setMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')}
+          className="font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          {mode === 'sign-in' ? 'Create account' : 'Sign in'}
+        </button>
       </p>
-    </>
+
+      <div className="space-y-3 border-t border-border pt-4">
+        <Button variant="ghost" onClick={onClose} className="w-full h-10 font-normal text-sm">
+          Continue without account
+        </Button>
+
+        <p className="text-xs text-muted-foreground text-center">
+          By continuing, you accept our{' '}
+          <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
+            Terms
+          </Link>
+          {' & '}
+          <Link href="/privacy-policy" className="underline underline-offset-2 hover:text-foreground">
+            Privacy Policy
+          </Link>
+        </p>
+      </div>
+    </div>
   );
+}
+
+export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogProps) {
+  const isMobile = useIsMobile();
+  const close = () => onOpenChange(false);
 
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[85vh] px-6 pb-6">
+        <DrawerContent className="max-h-[90vh] px-6 pb-6">
           <DrawerHeader className="px-0 pt-4 pb-0 font-be-vietnam-pro">
-            <DrawerTitle className="text-lg font-medium">Sign in to continue</DrawerTitle>
+            <DrawerTitle className="text-lg font-semibold">Sign in to continue</DrawerTitle>
             <p className="text-sm text-muted-foreground pt-1">Save conversations and sync across devices</p>
           </DrawerHeader>
-          <div className="overflow-y-auto pt-4">
-            {/* Auth Options */}
-            <div className="space-y-2 mb-4">
-              <SignInButton provider="google" loading={googleLoading} setLoading={setGoogleLoading} />
-            </div>
-
-            {/* Divider */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border"></div>
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-background text-muted-foreground">or</span>
-              </div>
-            </div>
-
-            {/* Guest Option */}
-            <Button variant="ghost" onClick={() => onOpenChange(false)} className="w-full h-10 font-normal text-sm">
-              Continue without account
-            </Button>
-
-            {/* Legal */}
-            <p className="text-xs text-muted-foreground text-center mt-4">
-              By continuing, you accept our{' '}
-              <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
-                Terms
-              </Link>
-              {' & '}
-              <Link href="/privacy-policy" className="underline underline-offset-2 hover:text-foreground">
-                Privacy Policy
-              </Link>
-            </p>
+          <div className="overflow-y-auto pt-5">
+            <PromptBody onClose={close} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -193,7 +168,13 @@ export function SignInPromptDialog({ open, onOpenChange }: SignInPromptDialogPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[360px] p-6 gap-0">{content}</DialogContent>
+      <DialogContent className="sm:max-w-[400px] max-h-[92vh] overflow-y-auto p-8 gap-0">
+        <div className="mb-6 space-y-1">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in to continue</h2>
+          <p className="text-sm text-muted-foreground">Save conversations and sync across devices</p>
+        </div>
+        <PromptBody onClose={close} />
+      </DialogContent>
     </Dialog>
   );
 }
