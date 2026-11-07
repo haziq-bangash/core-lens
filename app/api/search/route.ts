@@ -48,7 +48,7 @@ import { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { getCachedCustomInstructionsByUserId, getCachedUserPreferencesByUserId } from '@/lib/user-data-server';
 import { summarizeContext } from '@/lib/context-summarization';
 import { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
-import { unauthenticatedRateLimit, getClientIdentifier } from '@/lib/rate-limit';
+import { checkUnauthenticatedRateLimit, getClientIdentifier } from '@/lib/rate-limit';
 import { CohereChatModelOptions } from '@ai-sdk/cohere';
 import { XaiProviderOptions } from '@ai-sdk/xai';
 import { coreLens, getMaxOutputTokens, getModelParameters, requiresAuthentication } from '@/ai/providers';
@@ -224,7 +224,7 @@ export async function POST(req: Request) {
   const chatQueryPromise = getChatByIdForValidation({ id }); // Start immediately - doesn't depend on auth
   const rateLimitPromise = (async () => {
     const identifier = getClientIdentifier(req);
-    return unauthenticatedRateLimit.limit(identifier);
+    return checkUnauthenticatedRateLimit(identifier);
   })();
   recordTiming('start_parallel_operations', opStart);
 

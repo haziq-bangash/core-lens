@@ -18,9 +18,39 @@ const redis = new UpstashRedis({
   automaticDeserialization: false,
 });
 
+// The query cache is an optimisation, never a dependency. Upstash calls can fail
+// transiently (e.g. DNS ESERVFAIL from Cloud Run), and the cache library fires some
+// calls (invalidation) without awaiting them, which surfaces as unhandled rejections.
+// Wrap every Redis call so failures degrade to a cache miss instead of an error.
+let lastCacheWarning = 0;
+const failSafeRedis = new Proxy(redis, {
+  get(target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
+    if (typeof value !== 'function') return value;
+
+    return (...args: unknown[]) => {
+      const onError = (error: unknown) => {
+        const now = Date.now();
+        if (now - lastCacheWarning > 30_000) {
+          lastCacheWarning = now;
+          console.warn('[db-cache] Redis unavailable, skipping cache:', error instanceof Error ? error.message : error);
+        }
+        return null;
+      };
+
+      try {
+        const result = value.apply(target, args);
+        return result instanceof Promise ? result.catch(onError) : result;
+      } catch (error) {
+        return onError(error);
+      }
+    };
+  },
+}) as typeof redis;
+
 // Create shared cache instance
 const cache = new RedisDrizzleCache({
-  redis,
+  redis: failSafeRedis,
   defaultTtl: 20,
   strategy: 'explicit',
   namespace: 'core-lens:drizzle',
