@@ -11,6 +11,10 @@ import { LibraryRAG, type PaperMeta } from '@/lib/library-rag';
 import type { ChatMessage } from '@/lib/types';
 import type { UIMessageStreamWriter } from 'ai';
 
+/** When the user scoped the chat to specific papers or a collection, search up to this many of them. */
+const SCOPED_MAX_PAPERS = 10;
+const DEFAULT_MAX_PAPERS = 5;
+
 export function createLibrarySearchTool(userId: string, dataStream: UIMessageStreamWriter<ChatMessage>, defaultPaperIds?: string[]) {
   return tool({
     description:
@@ -27,9 +31,15 @@ export function createLibrarySearchTool(userId: string, dataStream: UIMessageStr
         .describe('Maximum number of papers to search across (default: 5)'),
     }),
     execute: async ({ query, paperIds, maxPapers }) => {
-      const effectiveMaxPapers = maxPapers ?? 5;
       // Use explicit paperIds from LLM, fall back to defaultPaperIds from @mentions
       const effectivePaperIds = paperIds?.length ? paperIds : defaultPaperIds;
+
+      // A scoped chat (a collection or a few mentioned papers) is usually asking about all of them, so
+      // cover the whole scope rather than letting paper selection drop most of it. Capped to bound cost.
+      const scopedDefault = effectivePaperIds?.length
+        ? Math.min(effectivePaperIds.length, SCOPED_MAX_PAPERS)
+        : DEFAULT_MAX_PAPERS;
+      const effectiveMaxPapers = maxPapers ?? scopedDefault;
 
       // Fetch document indices
       const indices = effectivePaperIds?.length

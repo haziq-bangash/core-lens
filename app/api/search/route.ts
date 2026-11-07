@@ -297,6 +297,7 @@ export async function POST(req: Request) {
   // Resolve @mentions to paper IDs
   let mentionedPaperIds: string[] = [];
   let mentionContext = '';
+  let hasCollectionMention = false;
   if (user && mentions && Array.isArray(mentions) && mentions.length > 0) {
     const paperIdSet = new Set<string>();
     const mentionLabels: string[] = [];
@@ -310,14 +311,24 @@ export async function POST(req: Request) {
         for (const p of collectionPapers) {
           paperIdSet.add(p.id);
         }
-        mentionLabels.push(`[Collection: ${mention.label}]`);
+        const unsearchable = collectionPapers.filter((p) => p.status !== 'ready').length;
+        mentionLabels.push(
+          `[Collection: ${mention.label} — ${collectionPapers.length} ${collectionPapers.length === 1 ? 'paper' : 'papers'}` +
+            (unsearchable > 0 ? `, ${unsearchable} not searchable yet (still processing or failed)` : '') +
+            ']',
+        );
+        hasCollectionMention = true;
       }
     }
 
     mentionedPaperIds = Array.from(paperIdSet);
 
     if (mentionLabels.length > 0) {
-      mentionContext = `\n\n## PAPER CONTEXT\nThe user has mentioned these papers/collections: ${mentionLabels.map(l => `"${l}"`).join(', ')}. When using library_search, focus your response on these specific papers. Use the library_search tool to find relevant information.`;
+      mentionContext = `\n\n## PAPER CONTEXT\nThe user has mentioned these papers/collections: ${mentionLabels.map(l => `"${l}"`).join(', ')}. When using library_search, focus your response on these specific papers. Use the library_search tool to find relevant information.${
+        hasCollectionMention
+          ? ' For questions about a whole collection, call library_search once with the scope omitted (it already covers the collection), then organise the answer by theme or by paper, say where papers agree or disagree, and name any papers that had nothing relevant. Never imply you read papers that were not searched or that are not searchable yet.'
+          : ''
+      }`;
     }
   }
 
