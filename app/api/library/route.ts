@@ -11,6 +11,7 @@ import {
   failStalePapers,
 } from '@/lib/db/queries';
 import { processAndIndexPaperPdf } from '@/lib/pdf-processing';
+import { isTrustedBlobUrl } from '@/lib/blob-url';
 
 const UploadBodySchema = z.object({
   fileUrl: z.string().url(),
@@ -57,6 +58,11 @@ export async function POST(req: NextRequest) {
   }
 
   const { fileUrl, fileName, fileSizeMb, collectionId } = parsed.data;
+
+  // The server downloads and indexes this URL, so it must be a file in our own storage.
+  if (!isTrustedBlobUrl(fileUrl)) {
+    return NextResponse.json({ error: 'File URL must come from an upload' }, { status: 400 });
+  }
 
   // Create the paper record
   const paperRecord = await createPaper({

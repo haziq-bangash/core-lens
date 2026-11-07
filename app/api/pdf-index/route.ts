@@ -11,6 +11,7 @@ import {
   getDocumentIndexByFileUrl,
 } from '@/lib/db/queries';
 import { processAndIndexPdf } from '@/lib/pdf-processing';
+import { isTrustedBlobUrl } from '@/lib/blob-url';
 
 const PostBodySchema = z.object({
   chatId: z.string().min(1),
@@ -31,6 +32,11 @@ export async function POST(req: NextRequest) {
   }
 
   const { chatId, fileUrl, fileName } = parsed.data;
+
+  // The server downloads and indexes this URL, so it must be a file in our own storage.
+  if (!isTrustedBlobUrl(fileUrl)) {
+    return NextResponse.json({ error: 'File URL must come from an upload' }, { status: 400 });
+  }
 
   // Check if this file is already indexed (avoid duplicates)
   const existing = await getDocumentIndexByFileUrl(fileUrl);
