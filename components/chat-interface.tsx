@@ -94,6 +94,7 @@ const ChatInterface = memo(
     const [query] = useQueryState('query', parseAsString.withDefault(''));
     const [q] = useQueryState('q', parseAsString.withDefault(''));
     const [paperId] = useQueryState('paperId', parseAsString.withDefault(''));
+    const [collectionId] = useQueryState('collectionId', parseAsString.withDefault(''));
     const [input, setInput] = useLocalStorage<string>('core-lens-draft-input', '');
     const { mentions, addMention, removeMention, clearMentions } = useMentions();
     const mentionsRef = useRef(mentions);
@@ -494,6 +495,22 @@ const ChatInterface = memo(
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paperId]);
+
+    // Auto-mention a collection from URL query param (?collectionId=...), used by "Chat with collection"
+    useEffect(() => {
+      if (collectionId && !mentions.some((m) => m.id === collectionId)) {
+        fetch('/api/library/collections')
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            const match = data?.collections?.find((c: { id: string; name: string }) => c.id === collectionId);
+            if (match) {
+              addMention({ type: 'collection', id: match.id, label: match.name });
+            }
+          })
+          .catch(() => {});
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [collectionId]);
 
     useEffect(() => {
       if (status) {

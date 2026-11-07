@@ -13,6 +13,7 @@ import {
   Loader2,
   Library,
   FolderPlus,
+  MessageSquare,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
@@ -442,6 +443,24 @@ export function LibraryPage() {
               <FolderPlus className="h-3 w-3" />
               New
             </button>
+
+            {selectedCollectionId && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="ml-auto h-7 shrink-0 gap-1.5 text-xs"
+                disabled={!papers.some((p) => p.status === 'ready')}
+                title={
+                  papers.some((p) => p.status === 'ready')
+                    ? 'Ask questions across every paper in this collection'
+                    : 'No indexed papers in this collection yet'
+                }
+                onClick={() => router.push(`/?collectionId=${selectedCollectionId}`)}
+              >
+                <MessageSquare className="h-3 w-3" />
+                Chat with collection
+              </Button>
+            )}
           </div>
         )}
 
