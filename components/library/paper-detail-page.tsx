@@ -59,6 +59,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { useUser } from '@/contexts/user-context';
 import { PaperStatusBadge } from './paper-status-badge';
+import { RetryIndexingButton } from './retry-indexing-button';
 import { TagEditor } from './tag-editor';
 import { DiscoveryPanel } from './discovery-panel';
 import { NotesEditor, NotesDisplay } from './notes-editor';
@@ -305,6 +306,7 @@ export function PaperDetailPage({ paperId }: PaperDetailPageProps) {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <PaperStatusBadge status={paper.status} />
+            {paper.status === 'failed' && <RetryIndexingButton paperId={paper.id} />}
             {isMobile && (
               <Button
                 variant="outline"

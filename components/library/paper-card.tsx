@@ -4,6 +4,7 @@ import React from 'react';
 import { FileText, Calendar, Users, BookOpen, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PaperStatusBadge } from './paper-status-badge';
+import { RetryIndexingButton } from './retry-indexing-button';
 import { cn } from '@/lib/utils';
 import type { Paper } from '@/lib/db/schema';
 
@@ -97,8 +98,13 @@ export function PaperCard({ paper, isSelected, onClick }: PaperCardProps) {
         )}
 
         {/* Error message */}
-        {paper.status === 'failed' && paper.error && (
-          <p className="text-xs text-destructive line-clamp-1">{paper.error}</p>
+        {paper.status === 'failed' && (
+          <div className="flex items-center justify-between gap-2">
+            <p className="min-w-0 flex-1 text-xs text-destructive line-clamp-1">
+              {paper.error || 'Processing failed.'}
+            </p>
+            <RetryIndexingButton paperId={paper.id} />
+          </div>
         )}
       </CardContent>
     </Card>
