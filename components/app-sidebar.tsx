@@ -12,7 +12,6 @@ import {
   BookIcon,
   FileTextIcon,
   ShieldIcon,
-  BugIcon,
   SunIcon,
   MoonIcon,
 } from '@phosphor-icons/react';
@@ -86,7 +85,6 @@ type SignedOutLink = {
   label: string;
   icon: React.ComponentType<any>;
   href: string;
-  external?: boolean;
 };
 
 interface AppSidebarProps {
@@ -155,12 +153,6 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
       href: '/about',
     },
     {
-      id: 'blog',
-      label: 'Blog',
-      icon: BookIcon,
-      href: '/blog',
-    },
-    {
       id: 'terms',
       label: 'Terms',
       icon: FileTextIcon,
@@ -171,13 +163,6 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
       label: 'Privacy',
       icon: ShieldIcon,
       href: '/privacy-policy',
-    },
-    {
-      id: 'feedback',
-      label: 'Feedback',
-      icon: BugIcon,
-      href: 'https://core-lensai.userjot.com',
-      external: true,
     },
   ];
 
@@ -420,20 +405,14 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
               return (
                 <SidebarMenuItem key={link.id}>
                   <SidebarMenuButton asChild tooltip={link.label} className="hover:bg-primary/10">
-                    {link.external ? (
-                      <a href={link.href} target="_blank" rel="noopener noreferrer" onClick={closeMobileSidebar} className="flex items-center gap-2 w-full">
-                        {content}
-                      </a>
-                    ) : (
-                      <Link
-                        prefetch
-                        href={link.href}
-                        onClick={closeMobileSidebar}
-                        className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
-                      >
-                        {content}
-                      </Link>
-                    )}
+                    <Link
+                      prefetch
+                      href={link.href}
+                      onClick={closeMobileSidebar}
+                      className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
+                    >
+                      {content}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
@@ -665,12 +644,6 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                           <Link href="/about" onClick={closeMobileSidebar}>
                             <InfoIcon size={16} weight="regular" className="mr-2" />
                             <span>About</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/blog" target="_blank" rel="noopener noreferrer" onClick={closeMobileSidebar}>
-                            <BookIcon size={16} weight="regular" className="mr-2" />
-                            <span>Blog</span>
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>

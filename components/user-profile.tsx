@@ -21,11 +21,9 @@ import {
   FileTextIcon,
   ShieldIcon,
   GithubLogoIcon,
-  BugIcon,
   SunIcon,
   GearIcon,
   CodeIcon,
-  BookIcon,
   XLogoIcon,
   InstagramLogoIcon,
 } from '@phosphor-icons/react';
@@ -105,14 +103,6 @@ const NavigationMenu = memo(() => {
             <span>About</span>
           </Link>
         </DropdownMenuItem>
-        {/* Blog */}
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <Link href="/blog" className="w-full flex items-center gap-2">
-            <BookIcon size={16} />
-            <span>Blog</span>
-          </Link>
-        </DropdownMenuItem>
-
         <DropdownMenuItem className="cursor-pointer" asChild>
           <Link href="/terms" className="w-full flex items-center gap-2">
             <FileTextIcon size={16} />
@@ -144,12 +134,6 @@ const NavigationMenu = memo(() => {
           <a href={'https://www.instagram.com/core-lens.ai'} target="_blank" className="w-full flex items-center gap-2">
             <InstagramLogoIcon size={16} />
             <span>Instagram</span>
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={'https://core-lensai.userjot.com/'} target="_blank" className="w-full flex items-center gap-2">
-            <BugIcon className="size-4" />
-            <span>Feature/Bug Request</span>
           </a>
         </DropdownMenuItem>
       </DropdownMenuContent>
