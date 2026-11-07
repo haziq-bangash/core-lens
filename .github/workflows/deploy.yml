@@ -16,7 +16,24 @@ env:
   IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPO }}/${{ vars.GCP_SERVICE_NAME }}:latest
 
 jobs:
+  # A type error should stop a deploy, not reach production.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
   deploy:
+    needs: typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,6 +95,7 @@ jobs:
             --memory=1Gi \
             --cpu=1 \
             --min-instances=0 \
+            --no-cpu-throttling \
             --max-instances=3 \
             --allow-unauthenticated \
             --env-vars-file=env.yaml
