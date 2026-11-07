@@ -99,10 +99,8 @@ export function PaperCard({ paper, isSelected, onClick }: PaperCardProps) {
 
         {/* Error message */}
         {paper.status === 'failed' && (
-          <div className="flex items-center justify-between gap-2">
-            <p className="min-w-0 flex-1 text-xs text-destructive line-clamp-1">
-              {paper.error || 'Processing failed.'}
-            </p>
+          <div className="space-y-2">
+            <p className="text-xs text-destructive line-clamp-2">{paper.error || 'Processing failed.'}</p>
             <RetryIndexingButton paperId={paper.id} />
           </div>
         )}

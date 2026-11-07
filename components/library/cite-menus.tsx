@@ -100,9 +100,10 @@ export function ExportLibraryMenu({ papers }: { papers: CitablePaper[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 gap-1.5 hidden sm:inline-flex" disabled={papers.length === 0}>
+        <Button variant="outline" size="sm" className="h-8 gap-1.5" disabled={papers.length === 0}>
           <Download className="h-3.5 w-3.5" />
-          Export
+          <span className="hidden sm:inline">Export</span>
+          <span className="sr-only sm:hidden">Export citations</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

@@ -405,7 +405,9 @@ export function LibraryPage() {
 
         {/* Collection filter pills */}
         {collections.length > 0 && (
-          <div className="flex items-center gap-2 px-4 sm:px-6 py-2.5 border-b overflow-x-auto">
+          <div className="flex items-center gap-3 px-4 sm:px-6 py-2.5 border-b">
+            {/* Only the pills scroll; the chat button below stays pinned and visible. */}
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
             <button
               onClick={() => setSelectedCollectionId(null)}
               className={cn(
@@ -443,12 +445,13 @@ export function LibraryPage() {
               <FolderPlus className="h-3 w-3" />
               New
             </button>
+            </div>
 
             {selectedCollectionId && (
               <Button
                 size="sm"
                 variant="outline"
-                className="ml-auto h-7 shrink-0 gap-1.5 text-xs"
+                className="h-7 shrink-0 gap-1.5 text-xs"
                 disabled={!papers.some((p) => p.status === 'ready')}
                 title={
                   papers.some((p) => p.status === 'ready')
@@ -458,7 +461,8 @@ export function LibraryPage() {
                 onClick={() => router.push(`/?collectionId=${selectedCollectionId}`)}
               >
                 <MessageSquare className="h-3 w-3" />
-                Chat with collection
+                <span className="hidden sm:inline">Chat with collection</span>
+                <span className="sm:hidden">Chat</span>
               </Button>
             )}
           </div>
