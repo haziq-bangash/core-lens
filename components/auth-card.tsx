@@ -5,6 +5,8 @@ import { authClient, signIn } from '@/lib/auth-client';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { AuthShell } from '@/components/auth/auth-shell';
+import { EmailAuthForm } from '@/components/auth/email-auth-form';
 
 type AuthProvider = 'google' | 'microsoft';
 
@@ -59,7 +61,7 @@ const SignInButton = ({ title, provider, loading, setLoading, callbackURL, icon 
 
   return (
     <button
-      className="relative w-full h-12 text-sm font-normal bg-muted/50 hover:bg-muted transition-all duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-start px-4 gap-3 group"
+      className="relative w-full h-12 text-sm font-medium bg-background hover:bg-muted/60 border border-border shadow-xs transition-all duration-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center px-4 gap-3 group active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       disabled={loading}
       onClick={async () => {
         await signIn.social(
@@ -78,7 +80,7 @@ const SignInButton = ({ title, provider, loading, setLoading, callbackURL, icon 
       <div className="w-5 h-5 flex items-center justify-center">
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : icon}
       </div>
-      <span className="text-foreground/80 group-hover:text-foreground transition-colors">Sign in with {title}</span>
+      <span className="text-foreground">Continue with {title}</span>
       {lastMethod === provider && (
         <Badge variant="default" className="absolute -top-2 -right-2 pointer-events-none z-10">
           Last used
@@ -95,55 +97,54 @@ export default function AuthCard({ title, description, mode = 'sign-in' }: AuthC
   const [googleLoading, setGoogleLoading] = useState(false);
 
   return (
-    <div className="w-full max-w-[380px] mx-auto">
-      <div className="space-y-6">
-        <div className="text-center space-y-3">
-          <h1 className="text-2xl font-medium">{title}</h1>
-          <p className="text-sm text-muted-foreground/80">{description}</p>
-        </div>
+    <AuthShell title={title} description={description}>
+      <SignInButton
+        title="Google"
+        provider="google"
+        loading={googleLoading}
+        setLoading={setGoogleLoading}
+        callbackURL="/"
+        icon={<AuthIcons.Google className="w-4 h-4" />}
+      />
 
-        <div className="space-y-4">
-          <SignInButton
-            title="Google"
-            provider="google"
-            loading={googleLoading}
-            setLoading={setGoogleLoading}
-            callbackURL="/"
-            icon={<AuthIcons.Google className="w-4 h-4" />}
-          />
-        </div>
-
-        <div className="pt-6 space-y-4">
-          <p className="text-[11px] text-center text-muted-foreground/60 leading-relaxed">
-            By continuing, you agree to our{' '}
-            <Link href="/terms" className="hover:text-muted-foreground underline-offset-2 underline">
-              Terms
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy-policy" className="hover:text-muted-foreground underline-offset-2 underline">
-              Privacy Policy
-            </Link>
-          </p>
-
-          <p className="text-sm text-center text-muted-foreground">
-            {mode === 'sign-in' ? (
-              <>
-                New to Core Lens?{' '}
-                <Link href="/sign-up" className="text-foreground font-medium hover:underline underline-offset-4">
-                  Create account
-                </Link>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <Link href="/sign-in" className="text-foreground font-medium hover:underline underline-offset-4">
-                  Sign in
-                </Link>
-              </>
-            )}
-          </p>
-        </div>
+      <div className="flex items-center gap-3" role="separator" aria-label="or">
+        <div className="h-px flex-1 bg-border/60" />
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border/60" />
       </div>
-    </div>
+
+      <EmailAuthForm mode={mode} />
+
+      <div className="space-y-5 border-t border-border/60 pt-6">
+        <p className="text-xs text-center text-muted-foreground leading-relaxed">
+          By continuing, you agree to our{' '}
+          <Link href="/terms" className="hover:text-foreground underline-offset-2 underline">
+            Terms
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy-policy" className="hover:text-foreground underline-offset-2 underline">
+            Privacy Policy
+          </Link>
+        </p>
+
+        <p className="text-sm text-center text-muted-foreground">
+          {mode === 'sign-in' ? (
+            <>
+              New to Core Lens?{' '}
+              <Link href="/sign-up" className="text-foreground font-medium hover:underline underline-offset-4">
+                Create account
+              </Link>
+            </>
+          ) : (
+            <>
+              Already have an account?{' '}
+              <Link href="/sign-in" className="text-foreground font-medium hover:underline underline-offset-4">
+                Sign in
+              </Link>
+            </>
+          )}
+        </p>
+      </div>
+    </AuthShell>
   );
 }
