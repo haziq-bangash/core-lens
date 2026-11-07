@@ -11,6 +11,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { HugeiconsIcon } from '@/components/ui/hugeicons';
 import { UserCircleIcon } from '@hugeicons/core-free-icons';
 import { PlusIcon } from 'lucide-react';
+import { AnimatedWordmark } from '@/components/animated-wordmark';
 import { useRouter, usePathname } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 import { toast } from 'sonner';
@@ -943,11 +944,7 @@ const ChatInterface = memo(
                         </Button>
                       </Link>
                     </div>
-                    <div className="inline-flex items-center gap-3">
-                      <h1 className="text-4xl sm:text-5xl mb-0! text-foreground dark:text-foreground font-be-vietnam-pro! font-light tracking-tighter">
-                        CoreLens
-                      </h1>
-                    </div>
+                    <AnimatedWordmark className="text-4xl sm:text-5xl mb-0! font-be-vietnam-pro!" />
                   </div>
                 )}
 
