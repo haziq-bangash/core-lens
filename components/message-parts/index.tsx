@@ -998,7 +998,8 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   <SearchLoadingState
                     key={`${messageIndex}-${partIndex}-tool`}
                     icon={FileText}
-                    text={`Searching PDFs for "${(part.input as any)?.query ?? '...'}"...`}
+                    text="Searching PDFs"
+                    detail={(part.input as any)?.query}
                     color="red"
                   />
                 );
@@ -1086,7 +1087,8 @@ export const MessagePartRenderer = memo<MessagePartRendererProps>(
                   <SearchLoadingState
                     key={`${messageIndex}-${partIndex}-tool`}
                     icon={FileText}
-                    text={`Searching library for "${(part.input as any)?.query ?? '...'}"...`}
+                    text="Searching your library"
+                    detail={(part.input as any)?.query}
                     color="blue"
                   />
                 );

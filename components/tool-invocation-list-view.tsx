@@ -17,10 +17,14 @@ import { ChevronDown, Copy, Loader2, MapPin, XCircle } from 'lucide-react';
 export const SearchLoadingState = ({
   icon: Icon,
   text,
+  detail,
   color,
 }: {
   icon: LucideIcon;
+  /** Short status line, e.g. "Searching your library". */
   text: string;
+  /** Optional longer text (such as the search query), clamped to two lines. */
+  detail?: string;
   color: 'red' | 'green' | 'orange' | 'violet' | 'gray' | 'blue';
 }) => {
   const colorVariants = {
@@ -68,31 +72,33 @@ export const SearchLoadingState = ({
   const variant = colorVariants[color];
 
   return (
-    <Card className="relative w-full h-25 my-4 overflow-hidden shadow-none">
+    <Card className="relative w-full my-4 overflow-hidden py-0 shadow-none" role="status" aria-live="polite">
       <BorderTrail className={cn('bg-linear-to-l', variant.border)} size={80} />
-      <CardContent className="px-6!">
-        <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={cn('relative h-10 w-10 rounded-full flex items-center justify-center', variant.background)}>
-              <BorderTrail className={cn('bg-linear-to-l', variant.border)} size={40} />
-              <Icon className={cn('h-5 w-5', variant.icon)} />
-            </div>
-            <div className="space-y-2">
-              <TextShimmer className="text-base font-medium" duration={2}>
-                {text}
-              </TextShimmer>
-              <div className="flex gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-1.5 rounded-full bg-muted animate-pulse"
-                    style={{
-                      width: `${Math.random() * 40 + 20}px`,
-                      animationDelay: `${i * 0.2}s`,
-                    }}
-                  />
-                ))}
-              </div>
+      <CardContent className="px-5 py-4">
+        <div className="relative flex items-start gap-3">
+          <div
+            className={cn(
+              'relative flex size-10 shrink-0 items-center justify-center rounded-full',
+              variant.background,
+            )}
+          >
+            <BorderTrail className={cn('bg-linear-to-l', variant.border)} size={40} />
+            <Icon className={cn('size-5', variant.icon)} />
+          </div>
+
+          <div className="min-w-0 flex-1 space-y-1.5 self-center">
+            <TextShimmer className="text-sm font-medium" duration={2}>
+              {text}
+            </TextShimmer>
+            {detail && <p className="line-clamp-2 break-words text-sm text-muted-foreground">&ldquo;{detail}&rdquo;</p>}
+            <div className="flex gap-1.5 pt-0.5" aria-hidden>
+              {[48, 32, 20].map((width, i) => (
+                <div
+                  key={width}
+                  className="h-1.5 animate-pulse rounded-full bg-muted"
+                  style={{ width, animationDelay: `${i * 0.2}s` }}
+                />
+              ))}
             </div>
           </div>
         </div>
