@@ -26,6 +26,7 @@ import {
   Share2,
   Trash2,
   Keyboard,
+  BellRing as BellRingIcon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -361,6 +362,29 @@ export const AppSidebar = memo(({ user, onHistoryClick }: AppSidebarProps) => {
                 >
                   <BookIcon size={18} weight="regular" />
                   <span className="group-data-[collapsible=icon]:hidden">Research Library</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+
+          {user && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip="Lookouts"
+                className={cn(
+                  'hover:bg-primary/10',
+                  pathname === '/lookouts' || pathname?.startsWith('/lookouts/') ? 'bg-primary/12 text-foreground' : '',
+                )}
+              >
+                <Link
+                  prefetch={true}
+                  href="/lookouts"
+                  onClick={closeMobileSidebar}
+                  className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
+                >
+                  <BellRingIcon size={18} />
+                  <span className="group-data-[collapsible=icon]:hidden">Lookouts</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
