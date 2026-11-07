@@ -277,7 +277,7 @@ class ExaSearchStrategy implements SearchProviderStrategy {
           : {}),
         ...(include_domains
           ? {
-              include_domains: include_domains,
+              includeDomains: include_domains,
             }
           : {}),
       });
