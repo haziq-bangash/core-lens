@@ -8,6 +8,7 @@ import {
   getPapersByUserId,
   saveDocumentIndex,
   addPaperToCollection,
+  failStalePapers,
 } from '@/lib/db/queries';
 import { processAndIndexPaperPdf } from '@/lib/pdf-processing';
 
@@ -29,6 +30,8 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100);
   const offset = parseInt(searchParams.get('offset') || '0', 10);
   const status = searchParams.get('status') || undefined;
+
+  await failStalePapers({ userId: lightweightUser.userId });
 
   const papers = await getPapersByUserId({
     userId: lightweightUser.userId,

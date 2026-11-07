@@ -1020,6 +1020,69 @@ export async function getReadyDocumentIndicesByChatId(chatId: string): Promise<D
   }
 }
 
+export async function getDocumentIndexByPaperId(paperId: string): Promise<DocumentIndexRecord | null> {
+  try {
+    // Read from the primary: callers use this right after status changes.
+    const [record] = await db.select().from(documentIndex).where(eq(documentIndex.paperId, paperId)).limit(1);
+    return record || null;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get document index by paper id');
+  }
+}
+
+export const PAPER_PROCESSING_STATUSES = ['pending', 'extracting_metadata', 'indexing', 'processing'] as const;
+
+/**
+ * Papers are processed in the background after the upload response is sent. If the
+ * container is scaled down or restarted mid-job, the paper would stay "indexing" forever.
+ * Mark anything that has not moved for `staleAfterMinutes` as failed so the user can retry.
+ */
+export async function failStalePapers({
+  userId,
+  staleAfterMinutes = 20,
+}: {
+  userId: string;
+  staleAfterMinutes?: number;
+}): Promise<number> {
+  try {
+    const cutoff = new Date(Date.now() - staleAfterMinutes * 60 * 1000);
+    const message = 'Processing was interrupted. Retry to index this paper again.';
+
+    const stale = await db
+      .update(paper)
+      .set({ status: 'failed', error: message })
+      .where(
+        and(
+          eq(paper.userId, userId),
+          inArray(paper.status, [...PAPER_PROCESSING_STATUSES]),
+          lt(paper.updatedAt, cutoff),
+        ),
+      )
+      .returning({ id: paper.id });
+
+    if (stale.length > 0) {
+      await db
+        .update(documentIndex)
+        .set({ status: 'failed', error: message, updatedAt: new Date() })
+        .where(
+          and(
+            inArray(
+              documentIndex.paperId,
+              stale.map((p) => p.id),
+            ),
+            inArray(documentIndex.status, ['pending', 'processing']),
+          ),
+        );
+    }
+
+    return stale.length;
+  } catch (error) {
+    // Housekeeping must never break the request that triggered it.
+    console.error('[library] Failed to mark stale papers:', error);
+    return 0;
+  }
+}
+
 export async function getDocumentIndexByFileUrl(fileUrl: string): Promise<DocumentIndexRecord | null> {
   try {
     const [record] = await getReadReplica()
