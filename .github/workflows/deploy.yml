@@ -32,6 +32,9 @@ jobs:
       - name: Typecheck
         run: bunx tsc --noEmit
 
+      - name: Unit tests
+        run: bun test
+
   deploy:
     needs: typecheck
     runs-on: ubuntu-latest

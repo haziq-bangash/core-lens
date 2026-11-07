@@ -8,6 +8,7 @@
     "build": "bun --bun next build",
     "start": "bun --bun next start",
     "lint": "eslint",
+    "test": "bun test",
     "fix": "prettier --write . --ignore-path .gitignore",
     "knip": "knip"
   },
