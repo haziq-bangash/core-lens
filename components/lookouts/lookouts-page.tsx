@@ -38,6 +38,7 @@ interface LookoutItem {
   timezone: string;
   status: 'active' | 'paused' | 'running' | 'archived';
   nextRunAt: string;
+  createdAt: string;
   lastRunAt: string | null;
   lastRun: { status: string; newPapers: number; error?: string } | null;
   totalPapersSent: number;
@@ -50,6 +51,11 @@ const EXAMPLE_TOPICS = [
   'Perovskite solar cell stability',
 ];
 
+/** A brand-new Lookout sends its first digest in the background; treat it as pending for a couple of minutes. */
+const FIRST_RUN_WINDOW_MS = 2 * 60 * 1000;
+const isFirstRunPending = (item: Pick<LookoutItem, 'lastRunAt' | 'createdAt' | 'status'>) =>
+  item.status !== 'paused' && !item.lastRunAt && Date.now() - new Date(item.createdAt).getTime() < FIRST_RUN_WINDOW_MS;
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...init });
   const body = await res.json().catch(() => ({}));
@@ -58,7 +64,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export function LookoutsPage() {
-  const { user } = useUser();
+  const { user, isProUser } = useUser();
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -71,7 +77,8 @@ export function LookoutsPage() {
     queryFn: () => request<{ lookouts: LookoutItem[]; limit: number }>('/api/lookouts'),
     enabled: !!user,
     // The first digest is sent in the background right after creating, so refresh while anything runs.
-    refetchInterval: (query) => (query.state.data?.lookouts.some((l) => l.status === 'running') ? 4000 : false),
+    refetchInterval: (query) =>
+      query.state.data?.lookouts.some((l) => l.status === 'running' || isFirstRunPending(l)) ? 3000 : false,
   });
 
   const lookouts = data?.lookouts ?? [];
@@ -153,9 +160,15 @@ export function LookoutsPage() {
             </span>
           )}
           <div className="flex-1" />
-          <Button size="sm" className="gap-1.5" onClick={() => openCreate()} disabled={atLimit}>
+          <Button
+            size="sm"
+            className="gap-1.5"
+            onClick={() => openCreate()}
+            disabled={atLimit}
+            title={atLimit ? `You've reached your limit of ${limit} Lookouts` : undefined}
+          >
             <Plus className="size-4" />
-            New Lookout
+            <span className="max-sm:sr-only">New Lookout</span>
           </Button>
         </header>
 
@@ -218,6 +231,7 @@ export function LookoutsPage() {
           {atLimit && (
             <p className="mt-4 text-center text-xs text-muted-foreground">
               You&apos;ve reached your limit of {limit} Lookouts.
+              {!isProUser && ' Upgrade to Pro to keep more.'}
             </p>
           )}
         </main>
@@ -244,7 +258,12 @@ export function LookoutsPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteTarget && remove.mutate(deleteTarget.id)}>Delete</AlertDialogAction>
+            <AlertDialogAction
+              className="bg-destructive text-white hover:bg-destructive/90"
+              onClick={() => deleteTarget && remove.mutate(deleteTarget.id)}
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -263,10 +282,11 @@ interface LookoutCardProps {
 
 function LookoutCard({ item, isRunning, isToggling, onRun, onToggle, onDelete }: LookoutCardProps) {
   const isPaused = item.status === 'paused';
-  const isBusy = item.status === 'running' || isRunning;
+  const firstRunPending = isFirstRunPending(item);
+  const isBusy = item.status === 'running' || isRunning || firstRunPending;
   const frequency = LOOKOUT_FREQUENCIES[item.frequency as LookoutFrequency];
 
-  let lastRunText = 'Not run yet';
+  let lastRunText = firstRunPending ? 'Sending your first digest…' : 'Not run yet';
   if (item.lastRunAt && item.lastRun) {
     const when = formatDistanceToNow(new Date(item.lastRunAt), { addSuffix: true });
     lastRunText =
@@ -291,7 +311,7 @@ function LookoutCard({ item, isRunning, isToggling, onRun, onToggle, onDelete }:
             ) : isBusy ? (
               <Badge variant="outline" className="gap-1 text-[11px]">
                 <Loader2 className="size-3 animate-spin" />
-                Searching
+                {firstRunPending ? 'First digest' : 'Searching'}
               </Badge>
             ) : null}
           </div>
@@ -305,6 +325,7 @@ function LookoutCard({ item, isRunning, isToggling, onRun, onToggle, onDelete }:
             onClick={onToggle}
             disabled={isToggling || isBusy}
             aria-label={isPaused ? 'Resume Lookout' : 'Pause Lookout'}
+            title={isPaused ? 'Resume' : 'Pause'}
           >
             {isPaused ? <Play className="size-4" /> : <Pause className="size-4" />}
           </Button>
@@ -314,6 +335,7 @@ function LookoutCard({ item, isRunning, isToggling, onRun, onToggle, onDelete }:
             className="size-8 text-muted-foreground hover:text-destructive"
             onClick={onDelete}
             aria-label="Delete Lookout"
+            title="Delete"
           >
             <Trash2 className="size-4" />
           </Button>
