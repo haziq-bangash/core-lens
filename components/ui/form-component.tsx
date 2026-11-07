@@ -865,6 +865,8 @@ interface Attachment {
   mediaType?: string;
   url: string;
   size: number;
+  /** Issued by the upload route; proves we uploaded this file so we may delete it. Never sent in messages. */
+  deleteToken?: string;
 }
 
 const ArrowUpIcon = ({ size = 16 }: { size?: number }) => {
@@ -1701,15 +1703,15 @@ const FormComponent: React.FC<FormComponentProps> = ({
       // Get the attachment to delete
       const attachmentToDelete = attachments[index];
 
-      // Delete from Vercel Blob if it's a blob URL
-      if (attachmentToDelete?.url && attachmentToDelete.url.includes('blob.vercel-storage.com')) {
+      // Delete from Vercel Blob if we hold the delete token issued at upload time
+      if (attachmentToDelete?.url && attachmentToDelete.deleteToken) {
         try {
           await fetch('/api/upload', {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ url: attachmentToDelete.url }),
+            body: JSON.stringify({ url: attachmentToDelete.url, token: attachmentToDelete.deleteToken }),
           });
         } catch (error) {
           console.error('Failed to delete file from storage:', error);

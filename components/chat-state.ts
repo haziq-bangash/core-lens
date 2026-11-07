@@ -19,6 +19,7 @@ interface Attachment {
   mediaType?: string;
   url: string;
   size: number;
+  deleteToken?: string;
 }
 
 export type ChatAction =
