@@ -95,7 +95,6 @@
     "@upstash/qstash": "^2.11.1",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
-    "@vapi-ai/server-sdk": "^0.11.2",
     "@vapi-ai/web": "^2.5.2",
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.5.0",
@@ -228,13 +227,7 @@
   ],
   "overrides": {
     "react-is": "^19.0.0-rc-69d4b800-20241021",
-    "baseline-browser-mapping": "latest",
-    "@browserbasehq/stagehand": "4.4.0",
-    "react-latex-next": {
-      ".": "^3.0.0",
-      "react": "^19.2.3",
-      "react-dom": "^19.2.3"
-    }
+    "baseline-browser-mapping": "latest"
   },
   "imports": {
     "#default-font/*": "./node_modules/@mathjax/mathjax-newcm-font/mjs/*"
