@@ -25,6 +25,7 @@ import Stripe from 'stripe';
 import { eq } from 'drizzle-orm';
 import { invalidateUserCaches } from './performance-cache';
 import { clearUserDataCache } from './user-data-server';
+import { sendPasswordResetEmail, sendVerificationEmail } from './email';
 
 config({
   path: '.env.local',
@@ -184,6 +185,13 @@ export const auth = betterAuth({
   rateLimit: {
     max: 100,
     window: 60,
+    customRules: {
+      // Credential endpoints are brute-force / email-bombing targets, so keep them tight.
+      '/sign-in/email': { window: 60, max: 5 },
+      '/sign-up/email': { window: 60, max: 5 },
+      '/request-password-reset': { window: 60, max: 3 },
+      '/send-verification-email': { window: 60, max: 3 },
+    },
   },
   experimental: { joins: true },
   database: drizzleAdapter(db, {
@@ -204,6 +212,35 @@ export const auth = betterAuth({
       lookout,
     },
   }),
+  emailAndPassword: {
+    enabled: true,
+    minPasswordLength: 8,
+    requireEmailVerification: true,
+    resetPasswordTokenExpiresIn: 60 * 60, // 1 hour
+    revokeSessionsOnPasswordReset: true,
+    // Awaited (unlike the docs' fire-and-forget example) because Cloud Run throttles CPU once
+    // the response is sent, which can drop an unawaited email.
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({ to: user.email, name: user.name, url });
+    },
+  },
+  emailVerification: {
+    expiresIn: 60 * 60, // verification links are valid for 1 hour (matches the email copy)
+    sendOnSignUp: true,
+    sendOnSignIn: true, // re-send the link if an unverified user tries to sign in
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmail({ to: user.email, name: user.name, url });
+    },
+  },
+  account: {
+    accountLinking: {
+      enabled: true,
+      // Only link when the provider has verified the email (the default), so an attacker can't
+      // pre-register a victim's address and take over the account via social sign-in.
+      trustedProviders: [],
+    },
+  },
   socialProviders: {
     google: {
       clientId: serverEnv.GOOGLE_CLIENT_ID,
